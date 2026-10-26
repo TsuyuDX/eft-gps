@@ -4,9 +4,9 @@ Offline maps, screenshot GPS and raid preparation for Escape from Tarkov on Wind
 
 ## Install
 
-Run **TSUYU-EFTGPS-1.7.0-Setup.exe**, choose a folder and confirm installation. To update, select your existing app folder. Quest progress, markers, notes and GPS preferences are preserved. The optional desktop shortcut is **T_S_U_Y_U EFT GPS**.
+Download **[EFT-GPS-Setup.exe](https://github.com/TsuyuDX/eft-gps/releases/latest/download/EFT-GPS-Setup.exe)** and run it. Click **Download and install**. The helper downloads and verifies the full package, then opens setup automatically. Choose a folder and confirm installation. To update, select your existing app folder: progress, markers, notes and GPS settings are preserved.
 
-For the portable version, extract **TSUYU-EFTGPS-1.7.0-Windows.zip** and run **EFT GPS.exe**. Do not run it inside an archive.
+Internet is required for the initial download. The installed app works offline. Advanced manual downloads are described in the repository README.
 
 Requires Windows 10 version 1903 or later, or Windows 11, x64. The installer checks system components and free space. The full package includes the rendering runtime for offline setup if it is missing. No separate drivers are needed.
 

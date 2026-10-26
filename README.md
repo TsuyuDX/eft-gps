@@ -2,9 +2,19 @@
 
 **Offline maps, screenshot GPS and raid preparation for Escape from Tarkov.**
 
-[Download the latest release](https://github.com/TsuyuDX/eft-gps/releases/latest) · [All versions](https://github.com/TsuyuDX/eft-gps/releases) · [Report a bug / suggest an idea](https://github.com/TsuyuDX/eft-gps/issues)
+[![Скачать для Windows / Download for Windows](download.svg)](https://github.com/TsuyuDX/eft-gps/releases/latest/download/EFT-GPS-Setup.exe)
+
+[All versions](https://github.com/TsuyuDX/eft-gps/releases) · [Report a bug / suggest an idea](https://github.com/TsuyuDX/eft-gps/issues)
 
 Created by **T_S_U_Y_U** · Windows 10/11 x64 · Русский / English · Current version **1.7.0**
+
+**Установка в три шага:**
+
+1. Нажмите **«Скачать / Download»** — получите один файл `EFT-GPS-Setup.exe`.
+2. Откройте его и нажмите **«Скачать и установить»**. Загрузчик сам подготовит нужный пакет.
+3. Выберите папку в открывшемся установщике и нажмите **«Установить»**.
+
+Для первого скачивания нужен интернет. После установки карты, справочник и GPS работают офлайн. При обновлении выберите текущую папку приложения, чтобы сохранить прогресс.
 
 ![Application overview](screenshots/overview.png)
 
@@ -24,13 +34,26 @@ Created by **T_S_U_Y_U** · Windows 10/11 x64 · Русский / English · Cur
 
 ## Download and install
 
-Open **[Releases](https://github.com/TsuyuDX/eft-gps/releases/latest)** and download **both `.part` files**, **`setup-parts.json`** and **`Join-Setup.cmd`** into the same folder. Run `Join-Setup.cmd`; it verifies the downloaded parts and recreates the original installer EXE. Run the resulting EXE and choose your installation folder. `SHA256SUMS.txt` is available for manual verification.
+1. **[Download EFT-GPS-Setup.exe](https://github.com/TsuyuDX/eft-gps/releases/latest/download/EFT-GPS-Setup.exe).** This is the only file you need.
+2. Run it and click **Download and install**. It downloads the correct package, verifies it and opens setup automatically.
+3. Choose your app folder and click **Install**. For updates, select the existing folder to preserve your progress.
 
-To update, select your existing app folder. Progress, notes, map markers and GPS preferences are preserved. An optional desktop shortcut launches the app in its own window.
+The small downloader requires internet to retrieve the full offline package (about 2.38 GB for 1.7.0). Once installed, the app works offline. The installer language defaults to Windows; RU and EN buttons let you change it.
 
-The download is split because the full offline package exceeds GitHub's per-file limit. The automatically generated **Source code ZIP/TAR** contains this release page and documentation; it is not the application installer.
+![Simple download and setup](screenshots/setup.png)
 
-Requires **Windows 10 version 1903 or newer / Windows 11, x64**. The installer checks the required system components. The full package includes the rendering runtime for offline installation if missing. No separate drivers are required.
+Requires **Windows 10 version 1903 or newer / Windows 11, x64**. The full package includes the rendering runtime if needed. No separate drivers are required.
+
+<details>
+<summary>Manual offline package · Ручная загрузка полного пакета</summary>
+
+Advanced users can download both `.part` files, `setup-parts.json` and `Join-Setup.cmd` from the chosen release into one folder. Run `Join-Setup.cmd`, then the reconstructed setup EXE. Every part and the final file are checked with SHA-256. `SHA256SUMS.txt` is available for manual verification.
+
+Для ручной загрузки скачайте обе части `.part`, `setup-parts.json` и `Join-Setup.cmd` в одну папку. Запустите `Join-Setup.cmd`, затем полученный EXE. Для обычной установки достаточно кнопки скачивания выше.
+
+The automatically generated Source code archives contain repository documentation. Install using `EFT-GPS-Setup.exe` or the complete offline package.
+
+</details>
 
 ## GPS: how it works
 
@@ -78,7 +101,7 @@ Older installers are preserved as originally built. Their names and capabilities
 
 **T_S_U_Y_U EFT GPS** — карты, GPS по игровым скриншотам, задания и подготовка к рейду в отдельном приложении для Windows. Сохранённые данные работают без интернета.
 
-Скачайте обе части `.part`, `setup-parts.json` и `Join-Setup.cmd` из последнего выпуска в одну папку. Запустите `Join-Setup.cmd`, затем полученный EXE. При обновлении выберите папку уже установленной программы. Автоматический архив Source code содержит документацию, а не приложение.
+Нажмите кнопку скачивания в начале страницы и запустите **EFT-GPS-Setup.exe**. Нажмите **«Скачать и установить»**: нужные файлы будут загружены и проверены автоматически. Затем выберите папку и подтвердите установку. При обновлении укажите текущую папку программы.
 
 Язык программы выбирается при первом запуске и меняется в настройках. Установщик берёт язык системы. В «Помощи» доступны обзор, FAQ и список изменений. Discord и поддержка проекта **скоро будут доступны**.
 
