@@ -1,3 +1,4 @@
+import { newsCards, newsEntries, renderNews } from "./features/news.js";
 import { loadWindowSettings } from "./core/window-settings.js";
 import { applyPreferences, openPreferences } from "./core/preferences.js";
 import {
@@ -30,17 +31,19 @@ const app = document.querySelector("#app"),
   navigation = document.querySelector("#navigation");
 let routeVersion = 0;
 const sections = [
-  ["season", "Сезоны"],
-  ["event", "События"],
   ["map", "Карты"],
-  ["boss", "Боссы"],
-  ["trader", "Торговцы"],
-  ["item", "Предметы"],
-  ["quest", "Задания"],
-  ["hideout", "Убежище"],
-  ["items-tracker", "Трекер предметов"],
   ["gps", "GPS"],
+  ["quest", "Задания"],
+  ["item", "Предметы"],
+  ["items-tracker", "Мой прогресс"],
+  ["hideout", "Убежище"],
+  ["trader", "Торговцы"],
+  ["boss", "Боссы"],
+  ["event", "События"],
+  ["season", "Сезоны"],
+  ["news", "Новости"],
 ];
+
 function nav() {
   navigation.innerHTML = sections
     .map(
@@ -51,16 +54,7 @@ function nav() {
 }
 function home() {
   const completed = Object.values(current().quests).filter(Boolean).length;
-  app.innerHTML = `<section class="home-hero"><h1>TarkovHead</h1><p>Карты, задания и справочник Escape from Tarkov — под рукой даже без интернета.</p><div class="home-search"><span>⌕</span><input type="search" id="global-search" placeholder="Найти предметы, задания, модули убежища" autocomplete="off"><kbd>Ctrl K</kbd></div><div id="global-results" class="global-results" hidden></div></section><div class="dashboard-strip"><a href="#/map/${db.mode}"><b>${db.maps.length}</b> карт</a><a href="#/item/${db.mode}"><b>${db.items.length.toLocaleString("ru-RU")}</b> предметов</a><a href="#/quest/${db.mode}"><b>${completed} / ${db.quests.length}</b> заданий</a><a href="#/items-tracker/${db.mode}"><b>Мой прогресс</b> →</a></div><section class="home-news"><h2 class="center">Последние новости</h2><div class="card-grid news-grid">${db.articles
-    .filter((x) => x.type === "news")
-    .slice(0, 8)
-    .map(
-      (x) =>
-        `<a class="card news-card" href="#/${x.path}">${img(x.image, x.title.replaceAll("торговецев", "торговцев"))}<div class="card-body"><h3>${esc(x.title.replaceAll("торговецев", "торговцев"))}</h3><p class="muted small">${esc(x.excerpt || "Обновления, события и руководства Escape from Tarkov.")}</p><span class="muted small">${esc(x.date || "Сохранено в офлайн-базе")}</span></div></a>`,
-    )
-    .join(
-      "",
-    )}</div><p class="center" style="margin-top:24px"><a class="button" href="#/news">Ко всем новостям →</a></p></section>`;
+  app.innerHTML = `<section class="home-hero"><div class="eyebrow">НАВИГАЦИЯ / ПОДГОТОВКА / РЕЙД</div><h1>Тарков <span>GPS</span></h1><p>Всё для следующего рейда. Карты, GPS, задания и личный прогресс.</p><div class="row wrap home-actions"><a class="button primary" href="#/map/${db.mode}">Открыть карты ↗</a><a class="button" href="#/gps">Настроить GPS</a></div><div class="home-search"><span>⌕</span><input type="search" id="global-search" placeholder="Найти предметы, задания, модули убежища" autocomplete="off"><kbd>Ctrl K</kbd></div><div id="global-results" class="global-results" hidden></div></section><div class="dashboard-strip"><a href="#/map/${db.mode}"><b>${db.maps.length}</b> карт</a><a href="#/item/${db.mode}"><b>${db.items.length.toLocaleString("ru-RU")}</b> предметов</a><a href="#/quest/${db.mode}"><b>${completed} / ${db.quests.length}</b> заданий</a><a href="#/items-tracker/${db.mode}"><b>Мой прогресс</b> →</a></div><section class="home-news"><h2 class="center">На связи с Тарковом</h2><div class="card-grid news-grid">${newsCards(newsEntries.slice(0, 4))}</div><p class="center" style="margin-top:24px"><a class="button" href="#/news">Все новости →</a></p></section>`;
   const field = app.querySelector("#global-search"),
     box = app.querySelector("#global-results");
   field.oninput = () => {
@@ -166,11 +160,13 @@ async function route() {
       case "gps":
         await renderGps(app);
         break;
+      case "news":
+        renderNews(app, slug || modeOrSlug);
+        break;
       case "boss":
       case "trader":
       case "event":
       case "season":
-      case "news":
         slug || (modeOrSlug && !["regular", "pve"].includes(modeOrSlug))
           ? await renderArticle(app, path)
           : renderArticleList(app, section);
@@ -202,7 +198,7 @@ try {
   await loadState();
   await init(profile().mode);
   document.querySelector("#mode").value = db.mode;
-  document.querySelector("#logo").src = asset("/logo.png");
+  document.querySelector("#logo").src = "/icons/app-192.png";
   document.querySelector("#snapshot-date").textContent =
     "Снимок " + new Date(db.manifest.savedAt).toLocaleDateString("ru-RU");
   nav();

@@ -13,3 +13,5 @@ if ($LASTEXITCODE -ne 0) { throw 'Не удалось собрать оболо�
 if ($LASTEXITCODE -ne 0) { throw 'Не удалось собрать запускатель.' }
 & $taskCompiler /nologo /target:winexe /platform:x64 /reference:System.Windows.Forms.dll /reference:System.Drawing.dll /reference:System.Web.Extensions.dll /reference:System.IO.Compression.dll /reference:System.IO.Compression.FileSystem.dll /win32icon:public\icons\app.ico /resource:public\icons\app-192.png,installer-logo.png /out:runtime\TarkovMaintenance.exe scripts\Maintenance.cs
 if ($LASTEXITCODE -ne 0) { throw 'Не удалось собрать установщик.' }
+
+Copy-Item -LiteralPath "Tarkov Offline.exe" -Destination "Tarkov GPS.exe" -Force

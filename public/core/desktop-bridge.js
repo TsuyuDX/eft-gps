@@ -3,7 +3,7 @@ export function bindDesktopActions(root) {
   const bridge = window.chrome?.webview;
   root.querySelectorAll("[data-desktop-command]").forEach((button) => {
     button.disabled = !bridge;
-    if (!bridge) button.title = "Доступно в отдельном окне Tarkov Offline";
+    if (!bridge) button.title = "Доступно в отдельном окне Тарков GPS";
     button.onclick = async () => {
       const command = button.dataset.desktopCommand;
       if (
@@ -19,7 +19,7 @@ export function bindDesktopActions(root) {
         command === "install-update" &&
         !(await confirmAction(
           "Обновить приложение",
-          "Выберите ZIP-пакет Tarkov Offline. Окно закроется, автосъёмка остановится. Состав пакета проверяется перед установкой; прогресс и настройки GPS сохраняются.",
+          "Выберите ZIP-пакет Тарков GPS. Окно закроется, автосъёмка остановится. Состав пакета проверяется перед установкой; прогресс и настройки GPS сохраняются.",
           "Выбрать пакет",
         ))
       )

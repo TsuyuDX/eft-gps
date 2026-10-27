@@ -1,6 +1,6 @@
 {
-  "name": "TarkovHead Offline",
-  "short_name": "Tarkov Offline",
+  "name": "Тарков GPS",
+  "short_name": "Тарков GPS",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",

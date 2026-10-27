@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 class Launcher {
-    const string AppTitle = "TarkovHead · Offline";
+    const string AppTitle = "Тарков GPS";
     delegate bool EnumWindowCallback(IntPtr window, IntPtr parameter);
     [DllImport("user32.dll")] static extern bool EnumWindows(EnumWindowCallback callback, IntPtr parameter);
     [DllImport("user32.dll", CharSet = CharSet.Unicode)] static extern int GetWindowText(IntPtr window, StringBuilder text, int count);
@@ -31,7 +31,7 @@ class Launcher {
             }
             if (!running) throw new Exception("Не удалось запустить локальное приложение. Проверьте, что архив распакован полностью, а порт 38471 свободен.");
             Process.Start(new ProcessStartInfo(Path.Combine(root, "runtime", "TarkovDesktopHost.exe")) { WorkingDirectory = root, UseShellExecute = false });
-        } catch (Exception e) { MessageBox.Show(e.Message, "Tarkov Offline", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+        } catch (Exception e) { MessageBox.Show(e.Message, "Тарков GPS", MessageBoxButtons.OK, MessageBoxIcon.Error); }
     }
 
     static bool Healthy(string url) {
