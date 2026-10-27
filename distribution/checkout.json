@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "version": "1.4.0",
-  "launcher": "Tarkov Offline.exe",
+  "version": "1.5.0",
+  "launcher": "Tarkov GPS.exe",
   "requiresWebView": true
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using System.Drawing;
@@ -10,8 +10,8 @@ using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
 using System.Reflection;
-[assembly: AssemblyVersion("1.4.0.0")]
-[assembly: AssemblyFileVersion("1.4.0.0")]
+[assembly: AssemblyVersion("1.5.0.0")]
+[assembly: AssemblyFileVersion("1.5.0.0")]
 
 class DesktopHost : Form {
     readonly string root, origin;
@@ -46,7 +46,7 @@ class DesktopHost : Form {
     }
     DesktopHost(string appRoot, string appOrigin) {
         root = appRoot; origin = appOrigin;
-        Text = "TarkovHead · Offline";
+        Text = "Тарков GPS";
         BackColor = Color.Black;
         Size = new Size(1440, 950);
         MinimumSize = new Size(800, 600);
@@ -110,7 +110,7 @@ class DesktopHost : Form {
                     }
                 };
                 core.ScriptDialogOpening += delegate(object sender, CoreWebView2ScriptDialogOpeningEventArgs e) {
-                    if (e.Kind == CoreWebView2ScriptDialogKind.Alert) { MessageBox.Show(this, e.Message, "Tarkov Offline", MessageBoxButtons.OK, MessageBoxIcon.Information); e.Accept(); }
+                    if (e.Kind == CoreWebView2ScriptDialogKind.Alert) { MessageBox.Show(this, e.Message, "Тарков GPS", MessageBoxButtons.OK, MessageBoxIcon.Information); e.Accept(); }
                 };
                 core.WebMessageReceived += delegate(object sender, CoreWebView2WebMessageReceivedEventArgs e) {
                     if (!IsLocal(e.Source)) return;
@@ -120,12 +120,12 @@ class DesktopHost : Form {
                     if (command == "reload-interface") { web.Reload(); return; }
                     if (command == "update-data") StartMaintenance("--data", null);
                     if (command == "install-update") {
-                        using (var dialog = new OpenFileDialog { Title = "Выберите пакет обновления Tarkov Offline", Filter = "Пакет Tarkov Offline (*.zip)|*.zip", CheckFileExists = true }) {
+                        using (var dialog = new OpenFileDialog { Title = "Выберите пакет обновления Тарков GPS", Filter = "Пакет Тарков GPS (*.zip)|*.zip", CheckFileExists = true }) {
                             if (dialog.ShowDialog(this) == DialogResult.OK) StartMaintenance("--install", dialog.FileName);
                         }
                     }
                 };
-                core.ProcessFailed += delegate { MessageBox.Show(this, "Окно приложения завершилось с ошибкой. Закройте и снова откройте Tarkov Offline. Прогресс хранится отдельно.", "Tarkov Offline", MessageBoxButtons.OK, MessageBoxIcon.Error); };
+                core.ProcessFailed += delegate { MessageBox.Show(this, "Окно приложения завершилось с ошибкой. Закройте и снова откройте Тарков GPS. Прогресс хранится отдельно.", "Тарков GPS", MessageBoxButtons.OK, MessageBoxIcon.Error); };
                 core.NavigationCompleted += delegate(object sender, CoreWebView2NavigationCompletedEventArgs e) {
                     if (!e.IsSuccess) ShowServiceError();
                 };
@@ -133,7 +133,7 @@ class DesktopHost : Form {
             } catch (Exception e) {
                 Directory.CreateDirectory(Path.Combine(root, "userdata"));
                 File.WriteAllText(Path.Combine(root, "userdata", "desktop-error.log"), e.ToString());
-                MessageBox.Show(this, "Не удалось открыть окно приложения. Проверьте наличие Microsoft Edge WebView2 Runtime. Подробности: userdata/desktop-error.log", "Tarkov Offline", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, "Не удалось открыть окно приложения. Проверьте наличие Microsoft Edge WebView2 Runtime. Подробности: userdata/desktop-error.log", "Тарков GPS", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Close();
             }
         };

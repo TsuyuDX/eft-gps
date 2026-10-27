@@ -41,7 +41,7 @@ public static class PackageInstaller {
         Directory.CreateDirectory(staged);
         using (var archive = ZipFile.OpenRead(zip)) {
             var entry = archive.GetEntry("release.json");
-            if (entry == null || entry.Length > 16 * 1024 * 1024) throw new IOException("Это не пакет Tarkov Offline");
+            if (entry == null || entry.Length > 16 * 1024 * 1024) throw new IOException("Это не пакет Тарков GPS");
             ReleaseInfo release;
             using (var reader = new StreamReader(entry.Open())) release = new JavaScriptSerializer { MaxJsonLength = 16 * 1024 * 1024 }.Deserialize<ReleaseInfo>(reader.ReadToEnd());
             if (release == null || release.format != 1 || release.app != "TarkovOffline" || release.files == null || release.files.Length == 0) throw new IOException("Неподдерживаемый пакет");
@@ -77,7 +77,7 @@ public static class PackageInstaller {
     static bool TryAddCompat<T>(this Dictionary<string,T> map, string key, T value) { if (map.ContainsKey(key)) return false; map.Add(key, value); return true; }
     public static string Install(string target, string staged, ReleaseInfo release, Action<string> progress) {
         target = Path.GetFullPath(target);
-        if (Directory.Exists(target) && Directory.GetFileSystemEntries(target).Length > 0 && !File.Exists(Path.Combine(target, "Tarkov Offline.exe"))) throw new IOException("Выберите пустую папку или папку установленного Tarkov Offline");
+        if (Directory.Exists(target) && Directory.GetFileSystemEntries(target).Length > 0 && !File.Exists(Path.Combine(target, "Tarkov Offline.exe"))) throw new IOException("Выберите пустую папку или папку установленного Тарков GPS");
         Directory.CreateDirectory(target);
         string backup = Path.Combine(target, "work", "install-backup-" + DateTime.Now.ToString("yyyyMMdd-HHmmss-fff"));
         string work = Path.Combine(target, "work");
@@ -206,7 +206,7 @@ class DarkFolderPicker : DarkWindow {
     int request;
     public string SelectedPath {get;private set;}
     public DarkFolderPicker(string initial) {
-        Text="Tarkov Offline · Выбор папки";ClientSize=new Size(840,590);MinimizeBox=false;StartPosition=FormStartPosition.CenterParent;
+        Text="Тарков GPS · Выбор папки";ClientSize=new Size(840,590);MinimizeBox=false;StartPosition=FormStartPosition.CenterParent;
         TextAt("Куда установить приложение?",24,20,792,39,20,ForeColor);
         TextAt("Выберите папку или введите новый путь — создадим её во время установки.",24,67,792,28,10,Color.Silver);
         back=ButtonAt("←",24,108,44,false);back.AccessibleName="Назад";back.Click+=delegate {if(history.Count>0) Navigate(history.Pop(),false);};
@@ -260,7 +260,7 @@ class DarkFolderPicker : DarkWindow {
 }
 class InstallConfirmation : DarkWindow {
     public InstallConfirmation(string heading, string message, string accept) {
-        Text="Tarkov Offline · Подтверждение"; ClientSize=new Size(620,360); MinimizeBox=false;
+        Text="Тарков GPS · Подтверждение"; ClientSize=new Size(620,360); MinimizeBox=false;
         TextAt(heading,24,22,572,42,19,ForeColor);
         TextAt(message,24,78,572,206,10,Color.Silver);
         var cancel=ButtonAt("Назад",300,296,128,false); cancel.DialogResult=DialogResult.Cancel;
@@ -356,17 +356,17 @@ class Maintenance : DarkWindow {
     }
     Maintenance(string[] args) {
         operation = args.Length > 0 ? args[0] : "--setup";
-        target = args.Length > 1 ? Path.GetFullPath(args[1]) : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TarkovOffline");
+        target = args.Length > 1 ? Path.GetFullPath(args[1]) : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TarkovGPS");
         package = args.Length > 2 ? args[2] : null;
         bool data=operation=="--data";
-        Text = data ? "Tarkov Offline · Обновление базы" : "Tarkov Offline · Установка";
+        Text = data ? "Тарков GPS · Обновление базы" : "Тарков GPS · Установка";
         ClientSize = new Size(820,720);
         Image branding=Icon.ToBitmap();
         using(var resource=System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("installer-logo.png")) if(resource!=null) using(var image=Image.FromStream(resource)) branding=new Bitmap(image);
         var logo=new PictureBox { Bounds=new Rectangle(28,24,62,62), Image=branding, SizeMode=PictureBoxSizeMode.Zoom };
         Controls.Add(logo);
-        TextAt("TARKOV OFFLINE",106,22,560,40,22,ForeColor);
-        TextAt(data ? "ОБНОВЛЕНИЕ СПРАВОЧНИКА" : "УСТАНОВКА ПРИЛОЖЕНИЯ  /  1.4.0",108,67,660,24,9,muted);
+        TextAt("ТАРКОВ GPS",106,22,560,40,22,ForeColor);
+        TextAt(data ? "ОБНОВЛЕНИЕ СПРАВОЧНИКА" : "УСТАНОВКА ПРИЛОЖЕНИЯ  /  1.5.0",108,67,660,24,9,muted);
         steps.SetBounds(28,108,764,32); steps.Text="01  Подготовка     /     02  Установка     /     03  Готово"; steps.ForeColor=Color.FromArgb(185,171,130);
         Controls.Add(steps);
         TextAt(data ? "Свежая база — привычный прогресс" : "Тарков под рукой. Даже без интернета.",28,154,764,38,18,ForeColor);
@@ -392,9 +392,9 @@ class Maintenance : DarkWindow {
             try {
                 target=Path.GetFullPath(folder.Text.Trim());
                 if(String.IsNullOrWhiteSpace(folder.Text)) throw new IOException("Выберите папку приложения.");
-                if(!data && Directory.Exists(target) && Directory.GetFileSystemEntries(target).Length>0 && !File.Exists(Path.Combine(target,"Tarkov Offline.exe"))) throw new IOException("В этой папке уже есть другие файлы. Выберите пустую папку или папку Tarkov Offline.");
+                if(!data && Directory.Exists(target) && Directory.GetFileSystemEntries(target).Length>0 && !File.Exists(Path.Combine(target,"Tarkov Offline.exe"))) throw new IOException("В этой папке уже есть другие файлы. Выберите пустую папку или папку Тарков GPS.");
                 CheckPlatform();
-                using(var confirm=new InstallConfirmation(data ? "Обновить локальную базу?" : "Установить Tarkov Offline?",
+                using(var confirm=new InstallConfirmation(data ? "Обновить локальную базу?" : "Установить Тарков GPS?",
                     "Папка: "+target+"\n\nЗакройте окно приложения перед продолжением. Автосъёмку GPS после запуска нужно будет включить заново.\n\n"+(data ? "Понадобится интернет. Предыдущая база будет сохранена." : "Проверим пакет и установим недостающий WebView2.\nЯрлык на рабочем столе: "+(shortcut.Checked ? "создать / обновить" : "не создавать"))+"\nЛичный прогресс и настройки останутся на месте.",data ? "Обновить" : "Установить")) if(confirm.ShowDialog(this)!=DialogResult.OK) return;
                 writeShortcut=shortcut.Checked;
                 busy=true; action.Enabled=false; cancel.Enabled=false; browse.Enabled=false; folder.Enabled=false; shortcut.Enabled=false;
@@ -439,7 +439,7 @@ class Maintenance : DarkWindow {
     }
     void StopServer() {
         foreach (var p in Process.GetProcessesByName("TarkovDesktopHost")) {
-            try { if (String.Equals(p.MainModule.FileName, Path.Combine(target, "runtime", "TarkovDesktopHost.exe"), StringComparison.OrdinalIgnoreCase) && !p.WaitForExit(5000)) throw new IOException("Сначала закройте окно Tarkov Offline"); } catch (System.ComponentModel.Win32Exception) {}
+            try { if (String.Equals(p.MainModule.FileName, Path.Combine(target, "runtime", "TarkovDesktopHost.exe"), StringComparison.OrdinalIgnoreCase) && !p.WaitForExit(5000)) throw new IOException("Сначала закройте окно Тарков GPS"); } catch (System.ComponentModel.Win32Exception) {}
         }
         try {
             var request = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:38471/api/desktop/stop");
@@ -492,7 +492,7 @@ class Maintenance : DarkWindow {
     void EnsureRuntime(string staged) {
         if(RuntimeVersion()!=null) { Append("WebView2 уже установлен. Повторная установка не требуется."); return; }
         string installer=Path.Combine(staged,"runtime","MicrosoftEdgeWebView2RuntimeInstallerX64.exe");
-        if(!File.Exists(installer)) throw new IOException("В пакете нет автономного установщика WebView2. Используйте полный установщик Tarkov Offline.");
+        if(!File.Exists(installer)) throw new IOException("В пакете нет автономного установщика WebView2. Используйте полный установщик Тарков GPS.");
         Append("Установка Microsoft WebView2 из автономного пакета…");
         using(var process=Process.Start(new ProcessStartInfo(installer,"/silent /install") {UseShellExecute=false,CreateNoWindow=true})) {
             process.WaitForExit();
@@ -525,9 +525,9 @@ class Maintenance : DarkWindow {
     void CreateShortcut() {
         Type type = Type.GetTypeFromProgID("WScript.Shell");
         object shell = Activator.CreateInstance(type);
-        string location = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "Tarkov Offline.lnk");
+        string location = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "Тарков GPS.lnk");
         object shortcut = type.InvokeMember("CreateShortcut", System.Reflection.BindingFlags.InvokeMethod, null, shell, new object[] { location });
-        shortcut.GetType().InvokeMember("TargetPath", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { Path.Combine(target, "Tarkov Offline.exe") });
+        shortcut.GetType().InvokeMember("TargetPath", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { Path.Combine(target, "Tarkov GPS.exe") });
         shortcut.GetType().InvokeMember("WorkingDirectory", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { target });
         shortcut.GetType().InvokeMember("IconLocation", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { Path.Combine(target, "public", "icons", "app.ico") + ",0" });
         shortcut.GetType().InvokeMember("Save", System.Reflection.BindingFlags.InvokeMethod, null, shortcut, null);

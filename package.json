@@ -1,9 +1,9 @@
 {
   "name": "tarkov-offline",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "type": "module",
-  "description": "Local HTML companion for Escape from Tarkov",
+  "description": "Тарков GPS — карты, навигация и подготовка к рейдам",
   "scripts": {
     "start": "node server.mjs",
     "test": "node --test test/*.test.mjs",

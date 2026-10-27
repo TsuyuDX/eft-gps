@@ -117,8 +117,20 @@ export async function renderArticle(root, path) {
       e.remove();
     if (e.tagName === "USE") e.remove();
   });
+  for (const link of [...doc.querySelectorAll("a")]) {
+    if (/tarkovhead/i.test(link.textContent)) link.remove();
+  }
+  for (
+    const walker = doc.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT);
+    walker.nextNode();
+  ) {
+    walker.currentNode.textContent = walker.currentNode.textContent.replace(
+      /TarkovHead/gi,
+      "Тарков GPS",
+    );
+  }
   const frame = root.querySelector("#article-frame");
-  frame.srcdoc = `<!doctype html><html lang="ru" class="dark"><head><meta charset="UTF-8"><link rel="stylesheet" href="/reference.css"><style>html{color-scheme:dark}*{scrollbar-width:thin;scrollbar-color:#454545 #000}html,body{background:#000000;color:#e5e5e5;font-family:monospace;margin:0;padding:12px}img{max-width:100%;height:auto}a{color:#e5e5e5}table{width:100%}button,input,select{display:none}svg:empty{display:none}p{line-height:1.8}h1,h2,h3{margin:1em 0}.container{max-width:100%}li{margin:.3em 0}</style></head><body>${doc.body.innerHTML}</body></html>`;
+  frame.srcdoc = `<!doctype html><html lang="ru" class="dark"><head><meta charset="UTF-8"><style>html{color-scheme:dark}*{scrollbar-width:thin;scrollbar-color:#454545 #000}html,body{background:#000000;color:#e5e5e5;font-family:"Segoe UI",Arial,sans-serif;margin:0;padding:12px}img{max-width:100%;max-height:540px;width:auto;height:auto;object-fit:contain}a{color:#b9ab82}table{width:100%;border-collapse:collapse}td,th{padding:12px;border-bottom:1px solid #292922;text-align:left}blockquote{border-left:2px solid #b9ab82;margin:20px 0;padding:4px 18px;color:#aaa99f}h1,h2,h3{color:#ded9c9}details{padding:12px;border:1px solid #292922}button,input,select{display:none}svg:empty{display:none}p{line-height:1.8}h1,h2,h3{margin:1em 0}.container{max-width:100%}li{margin:.3em 0}</style></head><body>${doc.body.innerHTML}</body></html>`;
   frame.onload = () => {
     try {
       installAppNavigation(frame.contentDocument);

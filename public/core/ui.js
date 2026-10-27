@@ -14,7 +14,7 @@ export const money = (n) =>
 export const img = (u, alt = "", cls = "") =>
   `<img class="${cls}" src="${asset(u)}" alt="${esc(alt)}" loading="lazy">`;
 export const heading = (title, sub = "", actions = "") =>
-  `<div class="page-title"><div><div class="eyebrow">TARKOVHEAD / ЛОКАЛЬНЫЙ СПРАВОЧНИК</div><h1>${esc(title)}</h1>${sub ? `<p class="muted">${esc(sub)}</p>` : ""}</div><div class="row">${actions}</div></div>`;
+  `<div class="page-title"><div><div class="eyebrow">ТАРКОВ GPS / ПОМОЩНИК В РЕЙДЕ</div><h1>${esc(title)}</h1>${sub ? `<p class="muted">${esc(sub)}</p>` : ""}</div><div class="row">${actions}</div></div>`;
 export function toast(message) {
   const e = document.querySelector("#toast");
   e.textContent = message;

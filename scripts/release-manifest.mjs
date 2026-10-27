@@ -24,6 +24,7 @@ async function walk(relative) {
 for (const name of top) await walk(name);
 for (const name of [
   "Tarkov Offline.exe",
+  "Tarkov GPS.exe",
   "package.json",
   "package-lock.json",
   "server.mjs",
