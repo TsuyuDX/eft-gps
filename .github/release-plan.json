@@ -33,5 +33,10 @@
     "version": "1.7.1",
     "commit": "61cde28b7cba373375618aed42597b62ebe2e2f1",
     "tag": "v1.7.1"
+  },
+  {
+    "version": "1.7.2",
+    "commit": "573d647a20b63cb7d14552d519a729d8bebd740a",
+    "tag": "v1.7.2"
   }
 ]

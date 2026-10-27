@@ -21,6 +21,8 @@
 
 ![Главная страница / Overview](screenshots/overview.png)
 
+**1.7.2:** номер версии теперь виден на главной странице. / The current version is now shown on the home screen.
+
 ## Возможности / Features
 
 - Интерактивные карты, этажи, зоны опасностей и отдельные фильтры типов меток и контейнеров.
