@@ -1,0 +1,303 @@
+{
+  "savedAt": "2026-10-26T09:01:21.384Z",
+  "restored": 0,
+  "remaining": 59,
+  "results": [
+    {
+      "asset": "https://assets.tarkov.dev/656f0f98d80a697f855d34b1-1.webp",
+      "status": "unavailable",
+      "error": "HTTP 404"
+    },
+    {
+      "asset": "https://assets.tarkov.dev/6617beeaa9cfa777ca915b7c-1.webp",
+      "status": "unavailable",
+      "error": "HTTP 404"
+    },
+    {
+      "asset": "https://assets.tarkov.dev/6617beeaa9cfa777ca915b7c-3.webp",
+      "status": "unavailable",
+      "error": "HTTP 404"
+    },
+    {
+      "asset": "https://assets.tarkov.dev/6617beeaa9cfa777ca915b7c-2.webp",
+      "status": "unavailable",
+      "error": "HTTP 404"
+    },
+    {
+      "asset": "https://assets.tarkov.dev/6617beeaa9cfa777ca915b7c-4.webp",
+      "status": "unavailable",
+      "error": "HTTP 404"
+    },
+    {
+      "asset": "https://assets.tarkov.dev/688246518448b05efd61d461-1.webp",
+      "status": "unavailable",
+      "error": "HTTP 404"
+    },
+    {
+      "asset": "https://assets.tarkov.dev/68fe15910f29ba3fdbba9d54-1.webp",
+      "status": "unavailable",
+      "error": "HTTP 404"
+    },
+    {
+      "asset": "https://assets.tarkov.dev/68fe15990f29ba3fdbba9d55-1.webp",
+      "status": "unavailable",
+      "error": "HTTP 404"
+    },
+    {
+      "asset": "https://assets.tarkov.dev/69e0d6cc77b63940375b9173-1.webp",
+      "status": "unavailable",
+      "error": "HTTP 404"
+    },
+    {
+      "asset": "https://assets.tarkov.dev/688246958448b05efd61d462-1.webp",
+      "status": "unavailable",
+      "error": "HTTP 404"
+    },
+    {
+      "asset": "/api/media/file/If_I_Can%27t_Have_It_Banner.png?preset=original",
+      "status": "unavailable",
+      "error": "HTTP 404"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Ff%2Ff8%2FInformationSourceMap.png%2Frevision%2Flatest%2Fscale-to-width-down%2F363%3Fcb%3D20230826233040",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F1%2F1e%2FInformationSourcePatrolA1.png%2Frevision%2Flatest%3Fcb%3D20230113225826",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F0%2F0d%2FInformationSourcePatrolA2.png%2Frevision%2Flatest%2Fscale-to-width-down%2F450%3Fcb%3D20230113225848",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F1%2F1e%2FInformationSourcePatrolA1.png%2Frevision%2Flatest%2Fscale-to-width-down%2F450%3Fcb%3D20230113225826",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Fd%2Fde%2FPyramid_Scheme_Location_2.png%2Frevision%2Flatest%2Fscale-to-width-down%2F300%3Fcb%3D20240101224446",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Ff%2Ff8%2FInformationSourceMap.png%2Frevision%2Flatest%3Fcb%3D20230826233040",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Ff%2Ff0%2FPyramid_Scheme_Location_1.png%2Frevision%2Flatest%3Fcb%3D20240101224452",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Fd%2Fde%2FPyramid_Scheme_Location_2.png%2Frevision%2Flatest%3Fcb%3D20240101224446",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F0%2F0d%2FInformationSourcePatrolA2.png%2Frevision%2Flatest%3Fcb%3D20230113225848",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F6%2F69%2FPyramid_Scheme_Location_5.png%2Frevision%2Flatest%2Fscale-to-width-down%2F300%3Fcb%3D20240101224453",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Ff%2Ff0%2FPyramid_Scheme_Location_1.png%2Frevision%2Flatest%2Fscale-to-width-down%2F300%3Fcb%3D20240101224452",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Ff%2Fff%2FPyramid_Scheme_Location_4.png%2Frevision%2Flatest%2Fscale-to-width-down%2F300%3Fcb%3D20240101224450",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Ff%2Fff%2FPyramid_Scheme_Location_4.png%2Frevision%2Flatest%3Fcb%3D20240101224450",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F6%2F69%2FPyramid_Scheme_Location_5.png%2Frevision%2Flatest%3Fcb%3D20240101224453",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Fb%2Fbd%2FPyramid_Scheme_Location_6.png%2Frevision%2Flatest%2Fscale-to-width-down%2F300%3Fcb%3D20240101224455",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Fa%2Fa2%2FPyramid_Scheme_Location_7.png%2Frevision%2Flatest%3Fcb%3D20240101224457",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Fa%2Fa2%2FPyramid_Scheme_Location_7.png%2Frevision%2Flatest%2Fscale-to-width-down%2F300%3Fcb%3D20240101224457",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F9%2F98%2FPyramid_Scheme_Location_8.png%2Frevision%2Flatest%2Fscale-to-width-down%2F300%3Fcb%3D20240101224459",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F9%2F98%2FPyramid_Scheme_Location_8.png%2Frevision%2Flatest%3Fcb%3D20240101224459",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Fb%2Fbd%2FPyramid_Scheme_Location_6.png%2Frevision%2Flatest%3Fcb%3D20240101224455",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F5%2F50%2FPyramid_Scheme_Location_9.png%2Frevision%2Flatest%2Fscale-to-width-down%2F300%3Fcb%3D20240101224501",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Fc%2Fc2%2FPyramid_Scheme_Location_10.png%2Frevision%2Flatest%2Fscale-to-width-down%2F300%3Fcb%3D20240101224502",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Fc%2Fc2%2FPyramid_Scheme_Location_10.png%2Frevision%2Flatest%3Fcb%3D20240101224502",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F5%2F50%2FPyramid_Scheme_Location_9.png%2Frevision%2Flatest%3Fcb%3D20240101224501",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Fa%2Fa1%2FPyramid_Scheme_Location_11.png%2Frevision%2Flatest%3Fcb%3D20240101224504",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Fa%2Fa1%2FPyramid_Scheme_Location_11.png%2Frevision%2Flatest%2Fscale-to-width-down%2F300%3Fcb%3D20240101224504",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F0%2F00%2FPyramid_Scheme_Location_13.png%2Frevision%2Flatest%2Fscale-to-width-down%2F300%3Fcb%3D20240101224507",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F1%2F1a%2FPyramid_Scheme_Location_14.png%2Frevision%2Flatest%3Fcb%3D20240101224509",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F1%2F1a%2FPyramid_Scheme_Location_14.png%2Frevision%2Flatest%2Fscale-to-width-down%2F300%3Fcb%3D20240101224509",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F9%2F9d%2FPyramid_Scheme_Location_12.png%2Frevision%2Flatest%2Fscale-to-width-down%2F300%3Fcb%3D20240101224506",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F5%2F55%2FPyramid_Scheme_Location_15.png%2Frevision%2Flatest%3Fcb%3D20240101224444",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F5%2F55%2FPyramid_Scheme_Location_15.png%2Frevision%2Flatest%2Fscale-to-width-down%2F300%3Fcb%3D20240101224444",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F9%2F9d%2FPyramid_Scheme_Location_12.png%2Frevision%2Flatest%3Fcb%3D20240101224506",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Fd%2Fd7%2FRevision_4.png%2Frevision%2Flatest%2Fscale-to-width-down%2F450%3Fcb%3D20241019184746",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Fd%2Fd7%2FRevision_4.png%2Frevision%2Flatest%3Fcb%3D20241019184746",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F0%2F00%2FPyramid_Scheme_Location_13.png%2Frevision%2Flatest%3Fcb%3D20240101224507",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F9%2F90%2FRevision_6.png%2Frevision%2Flatest%3Fcb%3D20241019183904",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F9%2F90%2FRevision_6.png%2Frevision%2Flatest%2Fscale-to-width-down%2F450%3Fcb%3D20241019183904",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fescapefromtarkov.fandom.com%2Fwiki%2FNooby_Shield_potassium_iodide_tablets",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Ff%2Ffa%2FRevision_7.png%2Frevision%2Flatest%3Fcb%3D20241019183758",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Ff%2Ffa%2FRevision_7.png%2Frevision%2Flatest%2Fscale-to-width-down%2F450%3Fcb%3D20241019183758",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Fa%2Fad%2FDogtags_Icon.gif%2Frevision%2Flatest%3Fcb%3D20240613212751",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F1%2F1e%2FShoreline_Scavs.png%2Frevision%2Flatest%3Fcb%3D20250729091944",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F1%2F1e%2FShoreline_Scavs.png%2Frevision%2Flatest%2Fscale-to-width-down%2F395%3Fcb%3D20250729091944",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Fc%2Fce%2FWorstJob.jpg%2Frevision%2Flatest%3Fcb%3D20240324151357",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2Fc%2Fce%2FWorstJob.jpg%2Frevision%2Flatest%2Fscale-to-width-down%2F317%3Fcb%3D20240324151357",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F0%2F0b%2FBreak_the_Chain_Woods_Map.jpg%2Frevision%2Flatest%2Fscale-to-width-down%2F376%3Fcb%3D20260812212348",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    },
+    {
+      "asset": "/api/wiki/image?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fescapefromtarkov_gamepedia%2Fimages%2F0%2F0b%2FBreak_the_Chain_Woods_Map.jpg%2Frevision%2Flatest%3Fcb%3D20260812212348",
+      "status": "unavailable",
+      "error": "HTTP 400"
+    }
+  ],
+  "alreadyAvailable": 1
+}

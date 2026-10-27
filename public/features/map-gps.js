@@ -8,7 +8,7 @@ export function bindMapGps(root, map, { setFloor, center }) {
   dot.className = "gps-player";
   dot.hidden = true;
   dot.innerHTML =
-    '<span class="gps-arrow">▲</span><span class="gps-player-label">Я</span>';
+    '<svg class="gps-arrow" viewBox="0 0 32 32" aria-hidden="true"><path class="gps-arrow-shadow" d="M16 3 29 29 16 23 3 29Z"/><path class="gps-arrow-outline" d="M16 3 29 29 16 23 3 29Z"/></svg><span class="gps-player-label">Я</span>';
   dot.setAttribute("aria-label", "Моя позиция");
   canvas.append(dot);
   label.className = "gps-map-status";

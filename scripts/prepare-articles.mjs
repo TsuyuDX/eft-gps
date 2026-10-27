@@ -88,10 +88,13 @@ for (const a of articles) {
   if (header?.textContent?.trim() && a.type !== "hideout")
     a.title = header.textContent.trim();
   Object.assign(a, newsCards.get(a.path) || {});
-  const poster = main.querySelector(
-    'img[src*="poster"],img[src*="portrait"],img[src*="/api/media"]',
-  );
+  const poster =
+    (a.type === "event" ? main.querySelector("img") : null) ||
+    main.querySelector(
+      'img[src*="poster"],img[src*="portrait"],img[src*="/api/media"]',
+    );
   if (!a.image && poster) a.image = original(poster.getAttribute("src"));
+  if (a.type === "event") a.title = a.title.replace(/Active$/, "").trim();
   collect(main);
   write(path.join(data, "articles", a.path.replaceAll("/", "__") + ".json"), {
     ...a,

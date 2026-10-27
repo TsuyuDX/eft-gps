@@ -3,6 +3,7 @@ import path from "node:path";
 import os from "node:os";
 import { spawn } from "node:child_process";
 import { parseScreenshot, parseLogLine } from "../public/core/gps-format.js";
+import { ScreenshotCleanup } from "./screenshot-cleanup.mjs";
 export class GpsService {
   constructor(root, { allowInput = true } = {}) {
     this.root = root;
@@ -23,6 +24,7 @@ export class GpsService {
       autoMap: true,
       autoFloor: true,
       follow: false,
+      deleteAutoScreenshots: true,
     };
     try {
       Object.assign(this.config, JSON.parse(fs.readFileSync(this.configFile)));
@@ -42,6 +44,7 @@ export class GpsService {
     this.busy = false;
     this.startedAt = Date.now();
     this.scanCount = 0;
+    this.cleanup = new ScreenshotCleanup();
   }
   start() {
     if (this.timer) return;
@@ -53,10 +56,17 @@ export class GpsService {
     clearInterval(this.timer);
     this.timer = null;
     this.stopAuto();
+    this.cleanup.cancel();
   }
   settings(next) {
     const c = { ...this.config };
-    for (const key of ["enabled", "autoMap", "autoFloor", "follow"])
+    for (const key of [
+      "enabled",
+      "autoMap",
+      "autoFloor",
+      "follow",
+      "deleteAutoScreenshots",
+    ])
       if (key in next) {
         if (typeof next[key] !== "boolean")
           throw Error("Неверная настройка " + key);
@@ -93,6 +103,7 @@ export class GpsService {
       c.map = next.map;
     }
     this.stopAuto();
+    this.cleanup.cancel();
     if (c.screenshotsPath !== this.config.screenshotsPath) {
       this.seen.clear();
       this.fix = null;
@@ -125,6 +136,7 @@ export class GpsService {
       manualRaid: this.manualRaid,
       captureStatus: this.captureStatus,
       message: this.message,
+      cleanup: this.cleanup.state(),
       folderExists: fs.existsSync(this.config.screenshotsPath),
       logsExist: !!this.config.logsPath && fs.existsSync(this.config.logsPath),
       helperExists: fs.existsSync(
@@ -144,6 +156,8 @@ export class GpsService {
         "Логи пока не подтвердили начало рейда. Можно вручную подтвердить, что вы уже в рейде.",
       );
     this.stopAuto();
+    if (this.config.deleteAutoScreenshots)
+      this.cleanup.begin(this.config.screenshotsPath);
     this.auto = true;
     this.manualRaid = !!manualRaid;
     this.message = "";
@@ -171,6 +185,7 @@ export class GpsService {
       }
     });
     this.helper.on("error", (e) => {
+      this.cleanup.end();
       this.message = "Не удалось запустить автосъёмку: " + e.message;
       this.auto = false;
       this.helper = null;
@@ -179,6 +194,7 @@ export class GpsService {
     const processRef = this.helper;
     this.helper.on("exit", () => {
       if (this.helper === processRef) {
+        this.cleanup.end();
         this.helper = null;
         this.auto = false;
         this.captureStatus = "off";
@@ -187,6 +203,7 @@ export class GpsService {
     return this.state();
   }
   stopAuto() {
+    this.cleanup.end();
     this.auto = false;
     this.manualRaid = false;
     this.captureStatus = "off";
@@ -209,6 +226,7 @@ export class GpsService {
         this.message =
           "Автосъёмка остановлена: окно приложения не поддерживает связь.";
       }
+      if (this.config.deleteAutoScreenshots) await this.cleanup.flush();
       if (!this.config.enabled) return;
       if (this.config.logsPath && ++this.scanCount % 3 === 0)
         await this.readLogs();
@@ -220,6 +238,10 @@ export class GpsService {
           "Папка скриншотов не найдена. Укажите её в настройках GPS.";
         return;
       }
+      const session =
+        this.auto && this.config.deleteAutoScreenshots
+          ? this.cleanup.session
+          : null;
       const files = await fs.promises.readdir(this.config.screenshotsPath);
       const candidates = [];
       for (const name of files) {
@@ -227,12 +249,13 @@ export class GpsService {
         const parsed = parseScreenshot(name);
         if (!parsed) continue;
         const stat = await fs.promises
-          .stat(path.join(this.config.screenshotsPath, name))
+          .lstat(path.join(this.config.screenshotsPath, name))
           .catch(() => null);
-        if (!stat?.isFile()) continue;
+        if (!stat?.isFile() || stat.isSymbolicLink()) continue;
         const signature = stat.mtimeMs;
         this.seen.set(name, signature);
         candidates.push({ name, parsed, mtime: signature });
+        this.cleanup.track(session, name, stat);
       }
       const latest = candidates.sort((a, b) => b.mtime - a.mtime)[0];
       if (latest && (!this.fix || latest.mtime > this.fix.updatedAt)) {

@@ -1,3 +1,4 @@
+import { extraPropertyLabels, propertyValue } from "../core/item-properties.js";
 import { db, detail, asset, localHref, itemBySlug } from "../core/data.js";
 import { current, toggleFavorite, inventory } from "../core/state.js";
 import {
@@ -61,7 +62,7 @@ export function renderCatalog(root, initial = "") {
     );
     const box = root.querySelector("#catalog-results");
     box.innerHTML = list.length
-      ? `<div class="table-wrap"><table><thead><tr><th>★</th><th>Название</th><th>Барахолка</th><th>Покупка</th><th>Продажа</th><th>Размер</th></tr></thead><tbody>${itemRows(list.slice(page * 50, page * 50 + 50))}</tbody></table></div>${pagination(list.length, page, 50)}`
+      ? `<div class="table-wrap"><table><thead><tr><th>★</th><th>Название</th><th>Барахолка</th><th>Купить у торговца, ₽</th><th>Продать торговцу, ₽</th><th>Размер</th></tr></thead><tbody>${itemRows(list.slice(page * 50, page * 50 + 50))}</tbody></table></div>${pagination(list.length, page, 50)}`
       : `<div class="empty">Ничего не найдено. Измените поиск или фильтры.</div>`;
     bindFavorites(box);
     bindPages(box, (p) => {
@@ -130,7 +131,7 @@ export async function renderItem(root, slug) {
         )
         .map(
           ([k, v]) =>
-            `<div><span class="muted">${esc(propLabels[k] || k)}</span><strong>${esc(v)}</strong></div>`,
+            `<div><span class="muted">${esc(extraPropertyLabels[k] || propLabels[k] || k)}</span><strong>${esc(propertyValue(k, v))}</strong></div>`,
         )
         .join("") || '<p class="muted">Дополнительных характеристик нет.</p>'
     }</div></section></div><section class="panel"><h2>Обмены</h2>${[...(x.barters?.bartersFor || []), ...(x.barters?.bartersUsing || [])].map(recipe).join("") || '<p class="muted">Обменов в базе нет.</p>'}</section><section class="panel"><h2>Производство</h2>${[...(x.crafts?.craftsFor || []), ...(x.crafts?.craftsUsing || [])].map(recipe).join("") || '<p class="muted">Рецептов в базе нет.</p>'}</section><section class="panel"><h2>Нужен для заданий</h2>${(x.questsFor || []).map((q) => '<p><a href="#/quest/' + db.mode + "/" + q.normalizedName + '">' + esc(q.name) + "</a> × " + q.count + "</p>").join("") || '<span class="muted">Нет требований в снимке.</span>'}</section>`;
