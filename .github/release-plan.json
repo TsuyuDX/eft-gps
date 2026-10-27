@@ -1,0 +1,37 @@
+[
+  {
+    "version": "1.0.0",
+    "commit": "7ec9990566a99b2a7a2a23428b5574a4a88cefbc",
+    "tag": "app-v1.0.0"
+  },
+  {
+    "version": "1.1.0",
+    "commit": "8b5dbd4e551c6b5304e52a9fc01ace66fcfda058",
+    "tag": "app-v1.1.0"
+  },
+  {
+    "version": "1.4.0",
+    "commit": "142c887b1fb44227f8387240c565fa57c7c6936f",
+    "tag": "app-v1.4.0"
+  },
+  {
+    "version": "1.5.0",
+    "commit": "a6fe3f9d12017cb8e72052b4d37e68b94598bf99",
+    "tag": "app-v1.5.0"
+  },
+  {
+    "version": "1.6.0",
+    "commit": "015ba0461aee3f463a9c623aea1548ac80a2761f",
+    "tag": "app-v1.6.0"
+  },
+  {
+    "version": "1.7.0",
+    "commit": "b3587c0bf75bdc549447b524deccd52421bc4270",
+    "tag": "app-v1.7.0"
+  },
+  {
+    "version": "1.7.1",
+    "commit": "61cde28b7cba373375618aed42597b62ebe2e2f1",
+    "tag": "v1.7.1"
+  }
+]

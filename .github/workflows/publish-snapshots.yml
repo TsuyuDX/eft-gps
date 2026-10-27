@@ -1,0 +1,21 @@
+name: Publish verified offline versions
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: publish-offline-releases
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: windows-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Build and publish saved application versions sequentially
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node .github/publish-snapshots.mjs
