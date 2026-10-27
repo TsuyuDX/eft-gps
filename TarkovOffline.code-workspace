@@ -1,0 +1,18 @@
+{
+  "folders": [{ "path": "." }],
+  "settings": {
+    "files.exclude": {
+      "public/data/source": true,
+      "public/assets": true,
+      "node_modules": true,
+      "runtime": true,
+    },
+    "search.exclude": {
+      "public/data": true,
+      "public/assets": true,
+      "runtime": true,
+      "node_modules": true,
+    },
+  },
+  "extensions": { "recommendations": [] },
+}
