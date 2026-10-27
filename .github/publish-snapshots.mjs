@@ -4,7 +4,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import https from 'node:https';
 import {spawnSync} from 'node:child_process';
-import {fileURLToPath} from 'node:url';
+import {fileURLToPath,pathToFileURL} from 'node:url';
 const home=path.dirname(fileURLToPath(import.meta.url)), workspace=path.dirname(home);
 const repository='TsuyuDX/eft-gps',token=process.env.GH_TOKEN;
 if(process.env.GITHUB_REPOSITORY!==repository || !token)throw Error('Run only in the authorized repository Actions environment.');
@@ -32,7 +32,11 @@ async function descriptors(file,prefix) {
 }
 async function upload(release,asset,assets) {
   const existing=assets.find(a=>a.name===asset.name);
-  if(existing){if(existing.state!=='uploaded'||existing.size!==asset.size||existing.digest!==`sha256:${asset.sha256}`)throw Error('Existing asset differs; refusing to overwrite '+asset.name);return;}
+  if(existing){
+    if(existing.state==='uploaded'&&existing.size===asset.size&&existing.digest===`sha256:${asset.sha256}`)return;
+    if(!release.draft)throw Error('Published asset differs; refusing to overwrite '+asset.name);
+    await api(`/releases/assets/${existing.id}`,{method:'DELETE'});assets.splice(assets.indexOf(existing),1);
+  }
   await pause(1500);const url=new URL(release.upload_url.replace(/\{.*$/,''));url.searchParams.set('name',asset.name);
   if(url.hostname!=='uploads.github.com')throw Error('Unexpected upload host');
   console.log('Uploading',release.tag_name,asset.name,asset.size);
@@ -67,15 +71,15 @@ for(const item of plan) {
   run('git',['fetch','--no-tags','--depth=1','origin',item.commit]);
   run('git',['worktree','prune']);run('git',['worktree','add','--detach',source,item.commit]);await fs.mkdir(out);
   try {
-    const node=path.join(source,'runtime/node.exe');
-    run(node,[path.join(source,'scripts/prepare-portable.mjs'),'--assemble-component'],source);
+    const componentModule=await import(pathToFileURL(path.join(source,'scripts/prepare-portable.mjs')).href+'?snapshot='+item.version);
+    componentModule.assembleComponent(source,JSON.parse(await fs.readFile(path.join(source,'scripts/offline-components.json'),'utf8')));
     const inventoryFile=path.join(source,'distribution/package-files.json');const inventory=JSON.parse(await fs.readFile(inventoryFile,'utf8'));
     const files=inventory.files.map(f=>({...f}));
     for(const relative of ['distribution/package-files.json','runtime/MicrosoftEdgeWebView2RuntimeInstallerX64.exe']){
       if(!files.some(f=>f.path===relative)){const file=path.join(source,relative);files.push({path:relative,size:(await fs.stat(file)).size,sha256:await hash(file)});}
     }
     for(const entry of files){if(entry.path.split('/').some(p=>!p||p==='..'||p==='.')||/^(userdata|work|\.git)\//.test(entry.path))throw Error('Unsafe source inventory');}
-    const releaseManifest={format:1,app:'TarkovOffline',version:item.version,builtAt:new Date().toISOString(),files};
+    const releaseManifest={format:1,app:'TarkovOffline',version:item.version,builtAt:run('git',['show','-s','--format=%cI',item.commit]),files};
     const manifestFile=path.join(out,'release-input.json');await fs.writeFile(manifestFile,JSON.stringify(releaseManifest));
     const native=path.join(home,'native');
     const nativeText=path.join(out,'NativeText.cs'),translations=path.join(out,'native.en.json'),maintenance=path.join(out,'Maintenance.cs');

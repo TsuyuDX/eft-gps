@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web.Script.Serialization;
 class PackRelease {
-    class FileEntry { public string path; }
+    class FileEntry { public string path; public long size; public string sha256; }
     class Release { public FileEntry[] files; }
     static void Main(string[] args) {
         string root = Path.GetFullPath(args[0]), manifest = File.ReadAllText(args[1]), zip = args[2], setup = args[3];
@@ -14,10 +14,18 @@ class PackRelease {
             foreach (var file in release.files) {
                 string full = Path.GetFullPath(Path.Combine(root, file.path.Replace('/', Path.DirectorySeparatorChar)));
                 if (!full.StartsWith(root.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)) throw new IOException("Invalid release path");
+                if(new FileInfo(full).Length!=file.size) throw new IOException("Source size mismatch: "+file.path);
                 var entry = archive.CreateEntry(file.path, CompressionLevel.Fastest);
-                using (var input = File.OpenRead(full)) using (var target = entry.Open()) input.CopyTo(target);
+                entry.LastWriteTime = new DateTimeOffset(2020,1,1,0,0,0,TimeSpan.Zero);
+                using(var sha=SHA256.Create()) using (var input = File.OpenRead(full)) using (var target = entry.Open()) {
+                    byte[] buffer=new byte[1024*1024];int count;
+                    while((count=input.Read(buffer,0,buffer.Length))>0){sha.TransformBlock(buffer,0,count,buffer,0);target.Write(buffer,0,count);}
+                    sha.TransformFinalBlock(new byte[0],0,0);
+                    if(BitConverter.ToString(sha.Hash).Replace("-", "").ToLowerInvariant()!=file.sha256) throw new IOException("Source checksum mismatch: "+file.path);
+                }
             }
-            using (var writer = new StreamWriter(archive.CreateEntry("release.json").Open(), new UTF8Encoding(false))) writer.Write(manifest);
+            var infoEntry=archive.CreateEntry("release.json");infoEntry.LastWriteTime=new DateTimeOffset(2020,1,1,0,0,0,TimeSpan.Zero);
+            using (var writer = new StreamWriter(infoEntry.Open(), new UTF8Encoding(false))) writer.Write(manifest);
         }
         byte[] hash;
         using (var sha = SHA256.Create()) using (var input = File.OpenRead(zip)) hash = sha.ComputeHash(input);
