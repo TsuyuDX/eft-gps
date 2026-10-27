@@ -1,0 +1,21 @@
+{
+  "name": "tarkov-offline",
+  "version": "1.7.1",
+  "private": true,
+  "type": "module",
+  "description": "T_S_U_Y_U EFT GPS — offline maps and raid companion",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test test/*.test.mjs",
+    "snapshot": "node scripts/snapshot.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "linkedom": "^0.18.12"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.10"
+  }
+}

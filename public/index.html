@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ru" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="color-scheme" content="dark" />
+    <title>T_S_U_Y_U EFT GPS 1.7.0</title>
+    <link rel="icon" href="/icons/app.ico" sizes="any" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/icons/app-192.png"
+      sizes="192x192"
+    />
+    <link rel="apple-touch-icon" href="/icons/app-192.png" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="stylesheet" href="/gps.css" />
+    <link rel="stylesheet" href="/quests.css" />
+  </head>
+  <body class="booting">
+    <section id="boot-screen" role="region" aria-label="Запуск EFT GPS">
+      <div class="boot-orbit" aria-hidden="true"></div>
+      <div class="boot-panel">
+        <div class="boot-brand">
+          <img src="/icons/app-192.png" alt="" />
+          <div>
+            <strong><small>T_S_U_Y_U</small>EFT <span>GPS</span></strong
+            ><small>НАВИГАЦИЯ ДЛЯ РЕЙДА</small>
+          </div>
+          <span class="boot-version">1.7.0</span>
+        </div>
+        <div class="boot-rule"></div>
+        <p class="eyebrow">ПОДГОТОВКА СИСТЕМЫ / SYSTEM CHECK</p>
+        <h1>Подготовка к рейду</h1>
+        <p id="boot-stage" role="status" aria-live="polite">
+          Подключение к приложению…
+        </p>
+        <div id="boot-language" hidden data-no-translate>
+          <p>Язык интерфейса / Interface language</p>
+          <div class="row">
+            <button data-language="ru" class="primary">Русский</button
+            ><button data-language="en">English</button>
+          </div>
+          <small
+            >Интерфейс и игровые тексты доступны на обоих языках. Interface and
+            game content are available in both languages.</small
+          >
+        </div>
+        <ol id="boot-checks" aria-label="Проверки запуска"></ol>
+        <div
+          id="boot-progress"
+          role="progressbar"
+          aria-label="Прогресс запуска"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+        >
+          <span></span>
+        </div>
+        <div id="boot-warning" hidden>
+          <p id="boot-warning-detail"></p>
+          <div class="row wrap">
+            <button id="boot-configure" class="primary">
+              Открыть настройки GPS</button
+            ><button id="boot-continue">Продолжить без GPS</button>
+          </div>
+        </div>
+        <div id="boot-error" hidden>
+          <p id="boot-error-text"></p>
+          <button id="boot-retry" class="primary">Повторить проверку</button>
+        </div>
+        <p class="boot-note">
+          Проверка путей не включает автосъёмку и не удаляет скриншоты.
+        </p>
+      </div>
+    </section>
+    <header>
+      <div class="topline">
+        <a class="brand" href="#/"
+          ><img id="logo" width="56" height="56" alt="EFT GPS" /><strong
+            >T_S_U_Y_U EFT GPS <span class="brand-version">1.7.0</span></strong
+          ><small>НАВИГАЦИЯ ДЛЯ РЕЙДА</small></a
+        >
+        <nav id="navigation" aria-label="Основные разделы"></nav>
+        <button id="menu" aria-label="Открыть меню">☰</button>
+      </div>
+      <div class="statusline">
+        <div class="row">
+          <span class="time" id="raid-time"></span
+          ><span class="pill online-dot">Локальная база</span
+          ><span class="muted" id="snapshot-date">Подготовка базы…</span>
+        </div>
+        <div class="row">
+          <button
+            class="quiet"
+            id="help-link"
+            title="Помощь и обзор приложения"
+          >
+            ? Помощь
+          </button>
+          <button
+            class="quiet community-stub"
+            disabled
+            title="Discord-сервер скоро будет"
+          >
+            <span>Discord</span><small>Скоро</small>
+          </button>
+          <button
+            class="quiet support-link"
+            id="support-link"
+            title="Поддержать развитие проекта"
+          >
+            <span>♡ Поддержать</span>
+          </button>
+          <button
+            class="quiet"
+            id="settings-link"
+            title="Настройки интерфейса и карты"
+          >
+            ⚙ Настройки</button
+          ><select id="mode" aria-label="Режим игры">
+            <option value="regular">⚔ PVP</option>
+            <option value="pve">♧ PVE</option>
+          </select>
+        </div>
+      </div>
+    </header>
+    <main id="app" aria-hidden="true">
+      <div class="empty">Загрузка локальной базы…</div>
+    </main>
+    <footer>
+      <span>Игровые материалы © Battlestate Games.</span
+      ><span>EFT GPS · <a href="#/settings">Состояние офлайн-базы</a></span>
+    </footer>
+    <dialog id="modal">
+      <button class="close" aria-label="Закрыть">×</button>
+      <div id="modal-content"></div>
+    </dialog>
+    <div id="toast" role="status"></div>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

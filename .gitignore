@@ -1,0 +1,27 @@
+userdata/
+work/
+node_modules/prettier/
+node_modules/.bin/
+node_modules/.package-lock.json
+snapshot-backup-*/
+update-staging/
+/dist/
+/coverage/
+.env
+.env.*
+!.env.example
+*.log
+*.exe
+!/EFT GPS.exe
+!/Tarkov GPS.exe
+!/Tarkov Offline.exe
+!/runtime/*.exe
+/runtime/MicrosoftEdgeWebView2RuntimeInstallerX64.exe
+/runtime/*.preparing-*
+*.zip
+*.part*
+*.pfx
+*.p12
+
+# Generated packaging inventory; the Git checkout has its own inventory.
+/release.json

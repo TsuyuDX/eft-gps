@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" id="svg235" version="1.1" viewBox="0 0 977.09998 977.09998">
+  <style id="style_common">
+    .trees { fill:#144043 }
+    .cement { fill:#c6c2c2 }
+    .land { fill:#1f5054 }
+    .rock { fill:#dcd5b6 }
+    .water { fill:#4a6b96 }
+    .wood { fill:#593700 }
+    .tarmac { fill:#768089 }
+    .gravel { fill:#946d3e }
+    .building { fill:#1a2632 }
+    .floor { fill:#70777f }
+    .locked { fill:#37414c }
+    .map_border { fill:none;stroke:#000;stroke-width:2 }
+    .fence { fill:none;stroke:#c4e3c3;stroke-width:1 }
+    .road_tarmac { fill:none;stroke:#888 }
+    .road_gravel { fill:none;stroke:#946d3e }
+    .road_small { stroke-width:5 }
+    .road_medium { stroke-width:8 }
+    .road_large { stroke-width:12 }
+    .railroad { fill:none;stroke:#914833;stroke-dasharray:6;stroke-width:3 }
+    .powerline { fill:none;stroke:#ffce00;stroke-width:2;stroke-miterlimit:10;stroke-dasharray:6,6 }
+    .danger { fill:red;fill-opacity:.4;stroke:red;stroke-dasharray:4,2;stroke-width:2 }
+    .task { fill:#000 }
+    .stairs { fill:#FFD700 }
+    .shadow { filter:drop-shadow(0 0 2px #000) }
+  </style>
+  <style id="style_interchange">
+    .structure{ fill:#4b4b4b }
+  </style>
+  <defs id="defs1">
+    <linearGradient id="rampDown_l2r">
+      <stop id="stop200" offset="0" style="stop-color:#777777;stop-opacity:0;"></stop>
+      <stop id="stop199" offset="1" style="stop-color:#000000;stop-opacity:0.5;"></stop>
+    </linearGradient>
+    <linearGradient id="rampDown_r2l">
+      <stop id="stop84" offset="0" style="stop-color:#000000;stop-opacity:0.5;"></stop>
+      <stop id="stop85" offset="1" style="stop-color:#777777;stop-opacity:0;"></stop>
+    </linearGradient>
+    <linearGradient id="rampUp_l2r">
+      <stop id="stop168" offset="0" style="stop-color:#ffffff;stop-opacity:0;"></stop>
+      <stop id="stop169" offset="1" style="stop-color:#ffffff;stop-opacity:0.5;"></stop>
+    </linearGradient>
+    <linearGradient id="rampUp_r2l">
+      <stop id="stop176" offset="0" style="stop-color:#ffffff;stop-opacity:0.5;"></stop>
+      <stop id="stop175" offset="1" style="stop-color:#ffffff;stop-opacity:0;"></stop>
+    </linearGradient>
+    <linearGradient xlink:href="#rampDown_l2r" id="linearGradient199" x1="559.72021" x2="580.3277" y1="616.02795" y2="616.02795" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampDown_l2r" id="linearGradient204" x1="615.41016" x2="636.92401" y1="475.4502" y2="475.4502" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampDown_l2r" id="linearGradient208" x1="559.91833" x2="580.39166" y1="335.18094" y2="335.18094" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampDown_l2r" id="linearGradient244" x1="654.29987" x2="666.34497" y1="622.46558" y2="622.46558" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampDown_r2l" id="linearGradient178" x1="534.58289" x2="551.11755" y1="475.25916" y2="475.25916" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampDown_r2l" id="linearGradient183" x1="562.59283" x2="578.76257" y1="648.22321" y2="648.22321" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampDown_r2l" id="linearGradient185" x1="689.42633" x2="716.38831" y1="638.20557" y2="638.20557" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampDown_r2l" id="linearGradient190" x1="653.56561" x2="665.01868" y1="326.37051" y2="326.37051" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampDown_r2l" id="linearGradient192" x1="563.65216" x2="577.10272" y1="216.61259" y2="216.61259" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampDown_r2l" id="linearGradient194" x1="547.94702" x2="578.65472" y1="313.95453" y2="313.95453" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampDown_r2l" id="linearGradient202" x1="675.54742" x2="697.62073" y1="475.55551" y2="475.55551" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampDown_r2l" id="linearGradient206" x1="575.14801" x2="596.96887" y1="475.6763" y2="475.6763" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampDown_r2l" id="linearGradient240" x1="887.88232" x2="887.88232" y1="481.81339" y2="469.19424" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampDown_r2l" id="linearGradient84" x1="655.97345" x2="655.97345" y1="565.0498" y2="554.98608" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampUp_l2r" id="linearGradient169" x1="674.61407" x2="687.49237" y1="475.59064" y2="475.59064" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampUp_l2r" id="linearGradient175" x1="574.55939" x2="586.74683" y1="475.59064" y2="475.59064" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampUp_l2r" id="linearGradient229" x1="566.33783" x2="574.46753" y1="216.59996" y2="216.59996" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampUp_l2r" id="linearGradient231" x1="547.76813" x2="566.72144" y1="314.01965" y2="314.01965" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampUp_l2r" id="linearGradient233" x1="534.90833" x2="545.61707" y1="475.27277" y2="475.27277" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampUp_l2r" id="linearGradient235" x1="563.2301" x2="574.45557" y1="648.18005" y2="648.18005" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampUp_l2r" id="linearGradient237" x1="652.07996" x2="652.07996" y1="570.19727" y2="552.70618" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampUp_l2r" id="linearGradient239" x1="688.47986" x2="705.50806" y1="638.04413" y2="638.04413" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampUp_r2l" id="linearGradient173" x1="624.84644" x2="637.6651" y1="475.40985" y2="475.40985" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampUp_r2l" id="linearGradient180" x1="569.98462" x2="582.73511" y1="615.86151" y2="615.86151" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampUp_r2l" id="linearGradient187" x1="569.39502" x2="583.13763" y1="335.23236" y2="335.23236" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampUp_r2l" id="linearGradient219" x1="887.76825" x2="887.76825" y1="481.87787" y2="469.13779" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampUp_r2l" id="linearGradient221" x1="882.4549" x2="882.4549" y1="298.95959" y2="261.57394" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampUp_r2l" id="linearGradient223" x1="848.27881" x2="886.75024" y1="182.32352" y2="182.32352" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampUp_r2l" id="linearGradient225" x1="882.44916" x2="882.44916" y1="650.49103" y2="691.24506" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampUp_r2l" id="linearGradient227" x1="848.47076" x2="886.86646" y1="767.81689" y2="767.81689" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampUp_r2l" id="linearGradient242" x1="660.83087" x2="668.61353" y1="326.46893" y2="326.46893" gradientUnits="userSpaceOnUse"></linearGradient>
+    <linearGradient xlink:href="#rampUp_r2l" id="linearGradient246" x1="660.5708" x2="669.35779" y1="622.61993" y2="622.61993" gradientUnits="userSpaceOnUse"></linearGradient>
+  </defs>
+  
+  
+  <g id="Second_Floor" data-name="Second Floor">
+    <g id="Structure-2" class="shadow building" data-name="Structure">
+      <path d="M478.391 150.707v136.225h-7.941v272.691h8.001v134.16l245.50536.01v-133.83H778.945V449.782h16.527v-53.269h-17.089V286.785h-54.42664V150.707Zm101.016 190.75h8.169l5.72 5.748v8.211l-5.72 5.749h-8.169l-5.721-5.749v-8.211zm.457 73.049h7.368l2.522 2.522h28.601l2.815 2.791v7.215l-2.878 2.876h-28.653l-2.589 2.588h-7.232l-2.587-2.588h-28.387l-2.961-2.961v-7.13l2.793-2.791h28.646zm-81.455 2.522h30.392l2.815 2.791v7.215l-2.878 2.876H498.58l-2.961-2.961v-7.13zm80.918 68.909h8.152l5.706 5.741v8.202l-5.706 5.744h-8.152l-5.707-5.744v-8.202z"></path>
+    </g>
+    <g id="Floor-2" class="floor" data-name="Floor">
+      <path d="M492.61705 288.89528v7.77594l-9.4661 5.14783-.005 41.90743h-1.71913v-11.40526l-9.35882-.0152v39.17174h9.35882v-13.14708h1.71915v14.86621H472.068l.00007 33.67403h-7.74291v5.13222l-2.24378 4.16863-.00007 13.56793 2.24378 4.17277v5.45375h7.74298v33.68693h11.11641v16.55514h-1.71914v-14.836h-9.39727v39.05843h9.39727v-12.45035h1.71914v25.70569h-1.71914v-8.27367h-9.39727v40.22355h18.5454v-8.44882l-9.14813-5.03402v-5.55699h1.71914v4.51358l9.14813 5.03235v9.4939h31.12502v-11.67305h5.45374v1.71913h-3.7346v9.95392h27.26954v-9.95392h-4.64118v-1.71913c28.76612 0-39.66241-.026 41.05709-.026v11.69941h9.88926v-5.69047h1.71914v5.69047h34.85542v-3.34007h1.71913v3.34007h23.35447v-8.98268h-7.91241v3.17555h3.96292v1.71914h-5.68207v-4.89469H637.157v.83775l-.11159.50281v1.58149h-1.71914v-2.0843h-3.70438v-8.95245h-3.32245v6.96721h.8428v1.71914h-13.96367v-1.71914h9.92368v-14.08386h-6.88077v12.45453h-10.61621v-12.45453h-7.13426v14.08386h9.88926v1.71914h-9.88926v.74374h-1.71918v-14.72296l-45.94002-.0218v-1.71913h5.94903v-13.42801h-14.41603v13.42799h5.62255v1.71913h-7.34169v-34.75858h8.30871v1.71913h-6.58957v13.50886h29.45381v-4.67652l-1.24571-1.24236 1.21633-1.21632 1.20373 1.20373h15.06991l11.5656-11.56559h24.13875v-9.91528h4.64117v1.71916h-2.92202v8.19612h3.35686v-4.60339h-1.63772v-1.71913h4.98954v1.71913h-1.63268v4.60339h3.7942v-8.19612h-3.5365v-1.71916h3.5365v-23.32842h-2.67694v-1.71916h2.67694v-83.07925h-3.65318v-1.71915h3.65318v-22.64286h-2.85322v-1.71914h2.85322v-8.05931h-4.06954v4.70666h1.21632v1.71914h-3.99312v-1.71914h1.05766v-4.70666h-2.59214v8.05931h2.81123v1.71914l-4.53037-.00066v-9.77759h-3.54574v.6195l-1.71913-.00067v-2.00286h-20.09999l-11.37903-11.04758H576.9995l-2.75767 2.80527-1.21631-1.21213.7731-.77311v-7.69711h-29.54624v14.76255h7.51555v1.71914l-9.23469-.00066v-34.88586l7.32248.00066v1.71914h-5.60334v14.14789h14.51379v-14.14855h-4.44472v-1.71914l44.60282.009v-14.98012h1.71913v1.6503h9.30502v1.71914h-9.30502l.0427 15.39253h7.06544v-13.64568h10.34506v13.64568h7.22074V298.0993h-9.76922v-1.71914h13.97221v1.71914l-.60186.0336v6.93616h3.29641v-6.96977h-.63124v-1.71914l3.96208.00067v-1.65115h1.71915v2.50652h22.4949v-8.34138h-7.11246v2.92287h4.09135v1.71915h-5.81048v-4.64202h-13.66331v2.96401h-1.71915v-2.96401h-34.9024v2.96401h-1.71914v-2.96401h-10.47435v10.16039h-34.12839l-.50198.12256h-6.8606v-1.71914h5.42352v-8.5635h-26.80954v8.5638h16.93791v1.71914H523.8537v-10.28294zm4.25411 6.03772h21.97949v7.8523h-21.97949v-1.71914h20.26035v-4.41401h-20.26035zm-1.79208 14.17203h10.34926v1.71999h-8.63012v10.35284h12.29673v-11.4676h4.54296v11.4676h12.96659v-10.35284h-8.61333v-1.71999h10.33247v23.69718h-1.71914v-9.48207h-9.57196v5.93215h-1.71914v-5.93215h-1.67549v19.97236h12.96659v-6.84634h1.71914v21.62207l-1.05264.0209h-18.17605v-11.50068h-12.29673v9.60529h7.71935v1.71913h-9.43849v-20.73226h1.71914v6.54587h12.29673v-20.40634h-12.29673v8.93557h-1.71914zm23.8875 18.19559h1.71914v12.54101h3.28383v1.71914l-5.00297-.00067zm-3.65318 4.95513h1.71914v8.44545h-1.71914zm52.92403 8.62592 1.21632 1.21633-2.48805 2.48805-8.81563.00067v-1.71914h8.10213zm11.16957.57533h8.169l5.72 5.748v8.211l-5.72 5.749h-8.169l-5.721-5.749v-8.211zm-97.97939 7.36227h1.71914v3.96292h-1.71914zm139.54414 6.792h1.71913v3.09328l-21.57068.00066-1.58147 1.58148-1.21633-1.21214 2.08429-2.08932 20.56506.00067zm-77.7208 2.8431h23.16409l10.30553 9.98476-.0511 26.07589h-1.71915v-2.32606h-28.49v15.04671h7.02682v1.71915h-17.8873v-1.71915h7.60382v-9.70879h-21.06063v9.70879h6.45517v1.71915l-25.1332-.001-1.91305-1.91221 1.21633-1.21633 1.41359 1.41024h11.79391v-7.72692h-.62369v-1.71915h.62369v-24.45004h-.62369v-1.71915l27.89893-.0177zm48.13025 7.62235 1.21632 1.21632-1.18611 1.18611v10.48587l5.14065-.0608v-9.22695h11.77544v1.5949h6.09925v-1.5949h8.2185v6.60627h-1.71913v-4.88713h-4.78023v4.88713h-1.71914v-3.29223h-6.09925v3.29223h-1.71914v-4.88713h-8.33717v7.50781h8.33717v-.70847h1.71914v.70847h6.09925v-.70847h1.71914v.70847h4.78023v-.70847h1.71913v1.63961h2.05774v1.71915h-2.05774v17.23231h-1.71913v-16.38388h-9.5255v3.55833l-.0763.53387h-1.68556l-.10072-.53387h-2.58541v14.51867h2.68615v-1.21632h1.71914v2.93547h-4.40529v5.03656h13.97359v-5.10036h1.71914v6.81866h-32.95305v-19.58381h1.71916v17.86548h11.15341V382.4029l-11.15343.0608v1.85682h-1.71914v-16.5423zm-95.75566 5.54285 17.11419.00066v1.71916h-.6195v4.28035h-1.71914v-4.28035h-1.9206v4.28035h-1.71914v-4.28035h-9.41666v5.92227l14.77554-.00067v7.45327h-1.71914v-5.73328h-1.9206v5.73328h-1.71914v-5.73328h-9.41666v7.37519l14.77554-.001v6.99744h-1.71914v-5.27746h-1.9206v5.27746h-1.71914v-5.27746h-9.41666v7.7143h16.30162v1.71915h-16.30162l.0235.62956 1.08537 1.08539-1.21213 1.21632-1.61589-1.61673zm114.01314 17.11014h1.71914v8.90125h-1.71914zm-34.68846 8.90125h1.71915v11.32301l-8.07518.00067v-1.71916h6.35603zm-15.78529 9.60471h3.83785v1.71915h-3.83785zM579.864 414.506h7.368l2.522 2.522h28.601l2.815 2.791.0292 1.53949H599.334v4.34904l21.86518.0942-.0292 1.23227-2.878 2.876h-28.653l-2.589 2.588h-7.232l-2.587-2.588h-28.387l-2.961-2.961-.1087-1.24147h21.60569v-4.36059l-21.49697-.08265V419.819l2.793-2.791h28.646zm-51.063 2.522 2.815 2.791v1.52794h-21.38318v4.44324H531.616v1.24382l-2.878 2.876H498.58l-2.961-2.961v-7.13l2.79-2.791zm-25.33607 20.40886h50.02214v1.71913h-7.02682v4.99837h1.62428v1.71916h-1.62428v8.64691h2.50987v-5.45794h-1.37078v-1.71915h4.34067v1.71915h-1.25075v5.45794h2.58291v-8.64691h-3.15035v-1.71916h4.86949v3.18898h8.87104v2.34199h6.97981v1.71916h-6.97981v1.53026h-1.71914v-3.87226h-7.1519v5.45794h14.25595v-2.1355h1.71913v2.1355h4.27105v-15.36444h-7.01679v-1.71913h8.73593v40.49085l-9.71638 9.88731h-8.07527v-1.71914h7.35755l8.71496-8.8758v-18.60747h-6.83632c0 15.68374-.026-8.56319-.026 14.54808h-3.46264v-1.71913h2.39824v-8.08453h-2.7936v4.58998h1.20792v1.71915h-4.135v-1.71915h1.20793v-4.58998h-2.9229v8.08451h3.22758v1.71915h-5.60147v-5.69046h-2.55269v-1.71914h2.55269l-.0127-7.13848h-13.40046l-.0176 7.13848h7.86959v1.71914h-9.58874v-3.61457h-7.39616v-5.24305h-14.29456v3.52391h.82935v1.71914h-.82935v9.21239h9.25717v1.71914h-14.62109v-1.71914h1.12148V450.2444h-19.61069v6.34353h9.95809v-4.57739h1.71914v4.57739h2.54849v-4.57739h1.71914v6.29652h-15.94486v7.44403h9.95809v-5.19185h1.71914v5.19185h2.54849v-5.19185h1.71914v6.91099h-15.94486v5.59782h9.95809v-3.67219h1.71914v3.67219h2.54849v-3.67219h1.71914v5.39133h-17.66397v-28.45368l1.52104-1.52187 1.21632 1.21632-1.01822 1.01906v1.47824h7.82176v-.6917h1.71914v.6917h11.67342v-2.93966h-11.67342l-.2342.39956h-1.48494v-2.11872h13.39256v-4.71045h-13.84333l-1.41023 1.4094-1.21634-1.21633zm55.7 0h3.28299v1.71913h-3.28299zm30.26988 0h33.63176v6.97941h-1.71914v-5.26028h-14.39491v5.94861h3.56756v2.41083h-1.71913v-.6917h-1.84843v14.81417h1.84843v-.87636h1.71913v3.87226h10.82735v-16.43088h1.71914v16.43088h1.55835v1.71916h-3.69598v.7731h-1.71915v-.7731h-2.92623v2.321h-1.71914v-2.321h-16.25857v8.34218h8.68949v-4.99036h1.71913v4.99036h5.84995v-2.7508h1.71914v2.7508h2.92623v-4.99036h1.71915v6.7095h-24.34223v-10.06132h-5.43276v10.83108l2.2354 2.23876-1.21634 1.21211-2.7382-2.734v-15.5923h1.71914v2.32519h5.43276v-9.20596h2.23455v-3.61456h1.71914v3.61456h1.54789v1.71914h-3.78244v7.48682h5.03318v-11.96094h-1.25074v-1.71914h1.25074v-11.79773h-12.18508v18.85057h-1.71914zm19.36614 12.14103h1.71913v8.94407h-1.71913zm-85.07651 12.55863h8.6041v1.71914h-8.6041zm11.69905 10.93153h9.14252v13.02783h8.92106v1.71914h-10.6402v-13.02783h-7.42338zM579.327 485.937h8.152l5.706 5.741v8.202l-5.706 5.744h-8.152l-5.707-5.744v-8.202zm20.18571-.14971 1.46899 1.46564h20.97889v3.28803h-1.71914v-1.56888h-19.97243l-1.96844-1.96845zm-86.26597 2.5401v11.54076h14.23412v2.48769h-14.23412v14.89645h4.9333v2.11451h-1.71914v-.39538h-3.21416v3.91313h3.21416v-2.03534h1.71914v2.03534h7.67234v-9.44912h1.71914v23.56737h-10.25106v-1.71914h8.53192v-9.35844h-12.60564v11.12177h-3.42626v-11.12177h-13.01303v9.35844h8.03665v1.71914h-9.75579v-22.97811h1.71914v8.85986h13.01303v-20.52871h-2.66013v10.83951h1.24234v1.71914h-2.96149v-12.55865h-8.63375v5.98427h-1.71914l.0642-19.99971zm-31.78069 5.39834h1.71914v4.02253h-1.71914zm74.94389 8.13991h10.12598l2.29499 2.29498-1.21634 1.21213-1.79132-1.78798h-9.41331zm-74.94389 28.94168h1.71914v6.12443h-1.71914zm14.96047 13.52209h22.24642v7.89488h-22.24642v-1.71914h20.52727v-4.4566h-20.52727zm35.89362 3.03386h9.97572v1.71914h-9.97572z" style=";fill-opacity:1;stroke:none;stroke-width:1.62439;stroke-dasharray:none;stroke-opacity:1"></path>
+    </g>
+    <g id="Ramps-2" class="road_tarmac road_small" transform="translate(.294605 .974665) scale(.888648)">
+      <path d="M558.473 335.185h23.139" style="stroke:url(#linearGradient208)"></path>
+      <path d="M598.056 475.547h-24.22" style="stroke:url(#linearGradient206)"></path>
+      <path d="M613.831 475.454h24.313" style="stroke:url(#linearGradient204)"></path>
+      <path d="M698.707 475.56h-24.605" style="stroke:url(#linearGradient202)"></path>
+      <path d="M558.541 615.899h22.873" style="stroke:url(#linearGradient199)"></path>
+    </g>
+  </g>
+</svg>
