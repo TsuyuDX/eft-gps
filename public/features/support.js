@@ -1,34 +1,42 @@
 import { language } from "../core/localization.js";
 import { modal, esc } from "../core/ui.js";
-import { supportLinks, supportUrl } from "../core/support-config.js";
+import { supportLinks, supportCommunity, supportUrl } from "../core/support-config.js";
 const L = (ru,en) => language() === "en" ? en : ru;
 
-export function openSupport(links = supportLinks) {
-  const providers = [
-    {id:"boosty", name:"Boosty", symbol:"B", region:L("СНГ", "CIS"),
-      description:L("Разовая поддержка и подписка на развитие проекта.", "One-time support and a membership to help fund development.")},
-    {id:"kofi", name:"Ko-fi", symbol:"K", region:L("США и Европа", "US & Europe"),
-      description:L("Добровольная поддержка через PayPal и доступные способы оплаты Ko-fi.", "Voluntary support through PayPal and the payment methods available on Ko-fi.")},
-  ];
+function publicNames(entries) {
+  return [...new Set((Array.isArray(entries) ? entries : [])
+    .filter(entry => entry?.verified === true && entry?.consent === true && typeof entry.nickname === "string")
+    .map(entry => entry.nickname.trim().slice(0,48)).filter(Boolean))];
+}
+
+export function openSupport(links = supportLinks, community = supportCommunity) {
+  const discord = supportUrl("discord",links.discord);
+  const goal = Number.isSafeInteger(community.goal) && community.goal > 0 ? community.goal : null;
+  const count = Number.isSafeInteger(community.confirmedSponsors) && community.confirmedSponsors >= 0 ? community.confirmedSponsors : 0;
+  const credits = (kind,title) => {
+    const names = publicNames(community[kind]);
+    return `<section class="support-credits" data-support-credits="${kind}"><h3><span aria-hidden="true">${kind === "boosters" ? "ϟ" : "◇"}</span> ${title}</h3><div class="support-nicknames">${names.length ? names.map(name => `<span class="support-nickname">${esc(name)}</span>`).join("") : `<p class="support-empty">${L("Здесь появятся подтверждённые участники, разрешившие показать свой никнейм.", "Verified supporters who choose to share their nickname will appear here.")}</p>`}</div></section>`;
+  };
   modal(`<section class="support-panel" aria-labelledby="support-title" data-no-translate>
-    <div class="eyebrow">T_S_U_Y_U / EFT GPS</div>
-    <h2 id="support-title">${L("Поддержать проект", "Support development")}</h2>
-    <p class="support-intro">${L("EFT GPS — бесплатное приложение. Ваша поддержка помогает выделять время на разработку, тестирование и обновление данных.", "EFT GPS is free. Your support helps fund development time, testing and data updates.")}</p>
-    <div class="support-free"><span aria-hidden="true">♡</span><span>${L("Все карты, GPS и задания доступны бесплатно. Поддержка полностью добровольная.", "All maps, GPS and quests remain free. Supporting the project is entirely optional.")}</span></div>
-    <div class="support-options">${providers.map(provider => {
-      const url = supportUrl(provider.id, links[provider.id]);
-      return `<article class="support-option" data-support-provider="${provider.id}">
-        <div class="support-provider-heading"><span class="support-provider-icon" aria-hidden="true">${provider.symbol}</span><div><h3>${provider.name}</h3><small>${provider.region}</small></div><span class="support-status ${url ? "ready" : ""}">${url ? L("Подключено", "Available") : L("Скоро", "Coming soon")}</span></div>
-        <p>${provider.description}</p>
-        ${url ? `<a class="button primary" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${L("Открыть", "Open")} ${provider.name} ↗</a>` : `<button type="button" disabled aria-disabled="true">${L("Приём поддержки скоро будет доступен", "Support payments are coming soon")}</button>`}
-      </article>`;
-    }).join("")}</div>
-    <section class="support-benefits" aria-labelledby="support-benefits-title"><div class="support-benefits-heading"><h3 id="support-benefits-title">${L("Что получат подписчики", "Membership benefits")}</h3><small>${L("После запуска подписок", "When memberships launch")}</small></div>
-      <ul><li><span aria-hidden="true">◇</span><div><strong>${L("Ваш никнейм в списке спонсоров", "Your nickname in the supporter credits")}</strong><p>${L("Добавим выбранный вами никнейм в благодарности внутри приложения — только с вашего согласия. Можно поддерживать проект и анонимно.", "We will add your chosen nickname to the in-app credits, only with your permission. You can also support the project anonymously.")}</p></div></li>
-      <li><span aria-hidden="true">↗</span><div><strong>${L("Обновления раньше публичного выпуска", "Updates before the public release")}</strong><p>${L("Ранний доступ к тестовым сборкам и новым возможностям. Ссылки на них будут доступны подписчикам на странице автора.", "Early access to test builds and new features. Members will find the download links on the creator’s page.")}</p></div></li></ul>
-      <p class="support-benefits-note">${L("Это бонусы подписки. Тестовые сборки могут содержать ошибки; стабильные обновления останутся бесплатными и будут доступны всем после выпуска.", "These are membership perks. Test builds may contain bugs; stable updates will remain free and available to everyone when released.")}</p>
-    </section>
-    <div class="support-explainer"><h3>${L("Как это работает", "How it works")}</h3><p>${L("Вы сами выбираете сумму и разовую поддержку или подписку на странице сервиса. Подписка означает регулярные списания — её условия и отмена доступны на выбранной площадке.", "Choose an amount and one-time support or a membership on the provider’s page. Memberships involve recurring payments; terms and cancellation are managed by the provider.")}</p><p>${L("Оплата открывается во внешнем браузере и требует интернета. EFT GPS не запрашивает данные карты и не хранит платёжные реквизиты.", "Payment opens in your external browser and requires internet access. EFT GPS does not request card details or store payment credentials.")}</p></div>
-    ${providers.some(p => supportUrl(p.id, links[p.id])) ? "" : `<p class="support-pending">${L("Страницы автора ещё не подключены. Платёжные кнопки станут доступны после настройки и проверки выплат.", "The creator’s pages are not connected yet. Payment buttons will become available after payout setup and verification.")}</p>`}
+    <header class="support-hero"><div class="support-heart" aria-hidden="true">♥</div><div class="eyebrow">T_S_U_Y_U / EFT GPS</div><h2 id="support-title">${L("Поддержите развитие EFT GPS!", "Support EFT GPS development!")}</h2><p>${L("Нравится приложение? Подписка на Boosty или Ko-fi помогает разработке. Буст Discord — ещё один способ помочь нашему сообществу.", "Enjoy the app? A Boosty or Ko-fi membership helps fund development. A Discord boost is another way to support our community.")}</p></header>
+    ${goal ? `<section class="support-goal"><h3>${L("Цель поддержки проекта", "Project supporter goal")}</h3><progress max="${goal}" value="${Math.min(count,goal)}" aria-label="${L("Цель поддержки", "Supporter goal")}"></progress><p>${count} ${L("из", "of")} ${goal} ${L("подтверждённых спонсоров", "confirmed supporters")}</p></section>` : `<div class="support-free">${L("Приложение остаётся бесплатным. Любой способ поддержки — только по вашему желанию.", "The app stays free. Every form of support is entirely optional.")}</div>`}
+    <section class="support-benefits" aria-labelledby="support-benefits-title"><div class="support-benefits-heading"><h3 id="support-benefits-title">${L("Бонусы поддержки", "Supporter perks")}</h3><small>${L("После запуска подписок и сервера", "Once memberships and the server launch")}</small></div><ul>${[
+      [L("Ранний доступ к тестовым сборкам", "Early access to test builds"),L("Обновления до публичного стабильного выпуска.", "Try updates before the public stable release.")],
+      [L("Роль поддержки в Discord", "A supporter role in Discord"),L("Для подтверждённых подписчиков и бустеров сервера.", "For verified members and server boosters.")],
+      [L("Обсуждение новых функций", "Discuss upcoming features"),L("Делитесь идеями и отзывами о развитии приложения.", "Share ideas and feedback on the app’s development.")],
+      [L("Ваш никнейм в благодарностях", "Your nickname in the credits"),L("Только с вашего согласия — анонимная поддержка тоже возможна.", "Only with your permission; anonymous support is welcome too.")],
+    ].map(([title,description]) => `<li><span aria-hidden="true">✓</span><div><strong>${title}</strong><p>${description}</p></div></li>`).join("")}</ul><p class="support-benefits-note">${L("Тестовые сборки могут содержать ошибки; стабильные обновления останутся бесплатными для всех.", "Test builds may contain bugs; stable updates will remain free for everyone.")}</p></section>
+    ${credits("sponsors",L("Спонсоры проекта", "Project supporters"))}${credits("boosters",L("Бустеры Discord", "Discord boosters"))}
+    <section class="support-actions" aria-label="${L("Способы поддержки", "Ways to support")}"><h3>${L("Поддержать разработку", "Support development")}</h3><div class="support-options">${[
+      ["boosty","Boosty",L("СНГ", "CIS")], ["kofi","Ko-fi",L("США и Европа", "US & Europe")],
+    ].map(([id,name,region]) => {
+      const url=supportUrl(id,links[id]);const content=`<strong>${name}${url ? " ↗" : ""}</strong><small>${region}${url ? "" : " · "+L("Скоро", "Coming soon")}</small>`;
+      return `<div class="support-option" data-support-provider="${id}">${url ? `<a class="button primary" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${content}</a>` : `<button disabled aria-disabled="true">${content}</button>`}</div>`;
+    }).join("")}</div><div class="support-or"><span>${L("или поддержите сообщество", "or support the community")}</span></div>
+    ${discord ? `<a class="button support-discord" href="${esc(discord)}" target="_blank" rel="noopener noreferrer">ϟ ${L("Бустнуть Discord", "Boost our Discord")} ↗</a>` : `<button class="support-discord" disabled aria-disabled="true">ϟ ${L("Бустнуть Discord · скоро", "Boost our Discord · coming soon")}</button>`}
+    <p class="support-discord-note">${L("Буст помогает серверу Discord; поддержка через Boosty и Ko-fi — разработке приложения. Буст оформляется в самом Discord после входа на сервер.", "Boosts help the Discord server; Boosty and Ko-fi help fund the app. Boosting is managed in Discord after joining the server.")}</p></section>
+    <details class="support-explainer"><summary>${L("Как это работает", "How it works")}</summary><p>${L("Сервисы открываются во внешнем браузере и требуют интернета. Сумму и разовый платёж или подписку вы выбираете на стороне сервиса. Подписка предполагает регулярные списания; условия и отмена доступны на выбранной площадке. EFT GPS не запрашивает данные карты и не хранит платёжные реквизиты.", "Providers open in your external browser and require internet. Choose an amount and one-time payment or membership on the provider’s page. Memberships involve recurring payments; terms and cancellation are managed there. EFT GPS does not request card details or store payment credentials.")}</p></details>
+    ${["boosty","kofi","discord"].some(id => supportUrl(id,links[id])) ? "" : `<p class="support-pending">${L("Страницы автора и сервер ещё не подключены. Кнопки станут доступны после настройки и проверки.", "The creator’s pages and server are not connected yet. Buttons will become available after setup and verification.")}</p>`}
   </section>`);
+  const dialog=document.querySelector("#modal");dialog.classList.add("support-dialog");dialog.addEventListener("close",()=>dialog.classList.remove("support-dialog"),{once:true});
 }

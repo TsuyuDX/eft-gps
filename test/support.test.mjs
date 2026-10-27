@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {parseHTML} from 'linkedom';
 import {setLanguage} from '../public/core/localization.js';
-import {supportUrl} from '../public/core/support-config.js';
+import {supportUrl,supportCommunity,supportLinks} from '../public/core/support-config.js';
 import {openSupport} from '../public/features/support.js';
 function dom(lang) {
   const {document,window}=parseHTML('<html><body><dialog id="modal"><div id="modal-content"></div></dialog></body></html>');
@@ -24,12 +24,43 @@ test('unconfigured support renders in both languages without active payment link
     assert.equal(document.querySelectorAll('.support-option button[disabled]').length,2);
     assert.equal(document.querySelectorAll('.support-panel a').length,0);
     assert.equal(document.querySelectorAll('.support-panel input,.support-panel form').length,0);
-    assert.match(document.querySelector('.support-free').textContent,lang==='ru'?/бесплатно/:/free/);
+    assert.match(document.querySelector('.support-free').textContent,lang==='ru'?/бесплатн/:/free/);
     assert.match(document.querySelector('.support-pending').textContent,lang==='ru'?/не подключены/:/not connected/);
-    assert.match(document.querySelector('.support-benefits').textContent,lang==='ru'?/только с вашего согласия/:/only with your permission/);
+    assert.match(document.querySelector('.support-benefits').textContent,lang==='ru'?/только с вашего согласия/i:/only with your permission/i);
     assert.match(document.querySelector('.support-benefits').textContent,lang==='ru'?/Тестовые сборки/:/Test builds/);
     assert.match(document.querySelector('.support-benefits').textContent,lang==='ru'?/останутся бесплатными/:/remain free/);
   }
+});
+
+test('Discord invites enable only the community action and reject unrelated or unsafe URLs',()=>{
+  for(const url of ['https://discord.gg/example','https://discord.com/invite/example'])assert.equal(supportUrl('discord',url),url);
+  for(const url of ['http://discord.gg/example','https://discord.gg.evil.test/example','https://discord.com/login','https://discord.gg/example?token=private','javascript:alert(1)'])assert.equal(supportUrl('discord',url),null);
+  const document=dom('en');openSupport({discord:'https://discord.gg/example'});
+  assert.equal(document.querySelectorAll('.support-option button[disabled]').length,2);
+  assert.equal(document.querySelector('.support-discord').getAttribute('href'),'https://discord.gg/example');
+  assert.match(document.querySelector('.support-discord-note').textContent,/Boosts help the Discord server/);
+});
+
+test('temporary fictional supporters exercise chips, consent filtering and goal clamping, then leave no demo data',()=>{
+  const document=dom('ru');
+  const fictional={goal:3,confirmedSponsors:5,sponsors:[
+    {nickname:'DEMO_Sponsor',verified:true,consent:true},
+    {nickname:'DEMO_Sponsor',verified:true,consent:true},
+    {nickname:'NOT_PUBLIC',verified:true,consent:false},
+    {nickname:'NOT_VERIFIED',verified:false,consent:true},
+    {nickname:'<img src=x onerror=alert(1)>',verified:true,consent:true},
+  ],boosters:[{nickname:'DEMO_Booster',verified:true,consent:true}]};
+  openSupport({},fictional);
+  assert.equal(document.querySelectorAll('.support-nickname').length,3);
+  assert.equal(document.querySelectorAll('.support-nicknames img').length,0);
+  assert.doesNotMatch(document.querySelector('.support-panel').textContent,/NOT_PUBLIC|NOT_VERIFIED/);
+  assert.equal(document.querySelector('progress').getAttribute('value'),'3');
+  openSupport();
+  assert.equal(document.querySelectorAll('.support-nickname').length,0);
+  assert.equal(document.querySelectorAll('progress').length,0);
+  assert.doesNotMatch(document.querySelector('.support-panel').textContent,/DEMO_/);
+  assert.equal(supportCommunity.goal,null);assert.deepEqual(supportCommunity.sponsors,[]);assert.deepEqual(supportCommunity.boosters,[]);
+  assert.equal(supportLinks.discord,'');
 });
 test('a verified profile enables only its own external link while missing or invalid profiles stay disabled',()=>{
   const document=dom('en');openSupport({boosty:'https://boosty.to/example_creator',kofi:'https://bad.test/fake'});
