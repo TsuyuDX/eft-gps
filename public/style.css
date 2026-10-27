@@ -2295,3 +2295,5 @@ footer a,
 .app-update progress::-webkit-progress-bar {background:#28271f;}
 .app-update progress::-webkit-progress-value {background:#b9ab82;}
 .app-update-dismiss {position:absolute; right:8px; top:5px; padding:4px 8px; border:0; background:none; color:#b9ab82;}
+
+.home-version { display:inline-flex; margin:0 0 12px; color:var(--accent,#b9ab82); font-size:12px; letter-spacing:.08em; }

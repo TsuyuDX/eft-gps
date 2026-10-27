@@ -381,7 +381,7 @@ class Maintenance : DarkWindow {
         var logo=new PictureBox { Bounds=new Rectangle(28,24,62,62), Image=branding, SizeMode=PictureBoxSizeMode.Zoom };
         Controls.Add(logo);
         TextAt("T_S_U_Y_U EFT GPS",106,22,560,40,22,ForeColor);
-        TextAt(data ? "ОБНОВЛЕНИЕ СПРАВОЧНИКА" : updating ? "ОБНОВЛЕНИЕ ПРИЛОЖЕНИЯ" : "УСТАНОВКА ПРИЛОЖЕНИЯ  /  1.7.1",108,67,660,24,9,muted);
+        TextAt(data ? "ОБНОВЛЕНИЕ СПРАВОЧНИКА" : updating ? "ОБНОВЛЕНИЕ ПРИЛОЖЕНИЯ" : "УСТАНОВКА ПРИЛОЖЕНИЯ  /  1.7.2",108,67,660,24,9,muted);
         steps.SetBounds(28,108,764,32); steps.Text="01  Подготовка     /     02  Установка     /     03  Готово"; steps.ForeColor=Color.FromArgb(185,171,130);
         Controls.Add(steps);
         TextAt(data ? "Свежая база — привычный прогресс" : updating ? "Новая версия — ваш прогресс на месте" : "Тарков под рукой. Даже без интернета.",28,154,764,38,18,ForeColor);

@@ -1,5 +1,7 @@
 # История версий / Version history
 
+- **1.7.2** — номер версии на главной странице; небольшой выпуск для проверки полного пути автообновления. / Home-screen version badge; a small release for end-to-end update verification.
+
 - **1.7.1** — проверка обновлений при запуске, прогресс загрузки, режим обновления текущей папки, проверка SHA-256, сохранение данных и отдельные ссылки Boosty. / Startup update checks, download progress, dedicated update mode, integrity checks and Boosty links.
 - **1.7.0** — T_S_U_Y_U EFT GPS, английский интерфейс и база, первый обзор и помощь. / English UI and data, onboarding and Help.
 - **1.6.0** — проверка запуска, поиск игровых папок, выбор языка и оформление загрузки. / Startup diagnostics, folder discovery and language choice.
