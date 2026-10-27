@@ -2,6 +2,8 @@ import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { GpsService } from "./server/gps.mjs";
+import { spawn } from "node:child_process";
 const root = path.dirname(fileURLToPath(import.meta.url));
 const publicRoot = path.join(root, "public"),
   userRoot = path.join(root, "userdata");
@@ -34,6 +36,7 @@ export function validProfile(p) {
   );
 }
 let lastPing = Date.now();
+const gps = new GpsService(root);
 const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, "http://127.0.0.1:" + port);
@@ -53,7 +56,77 @@ const server = http.createServer(async (req, res) => {
     if (url.pathname === "/api/health") {
       lastPing = Date.now();
       res.setHeader("Content-Type", "application/json");
-      return res.end(JSON.stringify({ app: "TarkovOffline", version: 1 }));
+      return res.end(
+        JSON.stringify({ app: "TarkovOffline", version: 2, gps: true }),
+      );
+    }
+    if (url.pathname.startsWith("/api/gps/")) {
+      res.setHeader("Content-Type", "application/json");
+      res.setHeader("Cache-Control", "no-store");
+      if (url.pathname === "/api/gps/state" && req.method === "GET")
+        return res.end(JSON.stringify(gps.state()));
+      if (req.method !== "POST" && req.method !== "PUT") {
+        res.writeHead(405);
+        return res.end("{}");
+      }
+      if (req.headers.origin !== `http://${req.headers.host}`) {
+        res.writeHead(403);
+        return res.end("{}");
+      }
+      let body = "",
+        bytes = 0;
+      for await (const chunk of req) {
+        bytes += chunk.length;
+        if (bytes > 16384) {
+          res.writeHead(413);
+          res.end("{}");
+          req.destroy();
+          return;
+        }
+        body += chunk.toString("utf8");
+      }
+      try {
+        const value = body ? JSON.parse(body) : {};
+        if (url.pathname === "/api/gps/settings")
+          return res.end(JSON.stringify(gps.settings(value)));
+        if (url.pathname === "/api/gps/auto") {
+          if (typeof value.enabled !== "boolean")
+            throw Error("Укажите включение или выключение автосъёмки");
+          if (value.enabled) gps.startAuto(value.manualRaid === true);
+          else gps.stopAuto();
+          return res.end(JSON.stringify(gps.state()));
+        }
+        if (url.pathname === "/api/gps/pick-folder") {
+          const child = spawn(
+            path.join(root, "runtime/GpsCapture.exe"),
+            ["--pick-folder"],
+            { windowsHide: true, stdio: ["ignore", "pipe", "pipe"] },
+          );
+          let selected = "";
+          child.stdout.setEncoding("utf8");
+          child.stdout.on("data", (s) => {
+            if (selected.length < 8192) selected += s;
+          });
+          child.on("error", () => {
+            if (!res.writableEnded) {
+              res.writeHead(500);
+              res.end(
+                JSON.stringify({ error: "Не удалось открыть выбор папки" }),
+              );
+            }
+          });
+          child.on("close", () => {
+            if (!res.writableEnded)
+              res.end(JSON.stringify({ path: selected.trim() }));
+          });
+          return;
+        }
+        res.writeHead(404);
+        return res.end("{}");
+      } catch (e) {
+        res.writeHead(400);
+        return res.end(JSON.stringify({ error: e.message }));
+      }
     }
     if (url.pathname === "/api/profile") {
       const file = path.join(userRoot, "profile.json");
@@ -124,6 +197,16 @@ if (
   server.listen(port, "127.0.0.1", () =>
     console.log(`Tarkov Offline: http://127.0.0.1:${port}`),
   );
+  gps.start();
+  process.on("exit", () => gps.stop());
+  process.on("SIGINT", () => {
+    gps.stop();
+    server.close(() => process.exit(0));
+  });
+  process.on("SIGTERM", () => {
+    gps.stop();
+    server.close(() => process.exit(0));
+  });
   server.on("error", (e) => {
     console.error(e.message);
     process.exit(1);

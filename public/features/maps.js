@@ -2,6 +2,7 @@ import { db, json, asset } from "../core/data.js";
 import { current, save } from "../core/state.js";
 import { projectPoint } from "../core/domain.js";
 import { heading, esc, img, modal, rich } from "../core/ui.js";
+import { bindMapGps } from "./map-gps.js";
 const groups = {
   lootLoose: ["Лут на карте", "#fde047", "◇"],
   btr: ["БТР и остановки", "#38bdf8", "▰"],
@@ -282,4 +283,19 @@ export async function renderMap(root, slug) {
     else root.querySelector(".map-layout").requestFullscreen();
   };
   draw();
+  bindMapGps(root, m, {
+    setFloor(value) {
+      if (layer === String(value)) return;
+      layer = String(value);
+      root.querySelector("#floor").value = layer;
+      draw();
+    },
+    center(p) {
+      const width = canvas.offsetWidth,
+        height = canvas.offsetHeight;
+      tx = -(p.x / 100 - 0.5) * width * zoom;
+      ty = -(p.y / 100 - 0.5) * height * zoom;
+      transform();
+    },
+  });
 }
