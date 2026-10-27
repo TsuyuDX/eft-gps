@@ -2,12 +2,12 @@
 
 Ветка `main` содержит полные последовательные снимки из реально сохранённых ZIP:
 
-1. `v1.0.0` — `Releases/Legacy/TarkovOffline-Windows.zip`.
-2. `v1.1.0` — `Releases/Legacy/TarkovOffline-Windows-updated.zip`.
-3. `v1.4.0` — `Releases/1.4.0/TarkovOffline-1.4.0-Windows.zip`.
-4. `v1.5.0` — `Releases/1.5.0/TarkovGPS-1.5.0-Windows.zip`.
-5. `v1.6.0` — `Releases/1.6.0/TarkovGPS-1.6.0-Windows.zip`.
-6. `v1.7.0` — `Releases/1.7.0/TSUYU-EFTGPS-1.7.0-Windows.zip`.
+1. `app-v1.0.0` — `Releases/Legacy/TarkovOffline-Windows.zip`.
+2. `app-v1.1.0` — `Releases/Legacy/TarkovOffline-Windows-updated.zip`.
+3. `app-v1.4.0` — `Releases/1.4.0/TarkovOffline-1.4.0-Windows.zip`.
+4. `app-v1.5.0` — `Releases/1.5.0/TarkovGPS-1.5.0-Windows.zip`.
+5. `app-v1.6.0` — `Releases/1.6.0/TarkovGPS-1.6.0-Windows.zip`.
+6. `app-v1.7.0` — `Releases/1.7.0/TSUYU-EFTGPS-1.7.0-Windows.zip`.
 
 Пути указаны относительно соседней папки `outputs`. Версии 1.2 и 1.3 не восстановлены: отдельных сохранённых архивов нет. Даты коммитов соответствуют восстановлению истории, а не предполагаемым датам старых выпусков.
 
@@ -17,7 +17,7 @@
 
 В Git входят код HTML/CSS/JS/C#, тесты, документация, иконки, инструменты сборки, базы `public/data`, изображения и карты `public/assets`, необходимые модули Node.js, runtime и готовые EXE. Личные сохранения, токены, временные файлы и большие ZIP/Setup-пакеты исключены. При откате выбирайте тег завершённой версии; промежуточные коммиты используются для поэтапной отправки больших наборов данных.
 
-Проверяемый список полных снимков и коммитов отправки: `../../work/full-history-restoration.json`. Предыдущая история только исходников сохранена в `../../work/source-only-history.bundle`. История создаётся локально; отправка на GitHub в эту операцию не входит.
+Проверяемый список полных снимков и коммитов отправки: `../../work/full-history-restoration.json`. Предыдущая история только исходников сохранена в `../../work/source-only-history.bundle`. История опубликована на GitHub вместе с отдельной архивной веткой исходных коммитов.
 
 ## Публикация полной истории
 
