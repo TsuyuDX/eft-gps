@@ -69,6 +69,8 @@ Maps, reference data and saved illustrations are local. Prices and events reflec
 
 Исторические снимки помечены тегами **app-v1.0.0, app-v1.1.0, app-v1.4.0, app-v1.5.0, app-v1.6.0, app-v1.7.0** и **v1.7.1**. Все промежуточные коммиты сохранены; частичные контрольные коммиты первой загрузки не являются готовыми версиями для запуска. Версии 1.2 и 1.3 отдельно не сохранились и не воссоздавались.
 
+Первоначальная история только с исходниками сохранена в ветке **archive/original-source-history**. Для запуска используйте полные снимки, а не эту архивную ветку.
+
 Старые теги v1.5.0–v1.7.0 сохранены без перезаписи: они относятся к прежней странице документации. Для полных исходников соответствующих версий используйте теги **app-v...**. Старые выпуски могут работать иначе, чем текущая версия.
 
 Clone the full repository and run **Start EFT GPS.cmd**. Use completed version tags for rollback, rather than partial upload checkpoints. Export personal progress separately and close the app before switching versions. Archived downloadable packages are rebuilt from verified historical snapshots; original local archives were retained unchanged.
