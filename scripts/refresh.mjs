@@ -78,6 +78,28 @@ for (const file of [
       "Update failed; the current snapshot has been preserved. See update-staging.",
     );
 }
+// English is a versioned offline snapshot shipped with the app. Preserve it
+// across Russian data refreshes; its own savedAt remains unchanged.
+if (fs.existsSync(path.join(data, "en"))) {
+  fs.cpSync(path.join(data, "en"), path.join(work, "public/data/en"), {
+    recursive: true,
+  });
+  const englishAssets = JSON.parse(
+    fs.readFileSync(path.join(data, "en/assets.json"), "utf8"),
+  );
+  for (const local of new Set(Object.values(englishAssets))) {
+    if (typeof local !== "string" || !local.startsWith("/assets/"))
+      throw Error("Invalid English asset path");
+    const source = path.resolve(root, "public", "." + local);
+    if (!source.startsWith(assets + path.sep))
+      throw Error("Invalid English asset path");
+    const target = path.join(work, "public", local);
+    if (!fs.existsSync(target)) {
+      fs.mkdirSync(path.dirname(target), { recursive: true });
+      fs.copyFileSync(source, target);
+    }
+  }
+}
 console.log("Проверка полноты загруженной базы…");
 validateSnapshot(root, work);
 const backup = commitSnapshot(root, work);

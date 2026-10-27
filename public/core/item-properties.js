@@ -1,3 +1,4 @@
+import { localeCode } from "./localization.js";
 export const extraPropertyLabels = {
   fragmentationChance: "Вероятность фрагментации, %",
   penetrationChance: "Вероятность пробития, %",
@@ -61,7 +62,7 @@ const values = {
 export function propertyValue(key, value) {
   if (typeof value === "boolean") return value ? "Да" : "Нет";
   if (typeof value === "number")
-    return new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 4 }).format(
+    return new Intl.NumberFormat(localeCode(), { maximumFractionDigits: 4 }).format(
       percentages.has(key) ? value * 100 : value,
     );
   if (key === "caliber")

@@ -6,5 +6,5 @@ if ($LASTEXITCODE -ne 0) { throw 'Не удалось подготовить с�
 if ($LASTEXITCODE -ne 0) { throw 'Не удалось собрать упаковщик.' }
 $taskVersion = (Get-Content package.json -Raw | ConvertFrom-Json).version
 $taskOutput = Split-Path (Get-Location)
-& work\PackRelease.exe (Get-Location).Path (Join-Path (Get-Location) 'work\release-input.json') (Join-Path $taskOutput "TarkovGPS-$taskVersion-Windows.zip") (Join-Path $taskOutput "TarkovGPS-$taskVersion-Setup.exe")
+& work\PackRelease.exe (Get-Location).Path (Join-Path (Get-Location) 'work\release-input.json') (Join-Path $taskOutput "TSUYU-EFTGPS-$taskVersion-Windows.zip") (Join-Path $taskOutput "TSUYU-EFTGPS-$taskVersion-Setup.exe")
 if ($LASTEXITCODE -ne 0) { throw 'Не удалось собрать выпуск.' }

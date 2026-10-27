@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 class Launcher {
-    const string AppTitle = "Тарков GPS";
+    const string AppTitle = "EFT GPS";
     delegate bool EnumWindowCallback(IntPtr window, IntPtr parameter);
     [DllImport("user32.dll")] static extern bool EnumWindows(EnumWindowCallback callback, IntPtr parameter);
     [DllImport("user32.dll", CharSet = CharSet.Unicode)] static extern int GetWindowText(IntPtr window, StringBuilder text, int count);
@@ -19,6 +19,7 @@ class Launcher {
     [STAThread] static void Main() {
         string root = AppDomain.CurrentDomain.BaseDirectory;
         string url = "http://127.0.0.1:38471";
+        NativeText.English=NativeText.Preferred(root);
         try {
             bool running = Healthy(url);
             if (!running) {
@@ -32,7 +33,7 @@ class Launcher {
             }
             if (!running) throw new Exception("Не удалось запустить локальное приложение. Проверьте, что архив распакован полностью, а порт 38471 свободен.");
             Process.Start(new ProcessStartInfo(Path.Combine(root, "runtime", "TarkovDesktopHost.exe")) { WorkingDirectory = root, UseShellExecute = false });
-        } catch (Exception e) { MessageBox.Show(e.Message, "Тарков GPS", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+        } catch (Exception e) { MessageBox.Show(NativeText.T(e.Message), "EFT GPS", MessageBoxButtons.OK, MessageBoxIcon.Error); }
     }
 
     static bool Healthy(string url) {

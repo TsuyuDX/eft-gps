@@ -25,6 +25,8 @@ for (const name of top) await walk(name);
 for (const name of [
   "Tarkov Offline.exe",
   "Tarkov GPS.exe",
+  "EFT GPS.exe",
+  "README.en.md",
   "package.json",
   "package-lock.json",
   "server.mjs",
