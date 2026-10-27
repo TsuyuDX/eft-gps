@@ -1,3 +1,4 @@
+import { AppUpdater } from "./server/app-update.mjs";
 import { startupDiagnostics } from "./server/startup.mjs";
 import http from "node:http";
 import fs from "node:fs";
@@ -47,6 +48,7 @@ export function validProfile(p) {
 }
 let lastPing = Date.now();
 const gps = new GpsService(root);
+const appUpdater = new AppUpdater(root, appVersion);
 const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, "http://127.0.0.1:" + port);
@@ -75,6 +77,18 @@ const server = http.createServer(async (req, res) => {
           gps: true,
         }),
       );
+    }
+    if (url.pathname === "/api/app-update/state" && req.method === "GET") {
+      res.setHeader("Content-Type", "application/json");
+      res.setHeader("Cache-Control", "no-store");
+      return res.end(JSON.stringify(appUpdater.state));
+    }
+    if (url.pathname === "/api/app-update/start" && req.method === "POST") {
+      if (req.headers.origin !== `http://${req.headers.host}`) {
+        res.writeHead(403); return res.end();
+      }
+      void appUpdater.start();
+      res.writeHead(202); return res.end();
     }
     if (url.pathname === "/api/startup" && req.method === "GET") {
       res.setHeader("Content-Type", "application/json");

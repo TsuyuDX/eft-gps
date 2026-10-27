@@ -1,3 +1,4 @@
+import { startAppUpdates } from "./core/app-update.js";
 import { localeCode } from "./core/localization.js";
 import { APP_TITLE } from "./core/brand.js";
 import { openHelp, maybeShowTour } from "./features/help.js";
@@ -230,6 +231,7 @@ try {
   await finishStartup(startupResult);
   startGpsClient(() => db.mode);
   maybeShowTour();
+  startAppUpdates();
 } catch (e) {
   startupError(e);
   app.innerHTML = errorView(e);

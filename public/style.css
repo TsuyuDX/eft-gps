@@ -2286,3 +2286,12 @@ footer a,
 .statusline {flex-wrap:wrap;}
 .statusline>.row {flex-wrap:wrap;gap:8px;}
 @media(max-width:760px){.community-stub{display:none}.help-row{gap:14px}.help-row small{max-width:240px}.tour-copy{min-height:0}.tour-tip{min-height:0}}
+
+/* Download status stays visible independently of the current page or map. */
+.app-update { position:fixed; inset:auto 16px 12px; z-index:10000; padding:12px 42px 12px 16px; background:rgba(17,17,15,.97); border:1px solid #514a35; border-radius:8px; color:#e8e8e2; box-shadow:0 8px 32px #0009; font-size:13px; }
+.app-update[hidden] {display:none;}
+.app-update-copy {overflow-wrap:anywhere;}
+.app-update progress {display:block; width:100%; height:4px; margin-top:9px; border:0; border-radius:4px; overflow:hidden; accent-color:#b9ab82;}
+.app-update progress::-webkit-progress-bar {background:#28271f;}
+.app-update progress::-webkit-progress-value {background:#b9ab82;}
+.app-update-dismiss {position:absolute; right:8px; top:5px; padding:4px 8px; border:0; background:none; color:#b9ab82;}

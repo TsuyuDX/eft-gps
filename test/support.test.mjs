@@ -19,9 +19,9 @@ test('support URLs only accept public HTTPS profile pages from the configured pr
 });
 test('unconfigured support renders in both languages without active payment links or card inputs',()=>{
   for(const lang of ['ru','en']) {
-    const document=dom(lang);openSupport();
-    assert.equal(document.querySelectorAll('[data-support-provider]').length,2);
-    assert.equal(document.querySelectorAll('.support-option button[disabled]').length,2);
+    const document=dom(lang);openSupport({});
+    assert.equal(document.querySelectorAll('[data-support-provider]').length,3);
+    assert.equal(document.querySelectorAll('.support-option button[disabled]').length,3);
     assert.equal(document.querySelectorAll('.support-panel a').length,0);
     assert.equal(document.querySelectorAll('.support-panel input,.support-panel form').length,0);
     assert.match(document.querySelector('.support-free').textContent,lang==='ru'?/бесплатн/:/free/);
@@ -36,7 +36,7 @@ test('Discord invites enable only the community action and reject unrelated or u
   for(const url of ['https://discord.gg/example','https://discord.com/invite/example'])assert.equal(supportUrl('discord',url),url);
   for(const url of ['http://discord.gg/example','https://discord.gg.evil.test/example','https://discord.com/login','https://discord.gg/example?token=private','javascript:alert(1)'])assert.equal(supportUrl('discord',url),null);
   const document=dom('en');openSupport({discord:'https://discord.gg/example'});
-  assert.equal(document.querySelectorAll('.support-option button[disabled]').length,2);
+  assert.equal(document.querySelectorAll('.support-option button[disabled]').length,3);
   assert.equal(document.querySelector('.support-discord').getAttribute('href'),'https://discord.gg/example');
   assert.match(document.querySelector('.support-discord-note').textContent,/Boosts help the Discord server/);
 });
@@ -67,5 +67,18 @@ test('a verified profile enables only its own external link while missing or inv
   const links=document.querySelectorAll('.support-panel a');assert.equal(links.length,1);
   assert.equal(links[0].getAttribute('href'),'https://boosty.to/example_creator');
   assert.equal(links[0].getAttribute('target'),'_blank');assert.match(links[0].getAttribute('rel'),/noopener/);
-  assert.equal(document.querySelectorAll('.support-option button[disabled]').length,1);
+  assert.equal(document.querySelectorAll('.support-option button[disabled]').length,2);
+});
+
+ test('configured Boosty buttons distinguish monthly membership from one-time donations',()=>{
+  for(const lang of ['ru','en']){
+    const document=dom(lang);openSupport();
+    const member=document.querySelector('[data-support-provider="boostySubscription"] a');
+    const donation=document.querySelector('[data-support-provider="boosty"] a');
+    assert.equal(member.getAttribute('href'),'https://boosty.to/tsuyueftgps/purchase/4150607');
+    assert.equal(donation.getAttribute('href'),'https://boosty.to/tsuyueftgps/donate');
+    assert.match(member.textContent,lang==='ru'?/ежемесячная/:/monthly/);
+    assert.match(donation.textContent,lang==='ru'?/без подписки/:/no subscription/);
+  }
+  for(const value of ['https://boosty.to/tsuyueftgps/purchase/not-a-number','https://boosty.to.evil.test/tsuyueftgps/purchase/4150607','https://boosty.to/tsuyueftgps/donate?token=secret'])assert.equal(supportUrl('boostySubscription',value),null);
 });

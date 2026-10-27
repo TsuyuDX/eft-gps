@@ -16,6 +16,13 @@ using System.Runtime.InteropServices;
 public class ReleaseFile { public string path; public string sha256; public long size; }
 public class ReleaseInfo { public int format; public string app; public string version; public ReleaseFile[] files; }
 public static class PackageInstaller {
+    public static void CheckUpdateHash(string zip, string expected) {
+        if(expected == null || expected.Length != 64 || Hash(zip) != expected) throw new IOException("Контрольная сумма обновления не совпадает");
+    }
+    public static void CheckUpdateVersion(string target, ReleaseInfo release, string expected) {
+        var installed=new JavaScriptSerializer().Deserialize<Dictionary<string,object>>(File.ReadAllText(Path.Combine(target,"package.json")));
+        if(release.version!=expected || new Version(release.version)<=new Version((string)installed["version"])) throw new IOException("Версия обновления не подходит");
+    }
     static string Extended(string value) {
         if (value.StartsWith(@"\\?\")) return value;
         return value.StartsWith(@"\\") ? @"\\?\UNC\" + value.Substring(2) : @"\\?\" + value;
@@ -338,7 +345,8 @@ class Maintenance : DarkWindow {
     readonly CheckBox shortcut = new DarkCheckBox();
     readonly Label components = new Label();
     readonly Label steps = new Label();
-    string operation, target, package;
+    string operation, target, package, expectedHash, expectedVersion;
+    bool updating;
     bool busy, complete, writeShortcut;
     static readonly Color muted=Color.FromArgb(157,157,147);
     [STAThread] static void Main(string[] args) {
@@ -360,25 +368,29 @@ class Maintenance : DarkWindow {
         operation = args.Length > 0 ? args[0] : "--setup";
         target = args.Length > 1 ? Path.GetFullPath(args[1]) : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "EFTGPS");
         package = args.Length > 2 ? args[2] : null;
+        updating = operation == "--update";
+        expectedHash = args.Length > 3 ? args[3] : null;
+        expectedVersion = args.Length > 4 ? args[4] : null;
+        if (updating && (package == null || expectedHash == null || expectedVersion == null || !File.Exists(Path.Combine(target,"EFT GPS.exe")))) throw new IOException("Некорректные параметры обновления");
         NativeText.English=System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName!="ru";
         bool data=operation=="--data";
-        Text = data ? "EFT GPS · Обновление базы" : "EFT GPS · Установка";
+        Text = data ? "EFT GPS · Обновление базы" : updating ? "EFT GPS · Обновление приложения" : "EFT GPS · Установка";
         ClientSize = new Size(820,720);
         Image branding=Icon.ToBitmap();
         using(var resource=System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("installer-logo.png")) if(resource!=null) using(var image=Image.FromStream(resource)) branding=new Bitmap(image);
         var logo=new PictureBox { Bounds=new Rectangle(28,24,62,62), Image=branding, SizeMode=PictureBoxSizeMode.Zoom };
         Controls.Add(logo);
         TextAt("T_S_U_Y_U EFT GPS",106,22,560,40,22,ForeColor);
-        TextAt(data ? "ОБНОВЛЕНИЕ СПРАВОЧНИКА" : "УСТАНОВКА ПРИЛОЖЕНИЯ  /  1.7.0",108,67,660,24,9,muted);
+        TextAt(data ? "ОБНОВЛЕНИЕ СПРАВОЧНИКА" : updating ? "ОБНОВЛЕНИЕ ПРИЛОЖЕНИЯ" : "УСТАНОВКА ПРИЛОЖЕНИЯ  /  1.7.1",108,67,660,24,9,muted);
         steps.SetBounds(28,108,764,32); steps.Text="01  Подготовка     /     02  Установка     /     03  Готово"; steps.ForeColor=Color.FromArgb(185,171,130);
         Controls.Add(steps);
-        TextAt(data ? "Свежая база — привычный прогресс" : "Тарков под рукой. Даже без интернета.",28,154,764,38,18,ForeColor);
-        TextAt(data ? "Загрузим актуальные справочные данные. Если загрузка прервётся, предыдущая база останется доступной." : "Карты, задания, предметы и GPS в отдельном приложении.\nСправочник и изображения входят в комплект; скачивать базу при установке не нужно.",28,201,764,55,10,muted);
+        TextAt(data ? "Свежая база — привычный прогресс" : updating ? "Новая версия — ваш прогресс на месте" : "Тарков под рукой. Даже без интернета.",28,154,764,38,18,ForeColor);
+        TextAt(updating ? "Обновим файлы в текущей папке приложения.\nНастройки, задания, личные метки и GPS сохранятся." : data ? "Загрузим актуальные справочные данные. Если загрузка прервётся, предыдущая база останется доступной." : "Карты, задания, предметы и GPS в отдельном приложении.\nСправочник и изображения входят в комплект; скачивать базу при установке не нужно.",28,201,764,55,10,muted);
         TextAt("ПАПКА ПРИЛОЖЕНИЯ",28,274,764,23,9,muted);
         folder.SetBounds(28,305,620,30); folder.Text=target; folder.BackColor=Color.FromArgb(19,19,18); folder.ForeColor=ForeColor; folder.BorderStyle=BorderStyle.FixedSingle;
         browse=ButtonAt("Обзор…",660,299,132,false);
         browse.Click+=delegate { using(var picker=new DarkFolderPicker(folder.Text)) if(picker.ShowDialog(this)==DialogResult.OK) folder.Text=picker.SelectedPath; };
-        shortcut.SetBounds(28,350,764,26); shortcut.Text="Создать ярлык на рабочем столе"; shortcut.Checked=true; shortcut.Visible=!data;
+        shortcut.SetBounds(28,350,764,26); shortcut.Text="Создать ярлык на рабочем столе"; shortcut.Checked=true; shortcut.Visible=!data && !updating; shortcut.Checked=!updating;
         components.SetBounds(28,387,764,84); components.ForeColor=muted;
         string runtime=RuntimeVersion();
         string systemStatus; try {CheckPlatform();systemStatus="✓ Windows и .NET Framework — готовы к работе";} catch(Exception e) {systemStatus="○ "+e.Message;}
@@ -386,10 +398,10 @@ class Maintenance : DarkWindow {
         log.SetBounds(28,479,764,88); 
         log.BackColor=Color.FromArgb(14,14,13); log.ForeColor=muted;  log.Font=new Font("Segoe UI",9);
         log.Text="Прогресс, личные метки и настройки GPS сохраняются при обновлении.\r\n"+(data ? "Для обновления справочника нужен интернет." : "Windows 10/11 x64 · .NET Framework 4.7.2 или новее.\r\nПеред заменой файлов создаётся резервная копия. Проверяем целостность каждого файла.");
-        status.SetBounds(28,588,764,26); status.ForeColor=ForeColor; status.Text="Всё готово к "+(data ? "обновлению базы" : "установке");
+        status.SetBounds(28,588,764,26); status.ForeColor=ForeColor; status.Text="Всё готово к "+(data ? "обновлению базы" : updating ? "обновлению приложения" : "установке");
         progress.SetBounds(28,624,764,4);
         cancel=ButtonAt("Отмена",448,651,132,false); cancel.Click+=delegate { Close(); };
-        action=ButtonAt(data ? "Обновить базу" : "Установить",592,651,200,true);
+        action=ButtonAt(data ? "Обновить базу" : updating ? "Обновить приложение" : "Установить",592,651,200,true);
         action.Click+=async delegate {
             if(complete) { Process.Start(new ProcessStartInfo(Path.Combine(target,"Tarkov Offline.exe")) {WorkingDirectory=target,UseShellExecute=false}); Close(); return; }
             try {
@@ -397,20 +409,20 @@ class Maintenance : DarkWindow {
                 if(String.IsNullOrWhiteSpace(folder.Text)) throw new IOException("Выберите папку приложения.");
                 if(!data && Directory.Exists(target) && Directory.GetFileSystemEntries(target).Length>0 && !File.Exists(Path.Combine(target,"Tarkov Offline.exe"))) throw new IOException("В этой папке уже есть другие файлы. Выберите пустую папку или папку EFT GPS.");
                 CheckPlatform();
-                using(var confirm=new InstallConfirmation(data ? "Обновить локальную базу?" : "Установить EFT GPS?",
-                    "Папка: "+target+"\n\nЗакройте окно приложения перед продолжением. Автосъёмку GPS после запуска нужно будет включить заново.\n\n"+(data ? "Понадобится интернет. Предыдущая база будет сохранена." : "Проверим пакет и установим недостающий WebView2.\nЯрлык на рабочем столе: "+(shortcut.Checked ? "создать / обновить" : "не создавать"))+"\nЛичный прогресс и настройки останутся на месте.",data ? "Обновить" : "Установить")) if(confirm.ShowDialog(this)!=DialogResult.OK) return;
+                using(var confirm=new InstallConfirmation(data ? "Обновить локальную базу?" : updating ? "Обновить EFT GPS?" : "Установить EFT GPS?",
+                    "Папка: "+target+"\n\nОкно приложения будет закрыто перед обновлением. Автосъёмку GPS после запуска нужно будет включить заново.\n\n"+(data ? "Понадобится интернет. Предыдущая база будет сохранена." : updating ? "Проверим загруженный пакет и заменим файлы приложения. Резервная копия изменённых файлов будет сохранена." : "Проверим пакет и установим недостающий WebView2.\nЯрлык на рабочем столе: "+(shortcut.Checked ? "создать / обновить" : "не создавать"))+"\nЛичный прогресс и настройки останутся на месте.",data || updating ? "Обновить" : "Установить")) if(confirm.ShowDialog(this)!=DialogResult.OK) return;
                 writeShortcut=shortcut.Checked;
                 busy=true; action.Enabled=false; cancel.Enabled=false; browse.Enabled=false; folder.Enabled=false; shortcut.Enabled=false;
                 steps.Text="✓  Подготовка     /     02  Установка     /     03  Готово"; status.Text="Подготовка файлов…"; progress.Running=true; NativeText.Apply(this);
                 await Task.Run((Action)RunOperation);
                 complete=true; progress.Value=100; steps.Text="✓  Подготовка     /     ✓  Установка     /     ✓  Готово";
-                status.Text=data ? "База обновлена. Можно возвращаться в Тарков." : "Приложение установлено. Всё готово к запуску.";
+                status.Text=data ? "База обновлена. Можно возвращаться в Тарков." : updating ? "Приложение обновлено. Всё готово к запуску." : "Приложение установлено. Всё готово к запуску.";
                 action.Text="Открыть приложение"; cancel.Text="Закрыть";
             } catch(Exception e) {
                 status.Text="Не удалось завершить "+(data ? "обновление базы" : "установку");
                 Append(e.Message+"\r\nИсправьте причину и повторите попытку. Личный прогресс не изменён.");
                 try { Directory.CreateDirectory(Path.Combine(target,"userdata")); File.WriteAllText(Path.Combine(target,"userdata","maintenance-error.log"),e.ToString()); } catch {}
-                action.Text="Повторить"; folder.Enabled=true; browse.Enabled=operation=="--setup"; shortcut.Enabled=true;
+                action.Text="Повторить"; folder.Enabled=!updating; browse.Enabled=operation=="--setup"; shortcut.Enabled=true;
             } finally { busy=false; action.Enabled=true; cancel.Enabled=true; progress.Running=false; progress.Invalidate(); NativeText.Apply(this); }
         };
         FormClosing+=delegate(object sender,FormClosingEventArgs e) { if(busy) {e.Cancel=true; status.Text="Идёт установка. Дождитесь завершения, чтобы не повредить файлы.";} };
@@ -433,7 +445,8 @@ class Maintenance : DarkWindow {
         russian.Click+=delegate {NativeText.Select(false);refreshLanguageButtons();};
         english.Click+=delegate {NativeText.Select(true);refreshLanguageButtons();};
         Controls.AddRange(new Control[]{russian,english});refreshLanguageButtons();
-        if(data || operation=="--install") {folder.ReadOnly=true; browse.Enabled=false;}
+        if(data || updating || operation=="--install") {folder.ReadOnly=true; browse.Enabled=false;}
+        if(updating) {browse.Visible=false;folder.Width=764;}
     }
     void Append(string value) { if(IsDisposed) return; BeginInvoke((Action)delegate { log.AppendText("\r\n"+value); if(busy) status.Text=NativeText.T(value.Length>100 ? value.Substring(0,97)+"…" : value); }); }
     static void CheckPlatform() {
@@ -459,7 +472,7 @@ class Maintenance : DarkWindow {
     }
     void StopServer() {
         foreach (var p in Process.GetProcessesByName("TarkovDesktopHost")) {
-            try { if (String.Equals(p.MainModule.FileName, Path.Combine(target, "runtime", "TarkovDesktopHost.exe"), StringComparison.OrdinalIgnoreCase) && !p.WaitForExit(5000)) throw new IOException("Сначала закройте окно EFT GPS"); } catch (System.ComponentModel.Win32Exception) {}
+            try { if (String.Equals(p.MainModule.FileName, Path.Combine(target, "runtime", "TarkovDesktopHost.exe"), StringComparison.OrdinalIgnoreCase) ) { if(updating) p.CloseMainWindow(); if(!p.WaitForExit(10000)) throw new IOException("Сначала закройте окно EFT GPS"); } } catch (System.ComponentModel.Win32Exception) {}
         }
         try {
             var request = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:38471/api/desktop/stop");
@@ -477,6 +490,18 @@ class Maintenance : DarkWindow {
         }
     }
     void RunOperation() {
+        string identity;
+        using(var sha=SHA256.Create()) identity=BitConverter.ToString(sha.ComputeHash(Encoding.UTF8.GetBytes(Path.GetFullPath(target).TrimEnd(Path.DirectorySeparatorChar).ToLowerInvariant()))).Replace("-","");
+        using(var installMutex=new Mutex(false,"Local\\EFTGPS-install-"+identity)) {
+            bool acquired=false;
+            try {
+                try {acquired=installMutex.WaitOne(0);} catch(AbandonedMutexException) {acquired=true;}
+                if(!acquired) throw new IOException("Обновление уже выполняется");
+                RunOperationCore();
+            } finally {if(acquired) installMutex.ReleaseMutex();}
+        }
+    }
+    void RunOperationCore() {
         StopServer();
         if (operation == "--data") {
             var start = new ProcessStartInfo(Path.Combine(target, "runtime", "node.exe"), "\"" + Path.Combine(target, "scripts", "refresh.mjs") + "\"") { WorkingDirectory = target, UseShellExecute = false, CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true, StandardOutputEncoding = Encoding.UTF8, StandardErrorEncoding = Encoding.UTF8 };
@@ -493,13 +518,16 @@ class Maintenance : DarkWindow {
         if (embedded) package = ExtractEmbeddedPackage();
         string staged = Path.Combine(Path.GetTempPath(), "TarkovOffline-package-" + Guid.NewGuid().ToString("N"));
         try {
+            if(updating) PackageInstaller.CheckUpdateHash(package,expectedHash);
             var release = PackageInstaller.Stage(package, staged, Append);
+            if(updating) PackageInstaller.CheckUpdateVersion(target,release,expectedVersion);
             long unpacked=0; foreach(var file in release.files) unpacked+=file.size;
             RequireSpace(target,unpacked*2+512L*1024*1024);
             EnsureRuntime(staged);
             string backup = PackageInstaller.Install(target, staged, release, Append);
             Append("Установлена версия " + release.version + ". Резервная копия изменённых файлов: " + backup);
             if(writeShortcut) CreateShortcut();
+            if(updating) { try {File.Delete(package);} catch {} }
         } finally {
             string temporaryRoot = Path.GetFullPath(Path.GetTempPath()).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
             string resolved = Path.GetFullPath(staged);

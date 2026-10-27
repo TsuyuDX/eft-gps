@@ -1,6 +1,6 @@
 {
   "name": "tarkov-offline",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "private": true,
   "type": "module",
   "description": "T_S_U_Y_U EFT GPS — offline maps and raid companion",

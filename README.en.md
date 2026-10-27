@@ -1,4 +1,4 @@
-# T_S_U_Y_U EFT GPS 1.7.0
+# T_S_U_Y_U EFT GPS 1.7.1
 
 Offline maps, screenshot GPS and raid preparation for Escape from Tarkov on Windows. Created by T_S_U_Y_U.
 
@@ -6,9 +6,9 @@ Offline maps, screenshot GPS and raid preparation for Escape from Tarkov on Wind
 
 **Downloaded the project from GitHub?** Extract the complete Download ZIP or clone the repository, then run **Start EFT GPS.cmd**. The `main` and development branches include the full offline package, Node.js and production modules. Missing WebView2 is prepared from bundled offline parts. See [checkout and rollback instructions](GIT-CHECKOUT.md).
 
-Run **TSUYU-EFTGPS-1.7.0-Setup.exe**, choose a folder and confirm installation. To update, select your existing app folder. Quest progress, markers, notes and GPS preferences are preserved. The optional desktop shortcut is **T_S_U_Y_U EFT GPS**.
+Run **TSUYU-EFTGPS-1.7.1-Setup.exe**, choose a folder and confirm installation. To update, select your existing app folder. Quest progress, markers, notes and GPS preferences are preserved. The optional desktop shortcut is **T_S_U_Y_U EFT GPS**.
 
-For the portable version, extract **TSUYU-EFTGPS-1.7.0-Windows.zip** and run **EFT GPS.exe**. Do not run it inside an archive.
+For the portable version, extract **TSUYU-EFTGPS-1.7.1-Windows.zip** and run **EFT GPS.exe**. Do not run it inside an archive.
 
 Requires Windows 10 version 1903 or later, or Windows 11, x64. The installer checks system components and free space. The full package includes the rendering runtime for offline setup if it is missing. No separate drivers are needed.
 
@@ -50,3 +50,7 @@ The installer verifies file hashes and backs up replaced files. If installation 
 Escape from Tarkov and game assets © Battlestate Games. An independent community application, not an official Battlestate Games product.
 
 [Official game website](https://www.escapefromtarkov.com/) · [Official developer announcements](https://steamcommunity.com/app/3932890/announcements/) · [Русский](README.md)
+
+## Application updates
+
+The app checks the latest stable GitHub release once at startup. New versions download with a bottom progress bar, then open a dedicated update window for the current installation folder, preserving personal data. The app remains usable offline. Install 1.7.1 manually once to enable this feature. See [AUTO-UPDATE.md](AUTO-UPDATE.md).

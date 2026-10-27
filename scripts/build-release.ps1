@@ -11,3 +11,8 @@ $taskOutput = Join-Path (Split-Path (Get-Location)) "Releases\$taskVersion"
 New-Item -ItemType Directory -Path $taskOutput -Force | Out-Null
 & work\PackRelease.exe (Get-Location).Path (Join-Path (Get-Location) 'work\release-input.json') (Join-Path $taskOutput "TSUYU-EFTGPS-$taskVersion-Windows.zip") (Join-Path $taskOutput "TSUYU-EFTGPS-$taskVersion-Setup.exe")
 if ($LASTEXITCODE -ne 0) { throw 'Не удалось собрать выпуск.' }
+
+# Upload this manifest and all parts together before marking the GitHub release Latest.
+$taskUpdateOutput = Join-Path $taskOutput 'AutoUpdate'
+& runtime\node.exe scripts\build-app-update.mjs (Join-Path $taskOutput "TSUYU-EFTGPS-$taskVersion-Windows.zip") $taskUpdateOutput $taskVersion
+if ($LASTEXITCODE -ne 0) { throw 'Auto-update package generation failed.' }

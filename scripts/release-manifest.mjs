@@ -27,6 +27,7 @@ for (const name of [
   "Tarkov GPS.exe",
   "EFT GPS.exe",
   "README.en.md",
+  "AUTO-UPDATE.md",
   "package.json",
   "package-lock.json",
   "server.mjs",
