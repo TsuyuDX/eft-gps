@@ -1,3 +1,4 @@
+import { startupDiagnostics } from "./server/startup.mjs";
 import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
@@ -73,6 +74,13 @@ const server = http.createServer(async (req, res) => {
           instance,
           gps: true,
         }),
+      );
+    }
+    if (url.pathname === "/api/startup" && req.method === "GET") {
+      res.setHeader("Content-Type", "application/json");
+      res.setHeader("Cache-Control", "no-store");
+      return res.end(
+        JSON.stringify(await startupDiagnostics(root, gps.config)),
       );
     }
     if (url.pathname === "/api/desktop/stop" && req.method === "POST") {

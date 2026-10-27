@@ -10,13 +10,13 @@ using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
 using System.Reflection;
-[assembly: AssemblyVersion("1.5.0.0")]
-[assembly: AssemblyFileVersion("1.5.0.0")]
+[assembly: AssemblyVersion("1.6.0.0")]
+[assembly: AssemblyFileVersion("1.6.0.0")]
 
 class DesktopHost : Form {
     readonly string root, origin;
     readonly WebView2 web = new WebView2();
-    Panel serviceError;
+    Panel serviceError, nativeLoading;
     bool maintenance;
     [DllImport("dwmapi.dll")] static extern int DwmSetWindowAttribute(IntPtr window, int attribute, ref int value, int size);
     [DllImport("user32.dll")] static extern bool SetForegroundWindow(IntPtr window);
@@ -56,6 +56,16 @@ class DesktopHost : Form {
         web.Dock = DockStyle.Fill;
         web.DefaultBackgroundColor = Color.Black;
         Controls.Add(web);
+        web.Visible=false;
+        nativeLoading=new Panel {Dock=DockStyle.Fill,BackColor=Color.FromArgb(5,5,4)};
+        var loadingBox=new Panel {Size=new Size(520,180),BackColor=Color.FromArgb(12,12,10)};
+        loadingBox.Controls.Add(new PictureBox {Image=new Bitmap(Path.Combine(root,"public","icons","app-192.png")),SizeMode=PictureBoxSizeMode.Zoom,Bounds=new Rectangle(28,28,64,64)});
+        loadingBox.Controls.Add(new Label {Text="ТАРКОВ GPS",Font=new Font("Segoe UI",23),ForeColor=Color.FromArgb(210,199,167),Bounds=new Rectangle(112,28,380,46)});
+        loadingBox.Controls.Add(new Label {Text="Подготовка окна приложения…",Font=new Font("Segoe UI",10),ForeColor=Color.FromArgb(151,147,132),Bounds=new Rectangle(112,82,380,30)});
+        loadingBox.Controls.Add(new Panel {BackColor=Color.FromArgb(185,171,130),Bounds=new Rectangle(30,144,460,2)});
+        nativeLoading.Controls.Add(loadingBox);
+        nativeLoading.Resize+=delegate {if(nativeLoading!=null)loadingBox.Location=new Point(Math.Max(0,(nativeLoading.ClientSize.Width-loadingBox.Width)/2),Math.Max(0,(nativeLoading.ClientSize.Height-loadingBox.Height)/2));};
+        Controls.Add(nativeLoading);nativeLoading.BringToFront();
         Shown += async delegate {
             try {
                 int dark = 1, black = 0, white = 0x00FFFFFF;
@@ -127,6 +137,7 @@ class DesktopHost : Form {
                 };
                 core.ProcessFailed += delegate { MessageBox.Show(this, "Окно приложения завершилось с ошибкой. Закройте и снова откройте Тарков GPS. Прогресс хранится отдельно.", "Тарков GPS", MessageBoxButtons.OK, MessageBoxIcon.Error); };
                 core.NavigationCompleted += delegate(object sender, CoreWebView2NavigationCompletedEventArgs e) {
+                    HideNativeLoading();
                     if (!e.IsSuccess) ShowServiceError();
                 };
                 core.Navigate(origin + "/");
@@ -139,7 +150,12 @@ class DesktopHost : Form {
         };
         FormClosing += delegate { if (!maintenance) StopAutoCapture(); };
     }
+    void HideNativeLoading() {
+        if(nativeLoading!=null) {var old=nativeLoading;nativeLoading=null;Controls.Remove(old);old.Dispose();}
+        web.Visible=true;
+    }
     void ShowServiceError() {
+        HideNativeLoading();
         if (serviceError != null) return;
         web.Visible = false;
         var panel = new Panel { Dock = DockStyle.Fill, BackColor = Color.Black };
@@ -152,6 +168,7 @@ class DesktopHost : Form {
             try {
                 var start = new ProcessStartInfo(Path.Combine(root, "runtime", "node.exe"), "\"" + Path.Combine(root, "server.mjs") + "\" --desktop") { WorkingDirectory = root, UseShellExecute = false, CreateNoWindow = true };
                 start.EnvironmentVariables["PORT"] = new Uri(origin).Port.ToString();
+                start.EnvironmentVariables["TARKOV_DOCUMENTS_PATH"] = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 Process.Start(start);
                 bool ready = await System.Threading.Tasks.Task.Run(delegate {
                     for (int i = 0; i < 60; i++) {

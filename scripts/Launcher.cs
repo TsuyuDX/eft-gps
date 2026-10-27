@@ -24,6 +24,7 @@ class Launcher {
             if (!running) {
                 var start = new ProcessStartInfo(Path.Combine(root, "runtime", "node.exe"), "\"" + Path.Combine(root, "server.mjs") + "\" --desktop");
                 start.WorkingDirectory = root;
+                start.EnvironmentVariables["TARKOV_DOCUMENTS_PATH"] = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 start.UseShellExecute = false;
                 start.CreateNoWindow = true;
                 Process.Start(start);

@@ -1,5 +1,6 @@
 const allowed = (key) =>
   key === "tarkov-interface-v1" ||
+  key === "tarkov-locale-v1" ||
   /^map-filters-v2-(regular|pve)-[a-z0-9-]+$/.test(key);
 let pending = Promise.resolve();
 export function readWindowSetting(key) {

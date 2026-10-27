@@ -1,6 +1,6 @@
 {
   "name": "tarkov-offline",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "private": true,
   "type": "module",
   "description": "Тарков GPS — карты, навигация и подготовка к рейдам",
