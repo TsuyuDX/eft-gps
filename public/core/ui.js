@@ -26,6 +26,23 @@ export function modal(content) {
   document.querySelector("#modal-content").innerHTML = content;
   document.querySelector("#modal").showModal();
 }
+export function confirmAction(title, message, actionLabel) {
+  modal(
+    `<h2>${esc(title)}</h2><p>${esc(message)}</p><div class="row wrap"><button type="button" id="confirm-action" class="primary">${esc(actionLabel)}</button><button type="button" id="cancel-action">Отмена</button></div>`,
+  );
+  const dialog = document.querySelector("#modal");
+  return new Promise((resolve) => {
+    let accepted = false;
+    dialog.addEventListener("close", () => resolve(accepted), { once: true });
+    dialog.querySelector("#confirm-action").onclick = () => {
+      accepted = true;
+      dialog.close();
+    };
+    const cancel = dialog.querySelector("#cancel-action");
+    cancel.onclick = () => dialog.close();
+    cancel.focus();
+  });
+}
 export function errorView(e) {
   return `<div class="empty"><h2>Данные недоступны</h2><p>${esc(e.message)}</p><a class="button" href="#/settings">Проверить базу</a></div>`;
 }

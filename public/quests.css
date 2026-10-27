@@ -1,0 +1,370 @@
+.quest-dialog {
+  width: min(1120px, 96vw);
+  max-width: 1120px;
+  padding: 28px;
+  overflow: hidden;
+}
+.quest-dialog #modal-content {
+  min-height: 0;
+}
+.quest-dialog .quest-card-view {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(85vh - 58px);
+  min-height: 0;
+}
+.quest-dialog .quest-card-header,
+.quest-dialog .quest-context,
+.quest-dialog .quest-tabs,
+.quest-dialog .quest-full-link {
+  flex-shrink: 0;
+}
+.quest-dialog .quest-full-link {
+  align-self: flex-start;
+}
+.quest-guide-reference {
+  padding: 10px 14px;
+  border: 1px solid #333;
+  border-radius: 5px;
+  margin-bottom: 16px;
+}
+.quest-guide-reference > summary {
+  cursor: pointer;
+  color: #c5baa2;
+  font-size: 12px;
+}
+.quest-card-header {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  padding: 0 28px 20px 0;
+  margin: 0;
+  max-width: none;
+}
+.quest-card-header > div {
+  flex: 1;
+  min-width: 0;
+}
+.quest-card-header h1,
+.quest-card-header h2 {
+  margin: 2px 0 12px;
+  font-size: 26px;
+}
+.quest-title-icon {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: #111;
+}
+.quest-context {
+  display: grid;
+  gap: 6px;
+  padding: 14px 18px;
+  background: #111;
+  border: 1px solid #363636;
+  border-left: 3px solid #c3b18a;
+  margin-bottom: 16px;
+}
+.quest-context .eyebrow {
+  margin: 0;
+}
+.quest-tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 0 0 12px;
+  border-bottom: 1px solid #333;
+}
+.quest-tabs [role="tab"] {
+  white-space: nowrap;
+  background: transparent;
+  border-color: transparent;
+  color: #aaa;
+}
+.quest-tabs [aria-selected="true"] {
+  background: #202020;
+  color: #fff;
+  border-color: #555;
+}
+.quest-tab-body {
+  padding-top: 20px;
+}
+.quest-dialog .quest-tab-body {
+  max-height: none;
+  min-height: 0;
+  flex: 1;
+  overflow: auto;
+  padding-right: 12px;
+}
+.quest-tab-body [role="tabpanel"][hidden] {
+  display: none;
+}
+.quest-guide {
+  font-size: 14px;
+  line-height: 1.85;
+}
+.quest-guide a:not(.button) {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  color: #d9cab0;
+}
+.quest-hero-image {
+  display: block;
+  max-width: 320px;
+  max-height: 160px;
+  object-fit: contain;
+  margin: 0 0 20px;
+  border-radius: 6px;
+}
+.quest-guide h2,
+.quest-guide h3 {
+  margin-top: 24px;
+}
+.quest-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 18px 0;
+}
+.quest-gallery figure {
+  margin: 0;
+  min-width: 0;
+}
+.quest-guide-image {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  background: #101010;
+  border: 1px solid #333;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.quest-guide-image img {
+  width: 100%;
+  max-height: 250px;
+  object-fit: contain;
+}
+.quest-guide-image span {
+  padding: 8px 2px 0;
+  color: #bdbdbd;
+}
+.quest-guide-image.inline-image {
+  display: inline-flex;
+  width: auto;
+  padding: 2px;
+  vertical-align: middle;
+}
+.quest-guide-image.inline-image img {
+  width: auto;
+  max-width: 72px;
+  max-height: 64px;
+}
+.quest-guide-image.inline-image span {
+  display: none;
+}
+.quest-image-missing {
+  display: block;
+  padding: 12px;
+  color: #999;
+  font-size: 12px;
+  border: 1px dashed #444;
+}
+.quest-guide-table {
+  margin: 20px 0;
+}
+.quest-guide-table td,
+.quest-guide-table th {
+  vertical-align: top;
+  min-width: 70px;
+  font-size: 12px;
+}
+.quest-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+.quest-columns h3 {
+  margin-top: 24px;
+}
+.quest-columns > div > h3:first-child {
+  margin-top: 0;
+}
+.quest-objective {
+  margin-bottom: 18px;
+  padding: 16px;
+  background: #0e0e0e;
+  border: 1px solid #292929;
+  border-radius: 6px;
+}
+.quest-objective .objective {
+  margin-bottom: 10px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+.quest-objective h4 {
+  margin: 12px 0 6px;
+  color: #aaa;
+  font-size: 12px;
+}
+.quest-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.quest-item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px;
+  background: #141414;
+  border: 1px solid #303030;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+.quest-item img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+.quest-unlock {
+  margin-top: 12px;
+}
+.quest-unlock p {
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+.quest-money {
+  color: #cfbe93;
+}
+.quest-full-link {
+  margin-top: 18px;
+}
+#quest-image-viewer {
+  width: min(1280px, 95vw);
+  max-width: 1280px;
+}
+#quest-image-viewer img {
+  display: block;
+  max-width: 100%;
+  max-height: 75vh;
+  margin: auto;
+  object-fit: contain;
+}
+#quest-image-viewer h3 {
+  font-size: 15px;
+  padding-right: 25px;
+}
+.map-quest-browser {
+  border: 1px solid #333;
+  background: #0b0b0b;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 14px 0 18px;
+}
+.map-quest-browser summary {
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+}
+.map-quest-browser summary small {
+  color: #888;
+  float: right;
+}
+.map-quest-browser input {
+  width: 100%;
+  margin: 12px 0 6px;
+  padding: 7px;
+  font-size: 11px;
+}
+.map-quest-results {
+  max-height: 225px;
+  overflow: auto;
+}
+.map-quest-row {
+  display: flex;
+  align-items: stretch;
+  gap: 3px;
+  margin: 4px 0;
+}
+.map-quest-row button {
+  min-height: 40px;
+  padding: 5px;
+  font-size: 11px;
+  text-align: left;
+  background: #111;
+  border: 1px solid #252525;
+}
+.map-quest-row [data-select-map-quest] {
+  flex: 1;
+  justify-content: flex-start;
+  min-width: 0;
+}
+.map-quest-row [aria-pressed="true"] {
+  border-color: #b7a47f;
+  background: #24211b;
+}
+.map-quest-row img {
+  width: 27px;
+  height: 27px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.map-quest-row span {
+  display: block;
+  min-width: 0;
+  line-height: 1.45;
+}
+.map-quest-row small {
+  display: block;
+  color: #888;
+  font-size: 9px;
+}
+.map-quest-selection p {
+  margin: 8px 0 0;
+}
+.map-quest-selection button {
+  font-size: 10px;
+  padding: 3px 0;
+  min-height: 25px;
+}
+.map-marker-icon .quest-marker-badge {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #000;
+  box-shadow: 0 0 2px #000;
+}
+@media (max-width: 700px) {
+  .quest-card-header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .quest-card-header h1,
+  .quest-card-header h2 {
+    font-size: 21px;
+  }
+  .quest-card-header > button {
+    width: 100%;
+  }
+  .quest-gallery,
+  .quest-columns {
+    grid-template-columns: 1fr;
+  }
+  .quest-dialog {
+    padding: 18px;
+  }
+  .quest-dialog .quest-tab-body {
+    max-height: 51vh;
+  }
+}

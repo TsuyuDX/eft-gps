@@ -3,11 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#171717" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="color-scheme" content="dark" />
     <title>TarkovHead · Offline</title>
+    <link rel="icon" href="/icons/app.ico" sizes="any" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/icons/app-192.png"
+      sizes="192x192"
+    />
+    <link rel="apple-touch-icon" href="/icons/app-192.png" />
     <link rel="stylesheet" href="/style.css" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="stylesheet" href="/gps.css" />
+    <link rel="stylesheet" href="/quests.css" />
   </head>
   <body>
     <header>
@@ -27,7 +37,12 @@
           ><span class="muted" id="snapshot-date">Подготовка базы…</span>
         </div>
         <div class="row">
-          <button class="quiet" id="settings-link">⚙ Данные и прогресс</button
+          <button
+            class="quiet"
+            id="settings-link"
+            title="Настройки интерфейса и карты"
+          >
+            ⚙ Настройки</button
           ><select id="mode" aria-label="Режим игры">
             <option value="regular">⚔ PVP</option>
             <option value="pve">♧ PVE</option>

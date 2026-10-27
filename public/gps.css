@@ -69,9 +69,9 @@
 .gps-player {
   position: absolute;
   z-index: 12;
-  width: 28px;
-  height: 28px;
-  margin: -14px;
+  width: 32px;
+  height: 32px;
+  margin: -16px;
   pointer-events: none;
   filter: drop-shadow(0 0 5px #000);
   transition:
@@ -80,14 +80,22 @@
 }
 .gps-arrow {
   display: block;
-  color: #22d3ee;
-  font-size: 29px;
-  line-height: 28px;
-  text-align: center;
-  text-shadow:
-    -1px -1px 0 #083344,
-    1px 1px 0 #083344;
+  width: 32px;
+  height: 32px;
+  overflow: visible;
   transform-origin: center;
+}
+.gps-arrow path {
+  fill: none;
+  stroke-linejoin: miter;
+}
+.gps-arrow-shadow {
+  stroke: #000;
+  stroke-width: 6;
+}
+.gps-arrow-outline {
+  stroke: #fff;
+  stroke-width: 3.3;
 }
 .gps-player-label {
   display: block;

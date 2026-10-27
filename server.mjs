@@ -4,10 +4,19 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { GpsService } from "./server/gps.mjs";
 import { spawn } from "node:child_process";
+import crypto from "node:crypto";
+import { validWindowSettings } from "./server/window-settings.mjs";
 const root = path.dirname(fileURLToPath(import.meta.url));
 const publicRoot = path.join(root, "public"),
   userRoot = path.join(root, "userdata");
 const port = Number(process.env.PORT || 38471);
+const instance = crypto
+  .createHash("sha256")
+  .update(path.resolve(root).toLowerCase())
+  .digest("hex");
+const appVersion = JSON.parse(
+  fs.readFileSync(path.join(root, "package.json")),
+).version;
 const types = {
   ".html": "text/html; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
@@ -57,8 +66,39 @@ const server = http.createServer(async (req, res) => {
       lastPing = Date.now();
       res.setHeader("Content-Type", "application/json");
       return res.end(
-        JSON.stringify({ app: "TarkovOffline", version: 2, gps: true }),
+        JSON.stringify({
+          app: "TarkovOffline",
+          version: 3,
+          appVersion,
+          instance,
+          gps: true,
+        }),
       );
+    }
+    if (url.pathname === "/api/desktop/stop" && req.method === "POST") {
+      if (req.headers.origin !== `http://${req.headers.host}`) {
+        res.writeHead(403);
+        return res.end();
+      }
+      let body = "";
+      for await (const chunk of req) {
+        body += chunk.toString();
+        if (body.length > 1024) {
+          res.writeHead(413);
+          res.end();
+          req.destroy();
+          return;
+        }
+      }
+      if (JSON.parse(body).instance !== instance) {
+        res.writeHead(409);
+        return res.end();
+      }
+      gps.stop();
+      res.writeHead(204);
+      res.end();
+      server.close(() => process.exit(0));
+      return;
     }
     if (url.pathname.startsWith("/api/gps/")) {
       res.setHeader("Content-Type", "application/json");
@@ -127,6 +167,43 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(400);
         return res.end(JSON.stringify({ error: e.message }));
       }
+    }
+    if (url.pathname === "/api/window-settings") {
+      const file = path.join(userRoot, "window-settings.json");
+      res.setHeader("Content-Type", "application/json");
+      res.setHeader("Cache-Control", "no-store");
+      if (req.method === "GET")
+        return res.end(fs.existsSync(file) ? fs.readFileSync(file) : "null");
+      if (req.method !== "PUT") {
+        res.writeHead(405);
+        return res.end("{}");
+      }
+      if (req.headers.origin !== `http://${req.headers.host}`) {
+        res.writeHead(403);
+        return res.end("{}");
+      }
+      const chunks = [];
+      let bytes = 0;
+      for await (const chunk of req) {
+        bytes += chunk.length;
+        if (bytes > 256 * 1024) {
+          res.writeHead(413);
+          res.end("{}");
+          req.destroy();
+          return;
+        }
+        chunks.push(chunk);
+      }
+      const value = JSON.parse(Buffer.concat(chunks));
+      if (!validWindowSettings(value)) {
+        res.writeHead(400);
+        return res.end("{}");
+      }
+      fs.mkdirSync(userRoot, { recursive: true });
+      fs.writeFileSync(file + ".tmp", JSON.stringify(value));
+      fs.renameSync(file + ".tmp", file);
+      res.writeHead(204);
+      return res.end();
     }
     if (url.pathname === "/api/profile") {
       const file = path.join(userRoot, "profile.json");
