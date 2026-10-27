@@ -121,6 +121,8 @@ test("first-run tour completes all steps, persists dismissal and replays from He
     document
       .querySelector('[data-help-action="support"]')
       .hasAttribute("disabled"),
-    true,
+    false,
   );
+  document.querySelector('[data-help-action="support"]').onclick();
+  assert.match(document.querySelector('#support-title').textContent,/Support/);
 });

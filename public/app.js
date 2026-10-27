@@ -1,6 +1,7 @@
 import { localeCode } from "./core/localization.js";
 import { APP_TITLE } from "./core/brand.js";
 import { openHelp, maybeShowTour } from "./features/help.js";
+import { openSupport } from "./features/support.js";
 import { language, t } from "./core/localization.js";
 import { prepareStartup, finishStartup, startupError } from "./core/startup.js";
 import { newsCards, newsEntries, renderNews } from "./features/news.js";
@@ -196,6 +197,7 @@ document.querySelector("#menu").onclick = () =>
   navigation.classList.toggle("expanded");
 document.querySelector("#settings-link").onclick = openPreferences;
 document.querySelector("#help-link").onclick = openHelp;
+document.querySelector("#support-link").onclick = () => openSupport();
 window.addEventListener("save-failed", () =>
   toast(
     "Не удалось записать файл. Прогресс остаётся в окне; сохраните резервную копию.",

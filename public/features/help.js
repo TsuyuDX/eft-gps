@@ -1,4 +1,5 @@
 import { language } from "../core/localization.js";
+import { openSupport } from "./support.js";
 import { modal, esc, toast } from "../core/ui.js";
 import {
   readWindowSetting,
@@ -82,8 +83,8 @@ const steps = [
       "Ctrl+K opens global search. Esc closes a detail view or collapses the map. Find this tour, FAQs and release notes under Help.",
     ],
     tip: [
-      "Discord и поддержка проекта скоро будут доступны. Пока кнопки отмечены как заглушки.",
-      "Discord and project support are coming soon. Their buttons are clearly marked as placeholders.",
+      "В разделе поддержки можно узнать, как помочь развитию проекта. Discord-сервер скоро будет доступен.",
+      "Visit Support to learn how to help fund development. The Discord server is coming soon.",
     ],
   },
 ];
@@ -266,8 +267,8 @@ export function openHelp() {
     [
       "support",
       L("Поддержать проект", "Support the project"),
-      L("Ссылка для поддержки · скоро будет", "Support link · coming soon"),
-      L("Скоро", "Coming soon"),
+      L("Добровольная поддержка разработки · Boosty и Ko-fi", "Optional development support · Boosty and Ko-fi"),
+      L("Открыть", "Open"),
     ],
     [
       "changes",
@@ -286,7 +287,7 @@ export function openHelp() {
     ],
   ];
   modal(
-    `<div id="help-panel"><h2>${L("Помощь", "Help")}</h2>${rows.map(([id, title, description, button]) => `<div class="help-row"><div><strong>${esc(title)}</strong><small>${esc(description)}</small></div>${id === "idea" ? `<a class="button" href="${PROJECT_URL}/issues/new" target="_blank" rel="noopener">${button} ↗</a>` : `<button data-help-action="${id}" ${["discord", "support"].includes(id) ? 'disabled aria-disabled="true"' : ""}>${button}</button>`}</div>`).join("")}</div>`,
+      `<div id="help-panel"><h2>${L("Помощь", "Help")}</h2>${rows.map(([id, title, description, button]) => `<div class="help-row"><div><strong>${esc(title)}</strong><small>${esc(description)}</small></div>${id === "idea" ? `<a class="button" href="${PROJECT_URL}/issues/new" target="_blank" rel="noopener">${button} ↗</a>` : `<button data-help-action="${id}" ${id === "discord" ? 'disabled aria-disabled="true"' : ""}>${button}</button>`}</div>`).join("")}</div>`,
   );
   const actions = {
     tour: openTour,
@@ -294,6 +295,7 @@ export function openHelp() {
     faq: faqPanel,
     changes: changesPanel,
     about: creditsPanel,
+    support: () => openSupport(),
   };
   document
     .querySelectorAll("[data-help-action]")

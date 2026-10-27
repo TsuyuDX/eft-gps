@@ -400,6 +400,7 @@ export const englishUi = {
   "Discord-сервер скоро будет": "Discord server coming soon",
   "Поддержка проекта скоро будет": "Project support coming soon",
   "♡ Поддержать": "♡ Support",
+  "Поддержать развитие проекта": "Support development",
   "Язык применяется к интерфейсу, предметам, заданиям и справочнику.": "Language applies to the interface, items, quests and reference content.",
   "T_S_U_Y_U EFT GPS: новый этап": "T_S_U_Y_U EFT GPS: a new chapter",
   "Английская база, первый обзор приложения и раздел помощи — в едином оформлении.": "English game data, a first-run tour and Help, all in one visual style.",

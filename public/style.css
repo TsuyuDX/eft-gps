@@ -2233,6 +2233,37 @@ footer a,
 .tour-dots .active {background:#b9ab82;}
 .community-stub {gap:7px;opacity:.6!important;}
 .community-stub small {font-size:9px;color:#b9ab82;border:1px solid #b9ab8233;padding:0 4px;border-radius:3px;}
+.support-link {color:#c9ba91!important;border-color:#b9ab8255!important;}
+.support-panel {padding-top:5px;}
+.support-panel h2 {margin:10px 30px 14px 0;}
+.support-intro {color:#b7b3a5;line-height:1.75;max-width:680px;}
+.support-free {display:flex;gap:13px;align-items:center;padding:15px 18px;margin:20px 0;border:1px solid #b9ab823d;background:#b9ab820b;color:#d1c5a6;font-size:13px;line-height:1.7;}
+.support-free>span:first-child {font-size:26px;flex-shrink:0;}
+.support-options {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:22px 0;}
+.support-option {display:flex;flex-direction:column;gap:16px;padding:20px;border:1px solid #b9ab8233;background:#11110f;border-radius:5px;min-width:0;}
+.support-provider-heading {display:flex;gap:11px;align-items:center;flex-wrap:wrap;}
+.support-provider-heading h3 {margin:0;color:#e5dfd0;font-size:19px;}
+.support-provider-heading small {font-size:11px;color:#a09a88;}
+.support-provider-icon {display:grid;place-items:center;flex-shrink:0;width:39px;height:39px;border:1px solid #b9ab8255;background:#b9ab8212;color:#d2bd85;font-size:20px;font-weight:700;border-radius:9px;}
+.support-status {margin-left:auto;border:1px solid #b9ab822e;padding:2px 7px;font-size:10px;color:#aaa18b;white-space:nowrap;border-radius:3px;}
+.support-status.ready {color:#b8c9a4;border-color:#b8c9a455;}
+.support-option p {margin:0;color:#a9a697;font-size:13px;line-height:1.7;}
+.support-option .button,.support-option button {margin-top:auto;width:100%;min-height:43px;white-space:normal;text-align:center;line-height:1.5;justify-content:center;}
+.support-explainer {border-top:1px solid #b9ab8228;padding-top:18px;}
+.support-benefits {margin:22px 0;padding:20px;background:#b9ab8207;border:1px solid #b9ab8233;border-radius:5px;}
+.support-benefits-heading {display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;}
+.support-benefits h3 {margin:0;font-size:15px;color:#d1c5a6;}
+.support-benefits-heading small {font-size:10px;color:#a89f89;}
+.support-benefits ul {list-style:none;margin:18px 0;padding:0;display:grid;gap:18px;}
+.support-benefits li {display:flex;gap:13px;align-items:flex-start;}
+.support-benefits li>span {color:#c9ba91;font-size:19px;line-height:1.3;flex-shrink:0;}
+.support-benefits strong {font-size:13px;font-weight:500;color:#ded8ca;}
+.support-benefits li p {font-size:12px;line-height:1.75;color:#a9a697;margin:6px 0 0;}
+.support-benefits-note {margin:0;border-top:1px solid #b9ab8222;padding-top:13px;color:#a89f89;font-size:11px;line-height:1.8;}
+.support-explainer h3 {font-size:14px;color:#c9ba91;margin:0 0 10px;}
+.support-explainer p {color:#a9a697;font-size:12px;line-height:1.8;}
+.support-pending {font-size:12px;line-height:1.8;padding:12px 15px;color:#a89f89;background:#b9ab8208;border-left:2px solid #b9ab8255;}
+@media(max-width:640px){.support-options{grid-template-columns:1fr}.support-option{padding:16px}.support-free{padding:12px}.support-intro{font-size:13px}}
 .brand-version {font-size:10px;color:#8f8874;letter-spacing:0;font-weight:400;}
 .statusline {flex-wrap:wrap;}
 .statusline>.row {flex-wrap:wrap;gap:8px;}
