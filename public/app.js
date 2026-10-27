@@ -11,6 +11,8 @@ import {
   renderSettings,
 } from "./features/progress.js";
 import { renderArticle, renderArticleList } from "./features/articles.js";
+import { renderGps } from "./features/gps.js";
+import { startGpsClient } from "./core/gps-client.js";
 const app = document.querySelector("#app"),
   navigation = document.querySelector("#navigation");
 let routeVersion = 0;
@@ -24,6 +26,7 @@ const sections = [
   ["quest", "Квесты"],
   ["hideout", "Убежище"],
   ["items-tracker", "Трекер предметов"],
+  ["gps", "GPS"],
 ];
 function nav() {
   navigation.innerHTML = sections
@@ -101,6 +104,7 @@ function home() {
   };
 }
 async function route() {
+  window.dispatchEvent(new Event("view-changing"));
   const version = ++routeVersion;
   const path = decodeURIComponent(location.hash.slice(2).split("?")[0]).replace(
     /\/$/,
@@ -145,6 +149,9 @@ async function route() {
         break;
       case "settings":
         renderSettings(app);
+        break;
+      case "gps":
+        await renderGps(app);
         break;
       case "boss":
       case "trader":
@@ -198,6 +205,7 @@ try {
   };
   window.addEventListener("hashchange", route);
   await route();
+  startGpsClient(() => db.mode);
 } catch (e) {
   app.innerHTML = errorView(e);
 }
