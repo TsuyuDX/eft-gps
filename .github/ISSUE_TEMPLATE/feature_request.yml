@@ -1,0 +1,17 @@
+name: Идея / Feature request
+description: Предложите улучшение EFT GPS / Suggest an EFT GPS improvement
+title: "[Idea] "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Чего не хватает? / What is missing?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Как это должно работать? / How should it work?
+    validations:
+      required: true

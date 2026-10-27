@@ -1,0 +1,29 @@
+name: Ошибка / Bug report
+description: Сообщите о проблеме в EFT GPS / Report an EFT GPS issue
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Версия приложения / Application version
+      placeholder: 1.7.1
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Шаги и проблема / Steps and problem
+      description: Что вы делали, что ожидали и что произошло? / What did you do, expect and observe?
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows и режим игры / Windows and game mode
+      placeholder: Windows 11, PvE
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Скриншот или детали / Screenshot or details
+      description: По желанию. Скройте личные данные. Не публикуйте пароли и токены. / Optional. Hide personal data and never post passwords or tokens.
