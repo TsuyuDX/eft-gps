@@ -6,7 +6,7 @@ export async function renderGps(root) {
   if (!initial) {
     root.innerHTML =
       heading("GPS") +
-      '<div class="notice">Перезапустите Tarkov GPS.exe, чтобы включить обновлённую локальную службу GPS.</div>';
+      '<div class="notice">Перезапустите EFT GPS.exe, чтобы включить обновлённую локальную службу GPS.</div>';
     return;
   }
   const c = initial.config;

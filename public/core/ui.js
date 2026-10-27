@@ -1,3 +1,4 @@
+import { localeCode } from "./localization.js";
 import { asset, localHref } from "./data.js";
 export const esc = (x) =>
   String(x ?? "").replace(
@@ -9,12 +10,12 @@ export const esc = (x) =>
   );
 export const money = (n) =>
   Number.isFinite(n)
-    ? new Intl.NumberFormat("ru-RU").format(Math.round(n)) + " ₽"
+    ? new Intl.NumberFormat(localeCode()).format(Math.round(n)) + " ₽"
     : "—";
 export const img = (u, alt = "", cls = "") =>
   `<img class="${cls}" src="${asset(u)}" alt="${esc(alt)}" loading="lazy">`;
 export const heading = (title, sub = "", actions = "") =>
-  `<div class="page-title"><div><div class="eyebrow">ТАРКОВ GPS / ПОМОЩНИК В РЕЙДЕ</div><h1>${esc(title)}</h1>${sub ? `<p class="muted">${esc(sub)}</p>` : ""}</div><div class="row">${actions}</div></div>`;
+  `<div class="page-title"><div><div class="eyebrow">EFT GPS / ПОМОЩНИК В РЕЙДЕ</div><h1>${esc(title)}</h1>${sub ? `<p class="muted">${esc(sub)}</p>` : ""}</div><div class="row">${actions}</div></div>`;
 export function toast(message) {
   const e = document.querySelector("#toast");
   e.textContent = message;
@@ -117,7 +118,7 @@ export function rich(x) {
 }
 export function pagination(total, page, size) {
   const count = Math.max(1, Math.ceil(total / size));
-  return `<div class="pagination"><span class="muted">${total.toLocaleString("ru-RU")} результатов · ${page + 1} / ${count}</span><div class="row"><button data-page="${page - 1}" ${page === 0 ? "disabled" : ""}>← Назад</button><button data-page="${page + 1}" ${page >= count - 1 ? "disabled" : ""}>Далее →</button></div></div>`;
+  return `<div class="pagination"><span class="muted">${total.toLocaleString(localeCode())} результатов · ${page + 1} / ${count}</span><div class="row"><button data-page="${page - 1}" ${page === 0 ? "disabled" : ""}>← Назад</button><button data-page="${page + 1}" ${page >= count - 1 ? "disabled" : ""}>Далее →</button></div></div>`;
 }
 export function bindPages(root, fn) {
   root

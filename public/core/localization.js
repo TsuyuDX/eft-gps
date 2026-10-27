@@ -1,5 +1,8 @@
+import { englishUi } from "./english-ui.js";
+import { translatePattern } from "./english-patterns.js";
 import { readWindowSetting, writeWindowSetting } from "./window-settings.js";
 const words = {
+  ...englishUi,
   Карты: "Maps",
   GPS: "GPS",
   Задания: "Quests",
@@ -13,11 +16,11 @@ const words = {
   Новости: "News",
   Настройки: "Settings",
   "⚙ Настройки": "⚙ Settings",
-  "Тарков GPS": "Tarkov GPS",
+  "EFT GPS": "EFT GPS",
   Тарков: "Tarkov",
   "НАВИГАЦИЯ ДЛЯ РЕЙДА": "RAID NAVIGATION",
   "НАВИГАЦИЯ / ПОДГОТОВКА / РЕЙД": "NAVIGATE / PREPARE / RAID",
-  "ТАРКОВ GPS / ПОМОЩНИК В РЕЙДЕ": "TARKOV GPS / RAID COMPANION",
+  "EFT GPS / ПОМОЩНИК В РЕЙДЕ": "EFT GPS / RAID COMPANION",
   "Всё для следующего рейда. Карты, GPS, задания и личный прогресс.":
     "Everything for your next raid. Maps, GPS, quests and personal progress.",
   "Открыть карты ↗": "Open maps ↗",
@@ -42,6 +45,7 @@ const words = {
   "Тема приложения": "Application theme",
   "Другие темы скоро будут доступны.": "More themes are coming soon.",
   "Скоро будут": "Coming soon",
+  "Скоро": "Coming soon",
   "Выбор темы · скоро будет": "Themes · coming soon",
   "Данные, резервные копии и заметки →": "Data, backups and notes →",
   "Вернуть стандартный вид": "Restore default appearance",
@@ -164,8 +168,8 @@ const words = {
   "Windows не приняла нажатие": "Windows blocked the key press",
   "Язык интерфейса": "Interface language",
   Русский: "Русский",
-  "Названия предметов, заданий и сохранённые описания доступны на русском.":
-    "Item names, quest names and saved descriptions are available in Russian.",
+  "Язык применяется к интерфейсу, предметам, заданиям и справочнику.":
+    "Language applies to the interface, items, quests and reference content.",
   "Подключение к приложению…": "Connecting to application…",
   "Проверка заняла слишком много времени. Повторите попытку.":
     "Checks timed out. Please retry.",
@@ -208,6 +212,11 @@ const words = {
   "Колесо — масштаб · перетаскивание — перемещение. Свои метки сохраняются в профиле.":
     "Wheel to zoom · drag to pan. Personal markers are saved in your profile.",
 };
+let extraWords = {};
+export function setContentTranslations(value) {
+  extraWords = value || {};
+}
+export const localeCode = () => (locale === "en" ? "en-US" : "ru-RU");
 let locale = "ru",
   observer = null;
 const originals = new WeakMap();
@@ -224,7 +233,7 @@ export function t(text) {
   if (locale === "ru") return text;
   const value = String(text),
     trim = value.trim();
-  let result = words[trim];
+  let result = words[trim] ?? extraWords[trim];
   if (result === undefined) {
     const patterns = [
       [
@@ -234,23 +243,22 @@ export function t(text) {
       [/^Снимок (.+)$/, (m, n) => "Snapshot " + n],
       [/^Показано: (\d+) из (\d+)$/, (m, a, b) => `Showing: ${a} of ${b}`],
       [/^Уровень (\d+)$/, (m, n) => "Level " + n],
-      [
-        /^Тарков GPS · версия (.+)\.$/,
-        (m, n) => "Tarkov GPS · version " + n + ".",
-      ],
+      [/^EFT GPS · версия (.+)\.$/, (m, n) => "EFT GPS · version " + n + "."],
       [/^(\d+) сек\. назад$/, (m, n) => n + " sec ago"],
       [/^GPS: ожидание позиции$/, "GPS: waiting for position"],
       [/^⌖ GPS · вкл$/, "⌖ GPS · on"],
       [/^⌖ GPS · выкл$/, "⌖ GPS · off"],
       [/^⌖ GPS · авто$/, "⌖ GPS · auto"],
     ];
-    result = trim;
+    result = translatePattern(trim);
     for (const [pattern, replacement] of patterns)
       if (pattern.test(trim)) {
         result = trim.replace(pattern, replacement);
         break;
       }
   }
+  result = result.replace(/(\d+)\s+(мин|точка|точки|точек)(?![а-яё])/gi,
+    (_, count, unit) => count + " " + (unit.toLowerCase() === "мин" ? "min" : Number(count) === 1 ? "point" : "points"));
   return value.replace(trim, result);
 }
 function translate(root) {
@@ -334,7 +342,7 @@ export function languageControl(root) {
   const row = document.createElement("label");
   row.className = "preference-row";
   row.innerHTML =
-    '<span><strong>Язык интерфейса</strong><small class="muted">Названия предметов, заданий и сохранённые описания доступны на русском.</small></span><select aria-label="Язык интерфейса"><option value="ru">Русский</option><option value="en">English</option></select>';
+    '<span><strong>Язык интерфейса</strong><small class="muted">Язык применяется к интерфейсу, предметам, заданиям и справочнику.</small></span><select aria-label="Язык интерфейса"><option value="ru">Русский</option><option value="en">English</option></select>';
   const select = row.querySelector("select");
   select.value = locale;
   select.onchange = () => setLanguage(select.value);

@@ -10,8 +10,8 @@ using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
 using System.Reflection;
-[assembly: AssemblyVersion("1.6.0.0")]
-[assembly: AssemblyFileVersion("1.6.0.0")]
+[assembly: AssemblyVersion("1.7.0.0")]
+[assembly: AssemblyFileVersion("1.7.0.0")]
 
 class DesktopHost : Form {
     readonly string root, origin;
@@ -45,8 +45,8 @@ class DesktopHost : Form {
         }
     }
     DesktopHost(string appRoot, string appOrigin) {
-        root = appRoot; origin = appOrigin;
-        Text = "Тарков GPS";
+        root = appRoot; origin = appOrigin; NativeText.English=NativeText.Preferred(root);
+        Text = NativeText.Brand+" "+NativeText.Version;
         BackColor = Color.Black;
         Size = new Size(1440, 950);
         MinimumSize = new Size(800, 600);
@@ -60,10 +60,10 @@ class DesktopHost : Form {
         nativeLoading=new Panel {Dock=DockStyle.Fill,BackColor=Color.FromArgb(5,5,4)};
         var loadingBox=new Panel {Size=new Size(520,180),BackColor=Color.FromArgb(12,12,10)};
         loadingBox.Controls.Add(new PictureBox {Image=new Bitmap(Path.Combine(root,"public","icons","app-192.png")),SizeMode=PictureBoxSizeMode.Zoom,Bounds=new Rectangle(28,28,64,64)});
-        loadingBox.Controls.Add(new Label {Text="ТАРКОВ GPS",Font=new Font("Segoe UI",23),ForeColor=Color.FromArgb(210,199,167),Bounds=new Rectangle(112,28,380,46)});
+        loadingBox.Controls.Add(new Label {Text="T_S_U_Y_U EFT GPS",Font=new Font("Segoe UI",23),ForeColor=Color.FromArgb(210,199,167),Bounds=new Rectangle(112,28,380,46)});
         loadingBox.Controls.Add(new Label {Text="Подготовка окна приложения…",Font=new Font("Segoe UI",10),ForeColor=Color.FromArgb(151,147,132),Bounds=new Rectangle(112,82,380,30)});
         loadingBox.Controls.Add(new Panel {BackColor=Color.FromArgb(185,171,130),Bounds=new Rectangle(30,144,460,2)});
-        nativeLoading.Controls.Add(loadingBox);
+        nativeLoading.Controls.Add(loadingBox);NativeText.Apply(nativeLoading);
         nativeLoading.Resize+=delegate {if(nativeLoading!=null)loadingBox.Location=new Point(Math.Max(0,(nativeLoading.ClientSize.Width-loadingBox.Width)/2),Math.Max(0,(nativeLoading.ClientSize.Height-loadingBox.Height)/2));};
         Controls.Add(nativeLoading);nativeLoading.BringToFront();
         Shown += async delegate {
@@ -113,14 +113,14 @@ class DesktopHost : Form {
                 };
                 core.DownloadStarting += delegate(object sender, CoreWebView2DownloadStartingEventArgs e) {
                     if (!e.DownloadOperation.Uri.StartsWith("blob:" + origin + "/", StringComparison.OrdinalIgnoreCase)) { e.Cancel = true; return; }
-                    using (var dialog = new SaveFileDialog { Title = "Сохранить резервную копию", Filter = "Резервная копия (*.json)|*.json", FileName = "Tarkov-прогресс.json", DefaultExt = "json" }) {
+                    using (var dialog = new SaveFileDialog { Title = NativeText.T("Сохранить резервную копию"), Filter = NativeText.T("Резервная копия (*.json)|*.json"), FileName = "EFT-GPS-progress.json", DefaultExt = "json" }) {
                         if (dialog.ShowDialog(this) != DialogResult.OK) { e.Cancel = true; return; }
                         e.ResultFilePath = dialog.FileName;
                         e.Handled = true;
                     }
                 };
                 core.ScriptDialogOpening += delegate(object sender, CoreWebView2ScriptDialogOpeningEventArgs e) {
-                    if (e.Kind == CoreWebView2ScriptDialogKind.Alert) { MessageBox.Show(this, e.Message, "Тарков GPS", MessageBoxButtons.OK, MessageBoxIcon.Information); e.Accept(); }
+                    if (e.Kind == CoreWebView2ScriptDialogKind.Alert) { MessageBox.Show(this, e.Message, "EFT GPS", MessageBoxButtons.OK, MessageBoxIcon.Information); e.Accept(); }
                 };
                 core.WebMessageReceived += delegate(object sender, CoreWebView2WebMessageReceivedEventArgs e) {
                     if (!IsLocal(e.Source)) return;
@@ -130,12 +130,12 @@ class DesktopHost : Form {
                     if (command == "reload-interface") { web.Reload(); return; }
                     if (command == "update-data") StartMaintenance("--data", null);
                     if (command == "install-update") {
-                        using (var dialog = new OpenFileDialog { Title = "Выберите пакет обновления Тарков GPS", Filter = "Пакет Тарков GPS (*.zip)|*.zip", CheckFileExists = true }) {
+                        using (var dialog = new OpenFileDialog { Title = NativeText.T("Выберите пакет обновления EFT GPS"), Filter = NativeText.T("Пакет EFT GPS (*.zip)|*.zip"), CheckFileExists = true }) {
                             if (dialog.ShowDialog(this) == DialogResult.OK) StartMaintenance("--install", dialog.FileName);
                         }
                     }
                 };
-                core.ProcessFailed += delegate { MessageBox.Show(this, "Окно приложения завершилось с ошибкой. Закройте и снова откройте Тарков GPS. Прогресс хранится отдельно.", "Тарков GPS", MessageBoxButtons.OK, MessageBoxIcon.Error); };
+                core.ProcessFailed += delegate { MessageBox.Show(this, NativeText.T("Окно приложения завершилось с ошибкой. Закройте и снова откройте EFT GPS. Прогресс хранится отдельно."), "EFT GPS", MessageBoxButtons.OK, MessageBoxIcon.Error); };
                 core.NavigationCompleted += delegate(object sender, CoreWebView2NavigationCompletedEventArgs e) {
                     HideNativeLoading();
                     if (!e.IsSuccess) ShowServiceError();
@@ -144,7 +144,7 @@ class DesktopHost : Form {
             } catch (Exception e) {
                 Directory.CreateDirectory(Path.Combine(root, "userdata"));
                 File.WriteAllText(Path.Combine(root, "userdata", "desktop-error.log"), e.ToString());
-                MessageBox.Show(this, "Не удалось открыть окно приложения. Проверьте наличие Microsoft Edge WebView2 Runtime. Подробности: userdata/desktop-error.log", "Тарков GPS", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, NativeText.T("Не удалось открыть окно приложения. Проверьте наличие Microsoft Edge WebView2 Runtime. Подробности: userdata/desktop-error.log"), "EFT GPS", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Close();
             }
         };
@@ -178,11 +178,11 @@ class DesktopHost : Form {
                     return false;
                 });
                 if (ready) { Controls.Remove(panel); panel.Dispose(); serviceError = null; web.Visible = true; web.CoreWebView2.Navigate(origin + "/"); }
-                else { description.Text = "Служба не запустилась. Закройте приложение и проверьте целостность папки установки."; retry.Enabled = true; }
+                else { description.Text = NativeText.T("Служба не запустилась. Закройте приложение и проверьте целостность папки установки."); retry.Enabled = true; }
             } catch { retry.Enabled = true; }
         };
         panel.Controls.AddRange(new Control[] { title, description, retry });
-        Controls.Add(panel); panel.BringToFront();
+        Controls.Add(panel); panel.BringToFront();NativeText.Apply(panel);
     }
     bool IsLocal(string value) {
         Uri uri;

@@ -1,5 +1,19 @@
+import { localeCode } from "../core/localization.js";
 import { esc, heading } from "../core/ui.js";
 export const newsEntries = [
+  {
+    slug: "eft-gps-1-7",
+    kind: "Приложение",
+    date: "2026-10-26",
+    label: "1.7",
+    title: "T_S_U_Y_U EFT GPS: новый этап",
+    summary:
+      "Английская база, первый обзор приложения и раздел помощи — в едином оформлении.",
+    paragraphs: [
+      "В версии 1.7.0 интерфейс, предметы, задания и сохранённые прохождения доступны на русском и английском. Язык приложения выбирается отдельно от языка установщика.",
+      "Короткий обзор помогает настроить карты и GPS. В разделе «Помощь» доступны повтор обзора, FAQ, список изменений и шаблон отчёта об ошибке. Discord и поддержка проекта скоро будут доступны.",
+    ],
+  },
   {
     slug: "startup-1-6",
     kind: "Приложение",
@@ -10,7 +24,7 @@ export const newsEntries = [
       "Проверка базы и папок игры, выбор языка и тонкие полупрозрачные скроллбары в цвет интерфейса.",
     paragraphs: [
       "Новый экран подготовки проверяет компоненты и возможность сохранить прогресс. Папки скриншотов и логов ищутся в известных расположениях; при необходимости их можно выбрать вручную.",
-      "Русский и English доступны для навигации и основных элементов управления. Игровые названия и сохранённые описания остаются на русском. На картах теперь используется название Тарков GPS.",
+      "Русский и English доступны для навигации и основных элементов управления. Игровые названия и сохранённые описания остаются на русском. На картах теперь используется название EFT GPS.",
     ],
   },
   {
@@ -18,11 +32,11 @@ export const newsEntries = [
     kind: "Приложение",
     date: "2026-10-26",
     label: "1.5",
-    title: "Знакомьтесь: Тарков GPS",
+    title: "Знакомьтесь: EFT GPS",
     summary:
       "Новое имя и единый стиль приложения: чёрная тема, песочные акценты и удобная навигация.",
     paragraphs: [
-      "Тарков GPS объединяет карты, задания, справочник предметов и подготовку к рейду в одном окне. Интерфейс и установщик теперь оформлены в одном стиле.",
+      "EFT GPS объединяет карты, задания, справочник предметов и подготовку к рейду в одном окне. Интерфейс и установщик теперь оформлены в одном стиле.",
       "Карты и сохранённый справочник доступны без интернета. Личные метки, выполненные задания, заметки и настройки сохраняются при обновлении.",
     ],
   },
@@ -85,16 +99,13 @@ export const newsCards = (entries = newsEntries) =>
   entries
     .map(
       (x) =>
-        `<a class="card news-card" href="#/news/${x.slug}"><div class="news-visual"><span>${esc(x.kind)}</span><strong>${esc(x.label)}</strong><img src="/icons/app-192.png" alt="" aria-hidden="true"></div><div class="card-body"><small class="news-date">${new Date(x.date + "T12:00:00").toLocaleDateString("ru-RU")}</small><h3>${esc(x.title)}</h3><p class="muted">${esc(x.summary)}</p><span class="read-more">Подробнее ↗</span></div></a>`,
+        `<a class="card news-card" href="#/news/${x.slug}"><div class="news-visual"><span>${esc(x.kind)}</span><strong>${esc(x.label)}</strong><img src="/icons/app-192.png" alt="" aria-hidden="true"></div><div class="card-body"><small class="news-date">${new Date(x.date + "T12:00:00").toLocaleDateString(localeCode())}</small><h3>${esc(x.title)}</h3><p class="muted">${esc(x.summary)}</p><span class="read-more">Подробнее ↗</span></div></a>`,
     )
     .join("");
 export function renderNews(root, slug) {
   if (!slug) {
     root.innerHTML =
-      heading(
-        "Новости",
-        "Изменения Тарков GPS и официальные объявления об игре",
-      ) +
+      heading("Новости", "Изменения EFT GPS и официальные объявления об игре") +
       `<div class="toolbar news-filters"><button data-news-filter="Все" class="primary">Все</button><button data-news-filter="Приложение">Приложение</button><button data-news-filter="Игра">Игра</button></div><div class="card-grid news-grid" id="news-list">${newsCards()}</div>`;
     root.querySelectorAll("[data-news-filter]").forEach(
       (b) =>
@@ -123,7 +134,7 @@ export function renderNews(root, slug) {
   root.innerHTML =
     heading(
       entry.title,
-      `${entry.kind} · ${new Date(entry.date + "T12:00:00").toLocaleDateString("ru-RU")}`,
+      `${entry.kind} · ${new Date(entry.date + "T12:00:00").toLocaleDateString(localeCode())}`,
     ) +
     `<article class="news-detail" data-selectable><p class="news-lead">${esc(entry.summary)}</p>${entry.paragraphs.map((p) => `<p>${esc(p)}</p>`).join("")}${entry.source ? `<div class="official-source"><strong>Battlestate Games</strong><p>Официальное объявление разработчиков. Для открытия публикации нужен интернет.</p><a class="button" href="${esc(entry.source)}" target="_blank" rel="noopener">Читать оригинал ↗</a></div>` : ""}</article>`;
 }

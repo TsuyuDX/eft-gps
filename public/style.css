@@ -2209,3 +2209,31 @@ footer a,
   }
 }
 .boot-panel {max-height:calc(100vh - 32px);overflow:auto;overscroll-behavior:contain;}
+.help-row {display:flex;align-items:center;justify-content:space-between;gap:24px;padding:18px 0;border-bottom:1px solid #b9ab8228;}
+.help-row:last-child {border:0;}
+.help-row strong {display:block;font-size:14px;font-weight:500;}
+.help-row small {display:block;max-width:410px;font-size:12px;color:#a19f93;margin-top:5px;}
+.help-row button,.help-row .button {flex-shrink:0;min-width:105px;}
+.help-faq details {border-bottom:1px solid #b9ab8228;padding:16px 0;}
+.help-faq p {padding:14px 0 0;color:#a9a697;line-height:1.8;}
+.help-change h3 {color:#c9ba91;margin-top:22px;}
+.tour-dialog {width:min(680px,calc(100vw - 28px));}
+.tour-header {display:flex;justify-content:space-between;color:#958a6c;letter-spacing:1px;margin:0 22px 20px 0;}
+.tour-art {height:125px;position:relative;overflow:hidden;display:grid;place-items:center;background:radial-gradient(ellipse,#b9ab8214,transparent 72%);}
+.tour-art>span {display:grid;place-items:center;width:80px;height:80px;color:#b9ab82;font-size:48px;border:1px solid #b9ab8255;border-radius:50%;z-index:1;background:#0b0b09;}
+.tour-art i {position:absolute;width:210px;height:1px;background:#b9ab8228;transform:rotate(25deg);}
+.tour-art i:nth-last-child(1){transform:rotate(-25deg)}
+.tour-art i:nth-last-child(2){width:330px;transform:rotate(0deg)}
+.tour-copy {font-size:16px;min-height:104px;line-height:1.8;color:#cecbc0;}
+.tour-tip {font-size:13px;min-height:70px;padding:14px 16px;border-left:2px solid #b9ab82;background:#b9ab8209;color:#aaa18b;}
+.tour-actions {display:flex;gap:10px;align-items:center;margin-top:24px;}
+.tour-actions>span {flex:1;}
+.tour-dots {display:flex;gap:7px;justify-content:center;}
+.tour-dots span {width:19px;height:3px;background:#b9ab822a;}
+.tour-dots .active {background:#b9ab82;}
+.community-stub {gap:7px;opacity:.6!important;}
+.community-stub small {font-size:9px;color:#b9ab82;border:1px solid #b9ab8233;padding:0 4px;border-radius:3px;}
+.brand-version {font-size:10px;color:#8f8874;letter-spacing:0;font-weight:400;}
+.statusline {flex-wrap:wrap;}
+.statusline>.row {flex-wrap:wrap;gap:8px;}
+@media(max-width:760px){.community-stub{display:none}.help-row{gap:14px}.help-row small{max-width:240px}.tour-copy{min-height:0}.tour-tip{min-height:0}}

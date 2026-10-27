@@ -1,3 +1,4 @@
+import { localeCode } from "../core/localization.js";
 import { extraPropertyLabels, propertyValue } from "../core/item-properties.js";
 import { db, detail, asset, localHref, itemBySlug } from "../core/data.js";
 import { current, toggleFavorite, inventory } from "../core/state.js";
@@ -32,7 +33,7 @@ export function renderCatalog(root, initial = "") {
   root.innerHTML =
     heading(
       "Предметы",
-      `${db.items.length.toLocaleString("ru-RU")} предметов · цены из локального снимка`,
+      `${db.items.length.toLocaleString(localeCode())} предметов · цены из локального снимка`,
     ) +
     `<div class="toolbar"><input id="item-search" type="search" placeholder="Искать по названию" value="${esc(initial)}"><select id="item-category" aria-label="Категория"><option value="">Все категории</option>${db.categories.map((c) => `<option value="${c.id}">${esc(c.name)}</option>`).join("")}</select><select id="item-sort" aria-label="Сортировка"><option value="name">По названию</option><option value="price-desc">Сначала дорогие</option><option value="price-asc">Сначала дешёвые</option><option value="slot">Цена за слот</option></select><label class="check"><input type="checkbox" id="fav-only"> Избранное</label></div><div id="catalog-results"></div>`;
   let page = 0;
@@ -121,7 +122,7 @@ export async function renderItem(root, slug) {
       "Характеристики, цены, обмены и производство",
       `<button class="star ${current().favorites.includes(x.id) ? "selected" : ""}" data-fav="${x.id}">★ В избранное</button>`,
     ) +
-    `<div class="detail-grid"><section class="panel item-hero">${img(x.iconLink, x.name)}<div class="muted">${x.width} × ${x.height} · ${x.properties?.weight ?? "—"} кг</div><label>Собрано <input id="item-count" type="number" min="0" value="${current().inventory[x.id] || 0}"></label><a href="#/items-tracker/${db.mode}">Открыть трекер →</a></section><section><p class="description">${esc(x.description)}</p><div class="stats"><div class="stat"><span>Барахолка</span><strong>${money(trades?.flea?.priceRUB)}</strong></div><div class="stat"><span>Купить у торговца</span><strong>${money(trades?.bestBuyVendor?.priceRUB)}</strong></div><div class="stat"><span>Продать торговцу</span><strong>${money(trades?.bestSellVendor?.priceRUB)}</strong></div><div class="stat"><span>Средняя за 24 часа</span><strong>${money(trades?.avg24hPrice?.priceRUB)}</strong></div></div><p class="muted small">Снимок цен: ${new Date(db.manifest.savedAt).toLocaleDateString("ru-RU")}. Свежие цены появляются после обновления базы.</p><h2>Характеристики</h2><div class="properties">${
+    `<div class="detail-grid"><section class="panel item-hero">${img(x.iconLink, x.name)}<div class="muted">${x.width} × ${x.height} · ${x.properties?.weight ?? "—"} кг</div><label>Собрано <input id="item-count" type="number" min="0" value="${current().inventory[x.id] || 0}"></label><a href="#/items-tracker/${db.mode}">Открыть трекер →</a></section><section><p class="description">${esc(x.description)}</p><div class="stats"><div class="stat"><span>Барахолка</span><strong>${money(trades?.flea?.priceRUB)}</strong></div><div class="stat"><span>Купить у торговца</span><strong>${money(trades?.bestBuyVendor?.priceRUB)}</strong></div><div class="stat"><span>Продать торговцу</span><strong>${money(trades?.bestSellVendor?.priceRUB)}</strong></div><div class="stat"><span>Средняя за 24 часа</span><strong>${money(trades?.avg24hPrice?.priceRUB)}</strong></div></div><p class="muted small">Снимок цен: ${new Date(db.manifest.savedAt).toLocaleDateString(localeCode())}. Свежие цены появляются после обновления базы.</p><h2>Характеристики</h2><div class="properties">${
       Object.entries(x.properties || {})
         .filter(
           ([k, v]) =>

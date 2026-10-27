@@ -1,3 +1,5 @@
+import { localeCode } from "../core/localization.js";
+import { language, installLocalization } from "../core/localization.js";
 import { installBackNavigation } from "../core/back-navigation.js";
 import { db, json, asset, localHref } from "../core/data.js";
 import { current, setHideout } from "../core/state.js";
@@ -126,11 +128,11 @@ export async function renderArticle(root, path) {
   ) {
     walker.currentNode.textContent = walker.currentNode.textContent.replace(
       /TarkovHead/gi,
-      "Тарков GPS",
+      "EFT GPS",
     );
   }
   const frame = root.querySelector("#article-frame");
-  frame.srcdoc = `<!doctype html><html lang="ru" class="dark"><head><meta charset="UTF-8"><style>html{color-scheme:dark}*{scrollbar-width:thin;scrollbar-color:rgba(185,171,130,.34) transparent}::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-thumb{background:rgba(185,171,130,.34);border-radius:8px}::-webkit-scrollbar-track{background:transparent}html,body{background:#000000;color:#e5e5e5;font-family:"Segoe UI",Arial,sans-serif;margin:0;padding:12px}img{max-width:100%;max-height:540px;width:auto;height:auto;object-fit:contain}a{color:#b9ab82}table{width:100%;border-collapse:collapse}td,th{padding:12px;border-bottom:1px solid #292922;text-align:left}blockquote{border-left:2px solid #b9ab82;margin:20px 0;padding:4px 18px;color:#aaa99f}h1,h2,h3{color:#ded9c9}details{padding:12px;border:1px solid #292922}button,input,select{display:none}svg:empty{display:none}p{line-height:1.8}h1,h2,h3{margin:1em 0}.container{max-width:100%}li{margin:.3em 0}</style></head><body>${doc.body.innerHTML}</body></html>`;
+  frame.srcdoc = `<!doctype html><html lang="${language()}" class="dark"><head><meta charset="UTF-8"><style>html{color-scheme:dark}*{scrollbar-width:thin;scrollbar-color:rgba(185,171,130,.34) transparent}::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-thumb{background:rgba(185,171,130,.34);border-radius:8px}::-webkit-scrollbar-track{background:transparent}html,body{background:#000000;color:#e5e5e5;font-family:"Segoe UI",Arial,sans-serif;margin:0;padding:12px}img{max-width:100%;max-height:540px;width:auto;height:auto;object-fit:contain}a{color:#b9ab82}table{width:100%;border-collapse:collapse}td,th{padding:12px;border-bottom:1px solid #292922;text-align:left}blockquote{border-left:2px solid #b9ab82;margin:20px 0;padding:4px 18px;color:#aaa99f}h1,h2,h3{color:#ded9c9}details{padding:12px;border:1px solid #292922}button,input,select{display:none}svg:empty{display:none}p{line-height:1.8}h1,h2,h3{margin:1em 0}.container{max-width:100%}li{margin:.3em 0}</style></head><body>${doc.body.innerHTML}</body></html>`;
   frame.onload = () => {
     try {
       installAppNavigation(frame.contentDocument);
@@ -171,7 +173,7 @@ export async function renderArticle(root, path) {
     try {
       const data = await json("traders/" + slug + ".json");
       const box = root.querySelector("#article-interactive");
-      box.innerHTML = `<section class="panel"><h2>Ассортимент</h2><div class="toolbar"><input id="trader-search" placeholder="Найти в ассортименте"><select id="trader-level" aria-label="Уровень торговца"><option value="0">Все уровни</option>${[1, 2, 3, 4].map((x) => `<option value="${x}">Уровень ${x}</option>`).join("")}</select></div><div id="trader-items"></div><h3>Уровни лояльности</h3><div class="stats">${(data.levels || db.lookup.traders[slug]?.levels || []).map((x) => `<div class="stat"><span>Уровень ${x.level}</span><strong>Ур. ${x.requiredPlayerLevel}</strong><small>Репутация ${x.requiredReputation}<br>Оборот ${Number(x.requiredCommerce).toLocaleString("ru-RU")}</small></div>`).join("")}</div></section>`;
+      box.innerHTML = `<section class="panel"><h2>Ассортимент</h2><div class="toolbar"><input id="trader-search" placeholder="Найти в ассортименте"><select id="trader-level" aria-label="Уровень торговца"><option value="0">Все уровни</option>${[1, 2, 3, 4].map((x) => `<option value="${x}">Уровень ${x}</option>`).join("")}</select></div><div id="trader-items"></div><h3>Уровни лояльности</h3><div class="stats">${(data.levels || db.lookup.traders[slug]?.levels || []).map((x) => `<div class="stat"><span>Уровень ${x.level}</span><strong>Ур. ${x.requiredPlayerLevel}</strong><small>Репутация ${x.requiredReputation}<br>Оборот ${Number(x.requiredCommerce).toLocaleString(localeCode())}</small></div>`).join("")}</div></section>`;
       const draw = () => {
         const q = box.querySelector("#trader-search").value.toLowerCase(),
           lvl = Number(box.querySelector("#trader-level").value);
