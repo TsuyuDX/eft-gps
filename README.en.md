@@ -4,6 +4,8 @@ Offline maps, screenshot GPS and raid preparation for Escape from Tarkov on Wind
 
 ## Install
 
+**Downloaded the project from GitHub?** Extract the complete Download ZIP or clone the repository, then run **Start EFT GPS.cmd**. The `main` and development branches include the full offline package, Node.js and production modules. Missing WebView2 is prepared from bundled offline parts. See [checkout and rollback instructions](GIT-CHECKOUT.md).
+
 Run **TSUYU-EFTGPS-1.7.0-Setup.exe**, choose a folder and confirm installation. To update, select your existing app folder. Quest progress, markers, notes and GPS preferences are preserved. The optional desktop shortcut is **T_S_U_Y_U EFT GPS**.
 
 For the portable version, extract **TSUYU-EFTGPS-1.7.0-Windows.zip** and run **EFT GPS.exe**. Do not run it inside an archive.

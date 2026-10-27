@@ -92,6 +92,12 @@ async function main() {
     console.log('Verified files: ' + verifyPackage(root));
     return;
   }
+  if (process.argv.includes('--assemble-component')) {
+    const manifest=JSON.parse(fs.readFileSync(path.join(root,'scripts','offline-components.json'),'utf8'));
+    assembleComponent(root,manifest);
+    console.log('Offline component verified. Installer was not executed.');
+    return;
+  }
   if (process.platform !== 'win32' || process.arch !== 'x64') throw Error('Windows 10/11 x64 is required.');
   const checkout = JSON.parse(fs.readFileSync(path.join(root, 'distribution', 'checkout.json'), 'utf8'));
   if (checkout.format !== 1 || typeof checkout.requiresWebView !== 'boolean' ||

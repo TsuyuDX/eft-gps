@@ -34,6 +34,7 @@ for (const name of [
   "Запустить.cmd",
   "Обновить базу.cmd",
   "TarkovOffline.code-workspace",
+  "distribution/checkout.json",
 ])
   await walk(name);
 let cursor = 0;
