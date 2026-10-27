@@ -1,3 +1,4 @@
+import { prepareStartup, finishStartup, startupError } from "./core/startup.js";
 import { newsCards, newsEntries, renderNews } from "./features/news.js";
 import { loadWindowSettings } from "./core/window-settings.js";
 import { applyPreferences, openPreferences } from "./core/preferences.js";
@@ -195,6 +196,9 @@ window.addEventListener("save-failed", () =>
   ),
 );
 try {
+  const startupResult = await prepareStartup();
+  document.querySelector("#boot-stage").textContent =
+    "Открываем интерфейс и личный профиль…";
   await loadState();
   await init(profile().mode);
   document.querySelector("#mode").value = db.mode;
@@ -215,8 +219,10 @@ try {
   };
   window.addEventListener("hashchange", route);
   await route();
+  await finishStartup(startupResult);
   startGpsClient(() => db.mode);
 } catch (e) {
+  startupError(e);
   app.innerHTML = errorView(e);
 }
 document.addEventListener("keydown", (e) => {

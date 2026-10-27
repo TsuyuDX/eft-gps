@@ -1930,3 +1930,282 @@ footer a,
     min-height: 0;
   }
 }
+/* Thin, translucent sand scrollbars throughout the application. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(185, 171, 130, 0.34) transparent;
+}
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(185, 171, 130, 0.34);
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  border-radius: 8px;
+  min-height: 24px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(205, 191, 153, 0.62);
+}
+::-webkit-scrollbar-thumb:active {
+  background-color: rgba(205, 191, 153, 0.82);
+}
+.booting {
+  overflow: hidden;
+}
+.booting > header,
+.booting > main,
+.booting > footer {
+  visibility: hidden;
+}
+#boot-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  display: grid;
+  place-items: center;
+  padding: 26px;
+  overflow: auto;
+  background:
+    radial-gradient(ellipse at 50% 25%, #24211660, transparent 65%), #050504;
+}
+.boot-panel {
+  position: relative;
+  width: min(660px, 100%);
+  padding: 36px 40px;
+  background: #0c0c0aef;
+  border: 1px solid #b9ab822e;
+  border-radius: 6px;
+  box-shadow: 0 28px 100px #0008;
+}
+.boot-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.boot-brand img {
+  width: 64px;
+  height: 64px;
+}
+.boot-brand strong {
+  font-size: 25px;
+  font-weight: 400;
+  letter-spacing: 2px;
+}
+.boot-brand strong span {
+  color: #b9ab82;
+}
+.boot-brand small {
+  display: block;
+  color: #a39774;
+  letter-spacing: 2px;
+  font-size: 9px;
+  margin-top: 4px;
+}
+.boot-version {
+  margin-left: auto;
+  color: #898571;
+  font-size: 11px;
+}
+.boot-rule {
+  height: 1px;
+  background: linear-gradient(90deg, #b9ab8270, transparent);
+  margin: 28px 0;
+}
+.boot-panel h1 {
+  font-size: 28px;
+}
+#boot-stage {
+  font-size: 14px;
+  color: #a19f93;
+  min-height: 24px;
+}
+#boot-language {
+  padding: 18px 0;
+}
+#boot-language small {
+  display: block;
+  margin-top: 14px;
+  color: #8c897d;
+  font-size: 11px;
+}
+#boot-checks {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0;
+}
+.boot-check {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 39px;
+  border-bottom: 1px solid #b9ab8210;
+  font-size: 13px;
+}
+.boot-check small {
+  margin-left: auto;
+  color: #8c897d;
+  font-size: 11px;
+}
+.boot-step-icon {
+  display: grid;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  border: 1px solid #b9ab822f;
+  color: #8c897d;
+  font-size: 10px;
+  border-radius: 50%;
+}
+.boot-check[data-state="ok"] .boot-step-icon {
+  color: #b9ab82;
+  border-color: #b9ab8260;
+}
+.boot-check[data-state="warning"] .boot-step-icon {
+  color: #e8ba69;
+  border-color: #e8ba6960;
+}
+.boot-check[data-state="error"] .boot-step-icon {
+  color: #e79b88;
+  border-color: #e79b8860;
+}
+#boot-progress {
+  height: 3px;
+  margin: 24px 0;
+  background: #b9ab8218;
+  overflow: hidden;
+}
+#boot-progress span {
+  display: block;
+  width: var(--progress, 0%);
+  height: 100%;
+  background: #b9ab82;
+  transition: width 0.22s ease;
+}
+#boot-checks:empty + #boot-progress span {
+  width: 24%;
+  animation: boot-scan 1.6s ease-in-out infinite;
+}
+.boot-note {
+  margin: 22px 0 0;
+  color: #777467;
+  font-size: 11px;
+}
+#boot-warning,
+#boot-error {
+  padding: 16px 0 0;
+  border-top: 1px solid #b9ab8225;
+}
+#boot-warning p,
+#boot-error p {
+  font-size: 13px;
+  color: #cbb987;
+}
+.boot-orbit {
+  position: absolute;
+  width: min(100vw, 1000px);
+  aspect-ratio: 1;
+  border: 1px solid #b9ab820b;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.boot-orbit:before,
+.boot-orbit:after {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border: 1px solid #b9ab820a;
+  transform: rotate(45deg);
+}
+.boot-orbit:after {
+  inset: 25%;
+  border-radius: 50%;
+}
+[hidden] {
+  display: none !important;
+}
+@keyframes boot-scan {
+  from {
+    transform: translateX(-150%);
+  }
+  to {
+    transform: translateX(550%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #boot-progress span {
+    animation: none !important;
+    transition: none;
+  }
+}
+@media (max-height: 740px) {
+  .boot-panel {
+    padding: 22px 30px;
+  }
+  .boot-rule {
+    margin: 16px 0;
+  }
+  #boot-checks {
+    margin: 12px 0;
+  }
+  .boot-check {
+    min-height: 32px;
+  }
+  .boot-note {
+    margin-top: 14px;
+  }
+}
+@media (max-width: 600px) {
+  #boot-screen {
+    padding: 12px;
+  }
+  .boot-panel {
+    padding: 20px;
+  }
+  .boot-brand strong {
+    font-size: 20px;
+  }
+  .boot-brand img {
+    width: 48px;
+    height: 48px;
+  }
+  .boot-check {
+    gap: 8px;
+  }
+  .boot-check small {
+    font-size: 10px;
+  }
+}
+#boot-progress[data-pending] span {
+  width: 24%;
+  animation: boot-scan 1.6s ease-in-out infinite;
+}
+.boot-check[data-state="pending"] .boot-step-icon {
+  position: relative;
+}
+.boot-check[data-state="pending"] .boot-step-icon:after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border: 1px solid transparent;
+  border-top-color: #b9ab82;
+  border-radius: 50%;
+  animation: boot-turn 1.2s linear infinite;
+}
+@keyframes boot-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .boot-step-icon:after {
+    animation: none !important;
+  }
+}
+.boot-panel {max-height:calc(100vh - 32px);overflow:auto;overscroll-behavior:contain;}

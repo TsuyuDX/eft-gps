@@ -19,7 +19,63 @@
     <link rel="stylesheet" href="/gps.css" />
     <link rel="stylesheet" href="/quests.css" />
   </head>
-  <body>
+  <body class="booting">
+    <section id="boot-screen" role="region" aria-label="Запуск Тарков GPS">
+      <div class="boot-orbit" aria-hidden="true"></div>
+      <div class="boot-panel">
+        <div class="boot-brand">
+          <img src="/icons/app-192.png" alt="" />
+          <div>
+            <strong>ТАРКОВ <span>GPS</span></strong
+            ><small>НАВИГАЦИЯ ДЛЯ РЕЙДА</small>
+          </div>
+          <span class="boot-version">1.6.0</span>
+        </div>
+        <div class="boot-rule"></div>
+        <p class="eyebrow">ПОДГОТОВКА СИСТЕМЫ / SYSTEM CHECK</p>
+        <h1>Подготовка к рейду</h1>
+        <p id="boot-stage" role="status" aria-live="polite">
+          Подключение к приложению…
+        </p>
+        <div id="boot-language" hidden data-no-translate>
+          <p>Язык интерфейса / Interface language</p>
+          <div class="row">
+            <button data-language="ru" class="primary">Русский</button
+            ><button data-language="en">English</button>
+          </div>
+          <small
+            >Описания игры сохраняются на русском. Game descriptions remain in
+            Russian.</small
+          >
+        </div>
+        <ol id="boot-checks" aria-label="Проверки запуска"></ol>
+        <div
+          id="boot-progress"
+          role="progressbar"
+          aria-label="Прогресс запуска"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+        >
+          <span></span>
+        </div>
+        <div id="boot-warning" hidden>
+          <p id="boot-warning-detail"></p>
+          <div class="row wrap">
+            <button id="boot-configure" class="primary">
+              Открыть настройки GPS</button
+            ><button id="boot-continue">Продолжить без GPS</button>
+          </div>
+        </div>
+        <div id="boot-error" hidden>
+          <p id="boot-error-text"></p>
+          <button id="boot-retry" class="primary">Повторить проверку</button>
+        </div>
+        <p class="boot-note">
+          Проверка путей не включает автосъёмку и не удаляет скриншоты.
+        </p>
+      </div>
+    </section>
     <header>
       <div class="topline">
         <a class="brand" href="#/"
@@ -50,10 +106,11 @@
         </div>
       </div>
     </header>
-    <main id="app"><div class="empty">Загрузка локальной базы…</div></main>
+    <main id="app" aria-hidden="true">
+      <div class="empty">Загрузка локальной базы…</div>
+    </main>
     <footer>
-      <span
-        >Игровые материалы © Battlestate Games.</span
+      <span>Игровые материалы © Battlestate Games.</span
       ><span>Тарков GPS · <a href="#/settings">Состояние офлайн-базы</a></span>
     </footer>
     <dialog id="modal">

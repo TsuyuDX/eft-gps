@@ -162,7 +162,7 @@ class FolderList : Control {
     const int row=38;
     int VisibleRows {get {return Math.Max(1,Height/row);}}
     int MaxFirst {get {return Math.Max(0,Items.Count-VisibleRows);}}
-    Rectangle Thumb {get {int h=Math.Min(Height,Math.Max(30,Height*VisibleRows/Math.Max(VisibleRows,Items.Count)));return new Rectangle(Width-10,first*(Height-h)/Math.Max(1,MaxFirst),6,h);}}
+    Rectangle Thumb {get {int h=Math.Min(Height,Math.Max(30,Height*VisibleRows/Math.Max(VisibleRows,Items.Count)));return new Rectangle(Width-8,first*(Height-h)/Math.Max(1,MaxFirst),3,h);}}
     public FolderList() {DoubleBuffered=true;TabStop=true;AccessibleName="Папки";AccessibleRole=AccessibleRole.List;BackColor=Color.FromArgb(13,13,12);}
     public void SetItems(List<FolderChoice> items) {Items=items;Selected=-1;first=0;Invalidate();}
     void Scroll(int value) {first=Math.Max(0,Math.Min(MaxFirst,value));Invalidate();}
@@ -178,7 +178,7 @@ class FolderList : Control {
     protected override void OnMouseWheel(MouseEventArgs e) {base.OnMouseWheel(e);Scroll(first-e.Delta/120*3);}
     protected override void OnMouseDown(MouseEventArgs e) {
         base.OnMouseDown(e);Focus();
-        if(e.X>=Width-16 && MaxFirst>0) {if(Thumb.Contains(e.Location)) {dragging=true;dragY=e.Y;dragFirst=first;Capture=true;} else Scroll(first+(e.Y<Thumb.Top ? -VisibleRows : VisibleRows));return;}
+        if(e.X>=Width-16 && MaxFirst>0) {if(e.Y>=Thumb.Top && e.Y<=Thumb.Bottom) {dragging=true;dragY=e.Y;dragFirst=first;Capture=true;} else Scroll(first+(e.Y<Thumb.Top ? -VisibleRows : VisibleRows));return;}
         int index=first+e.Y/row;if(index<Items.Count) SelectRow(index);
     }
     protected override void OnMouseMove(MouseEventArgs e) {base.OnMouseMove(e);if(dragging) Scroll(dragFirst+(e.Y-dragY)*MaxFirst/Math.Max(1,Height-Thumb.Height));}
@@ -192,7 +192,7 @@ class FolderList : Control {
             using(var brush=new SolidBrush(Color.FromArgb(185,171,130))) {e.Graphics.FillRectangle(brush,14,y+14,18,13);e.Graphics.FillRectangle(brush,14,y+11,8,4);}
             TextRenderer.DrawText(e.Graphics,Items[index].Name,Font,new Rectangle(46,y,Width-68,row),ForeColor,TextFormatFlags.Left|TextFormatFlags.VerticalCenter|TextFormatFlags.EndEllipsis);
         }
-        if(MaxFirst>0) using(var brush=new SolidBrush(dragging ? Color.FromArgb(166,160,141) : Color.FromArgb(85,85,78))) e.Graphics.FillRectangle(brush,Thumb);
+        if(MaxFirst>0) using(var brush=new SolidBrush(dragging ? Color.FromArgb(180,185,171,130) : Color.FromArgb(85,185,171,130))) e.Graphics.FillRectangle(brush,Thumb);
         if(Focused) ControlPaint.DrawFocusRectangle(e.Graphics,ClientRectangle,Color.FromArgb(85,85,78),BackColor);
     }
 }
@@ -278,9 +278,9 @@ class DarkLog : Panel {
     class ScrollRail : Control {
         public DarkLog Owner; bool dragging; int dragStart, lineStart;
         public ScrollRail() { DoubleBuffered=true; Cursor=Cursors.Hand; AccessibleRole=AccessibleRole.ScrollBar; AccessibleName="Прокрутка журнала"; }
-        Rectangle Thumb() { int total=Owner.Total,visible=Owner.VisibleLines; int height=Math.Min(Height,Math.Max(24,Height*visible/Math.Max(visible,total))); int top=Owner.First*(Height-height)/Math.Max(1,total-visible);return new Rectangle(5,top,6,height); }
-        protected override void OnPaint(PaintEventArgs e) { e.Graphics.Clear(Color.FromArgb(14,14,13)); if(Owner.Total<=Owner.VisibleLines) return; using(var brush=new SolidBrush(dragging ? Color.FromArgb(166,160,141) : Color.FromArgb(85,85,78))) e.Graphics.FillRectangle(brush,Thumb()); }
-        protected override void OnMouseDown(MouseEventArgs e) { base.OnMouseDown(e); if(Thumb().Contains(e.Location)) { dragging=true;dragStart=e.Y;lineStart=Owner.First;Capture=true; } else Owner.ScrollTo(Owner.First+(e.Y<Thumb().Top ? -Owner.VisibleLines : Owner.VisibleLines)); Invalidate(); }
+        Rectangle Thumb() { int total=Owner.Total,visible=Owner.VisibleLines; int height=Math.Min(Height,Math.Max(24,Height*visible/Math.Max(visible,total))); int top=Owner.First*(Height-height)/Math.Max(1,total-visible);return new Rectangle(6,top,3,height); }
+        protected override void OnPaint(PaintEventArgs e) { e.Graphics.Clear(Color.FromArgb(14,14,13)); if(Owner.Total<=Owner.VisibleLines) return; using(var brush=new SolidBrush(dragging ? Color.FromArgb(180,185,171,130) : Color.FromArgb(85,185,171,130))) e.Graphics.FillRectangle(brush,Thumb()); }
+        protected override void OnMouseDown(MouseEventArgs e) { base.OnMouseDown(e); if(e.Y>=Thumb().Top && e.Y<=Thumb().Bottom) { dragging=true;dragStart=e.Y;lineStart=Owner.First;Capture=true; } else Owner.ScrollTo(Owner.First+(e.Y<Thumb().Top ? -Owner.VisibleLines : Owner.VisibleLines)); Invalidate(); }
         protected override void OnMouseMove(MouseEventArgs e) { base.OnMouseMove(e); if(dragging) Owner.ScrollTo(lineStart+(e.Y-dragStart)*Math.Max(1,Owner.Total-Owner.VisibleLines)/Math.Max(1,Height-Thumb().Height)); }
         protected override void OnMouseUp(MouseEventArgs e) { base.OnMouseUp(e); dragging=false;Capture=false;Invalidate(); }
         protected override void OnMouseWheel(MouseEventArgs e) { Owner.ScrollTo(Owner.First-e.Delta/120*3); }
@@ -366,7 +366,7 @@ class Maintenance : DarkWindow {
         var logo=new PictureBox { Bounds=new Rectangle(28,24,62,62), Image=branding, SizeMode=PictureBoxSizeMode.Zoom };
         Controls.Add(logo);
         TextAt("ТАРКОВ GPS",106,22,560,40,22,ForeColor);
-        TextAt(data ? "ОБНОВЛЕНИЕ СПРАВОЧНИКА" : "УСТАНОВКА ПРИЛОЖЕНИЯ  /  1.5.0",108,67,660,24,9,muted);
+        TextAt(data ? "ОБНОВЛЕНИЕ СПРАВОЧНИКА" : "УСТАНОВКА ПРИЛОЖЕНИЯ  /  1.6.0",108,67,660,24,9,muted);
         steps.SetBounds(28,108,764,32); steps.Text="01  Подготовка     /     02  Установка     /     03  Готово"; steps.ForeColor=Color.FromArgb(185,171,130);
         Controls.Add(steps);
         TextAt(data ? "Свежая база — привычный прогресс" : "Тарков под рукой. Даже без интернета.",28,154,764,38,18,ForeColor);
