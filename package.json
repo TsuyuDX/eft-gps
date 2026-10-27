@@ -1,0 +1,21 @@
+{
+  "name": "tarkov-offline",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Local HTML companion for Escape from Tarkov",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test test/*.test.mjs",
+    "snapshot": "node scripts/snapshot.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "linkedom": "^0.18.12"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.10"
+  }
+}
