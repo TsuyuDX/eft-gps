@@ -1,3 +1,9 @@
+import { loadWindowSettings } from "./core/window-settings.js";
+import { applyPreferences, openPreferences } from "./core/preferences.js";
+import {
+  addBackButton,
+  installBackNavigation,
+} from "./core/back-navigation.js";
 import { db, init, loadMode, asset, json } from "./core/data.js";
 import { loadState, profile, setMode, current } from "./core/state.js";
 import { esc, heading, img, toast, errorView } from "./core/ui.js";
@@ -13,17 +19,24 @@ import {
 import { renderArticle, renderArticleList } from "./features/articles.js";
 import { renderGps } from "./features/gps.js";
 import { startGpsClient } from "./core/gps-client.js";
+import { installAppNavigation } from "./core/navigation.js";
+import { installDesktopUi } from "./core/desktop-ui.js";
+installAppNavigation();
+installDesktopUi();
+installBackNavigation();
+await loadWindowSettings();
+applyPreferences();
 const app = document.querySelector("#app"),
   navigation = document.querySelector("#navigation");
 let routeVersion = 0;
 const sections = [
   ["season", "Сезоны"],
-  ["event", "Ивенты"],
+  ["event", "События"],
   ["map", "Карты"],
   ["boss", "Боссы"],
   ["trader", "Торговцы"],
   ["item", "Предметы"],
-  ["quest", "Квесты"],
+  ["quest", "Задания"],
   ["hideout", "Убежище"],
   ["items-tracker", "Трекер предметов"],
   ["gps", "GPS"],
@@ -38,16 +51,16 @@ function nav() {
 }
 function home() {
   const completed = Object.values(current().quests).filter(Boolean).length;
-  app.innerHTML = `<section class="home-hero"><h1>TarkovHead</h1><p>Всё, что нужно, чтобы выжить и преуспеть в Таркове — карты, квесты, предметы и многое другое.</p><div class="home-search"><span>⌕</span><input type="search" id="global-search" placeholder="Найти предметы, задания, модули убежища" autocomplete="off"><kbd>Ctrl K</kbd></div><div id="global-results" class="global-results" hidden></div></section><div class="dashboard-strip"><a href="#/map/${db.mode}"><b>${db.maps.length}</b> карт</a><a href="#/item/${db.mode}"><b>${db.items.length.toLocaleString("ru-RU")}</b> предметов</a><a href="#/quest/${db.mode}"><b>${completed} / ${db.quests.length}</b> заданий</a><a href="#/items-tracker/${db.mode}"><b>Мой прогресс</b> →</a></div><h2 class="center">Последние новости</h2><div class="card-grid news-grid">${db.articles
+  app.innerHTML = `<section class="home-hero"><h1>TarkovHead</h1><p>Карты, задания и справочник Escape from Tarkov — под рукой даже без интернета.</p><div class="home-search"><span>⌕</span><input type="search" id="global-search" placeholder="Найти предметы, задания, модули убежища" autocomplete="off"><kbd>Ctrl K</kbd></div><div id="global-results" class="global-results" hidden></div></section><div class="dashboard-strip"><a href="#/map/${db.mode}"><b>${db.maps.length}</b> карт</a><a href="#/item/${db.mode}"><b>${db.items.length.toLocaleString("ru-RU")}</b> предметов</a><a href="#/quest/${db.mode}"><b>${completed} / ${db.quests.length}</b> заданий</a><a href="#/items-tracker/${db.mode}"><b>Мой прогресс</b> →</a></div><section class="home-news"><h2 class="center">Последние новости</h2><div class="card-grid news-grid">${db.articles
     .filter((x) => x.type === "news")
     .slice(0, 8)
     .map(
       (x) =>
-        `<a class="card news-card" href="#/${x.path}">${img(x.image, x.title)}<div class="card-body"><h3>${esc(x.title)}</h3><p class="muted small">${esc(x.excerpt || "Обновления, события и руководства Escape from Tarkov.")}</p><span class="muted small">${esc(x.date || "Сохранено в офлайн-базе")}</span></div></a>`,
+        `<a class="card news-card" href="#/${x.path}">${img(x.image, x.title.replaceAll("торговецев", "торговцев"))}<div class="card-body"><h3>${esc(x.title.replaceAll("торговецев", "торговцев"))}</h3><p class="muted small">${esc(x.excerpt || "Обновления, события и руководства Escape from Tarkov.")}</p><span class="muted small">${esc(x.date || "Сохранено в офлайн-базе")}</span></div></a>`,
     )
     .join(
       "",
-    )}</div><p class="center" style="margin-top:24px"><a class="button" href="#/news">Ко всем новостям →</a></p>`;
+    )}</div><p class="center" style="margin-top:24px"><a class="button" href="#/news">Ко всем новостям →</a></p></section>`;
   const field = app.querySelector("#global-search"),
     box = app.querySelector("#global-results");
   field.oninput = () => {
@@ -71,7 +84,7 @@ function home() {
           name: x.name,
           icon: x.iconLink || db.lookup.traders?.[x.trader]?.imageLink,
           href: `quest/${db.mode}/${x.normalizedName}`,
-          type: "Квест",
+          type: "Задание",
         })),
       ...Object.values(db.lookup.hideout || {})
         .filter((x) => x.name.toLowerCase().includes(q))
@@ -133,7 +146,7 @@ async function route() {
         slug ? await renderItem(app, slug) : renderCatalog(app);
         break;
       case "quest":
-        slug ? await renderQuest(app, slug) : renderQuests(app);
+        slug ? await renderQuest(app, slug) : await renderQuests(app);
         break;
       case "map":
         slug ? await renderMap(app, slug) : renderMaps(app);
@@ -148,7 +161,7 @@ async function route() {
         renderModifiers(app);
         break;
       case "settings":
-        renderSettings(app);
+        await renderSettings(app);
         break;
       case "gps":
         await renderGps(app);
@@ -165,6 +178,8 @@ async function route() {
       default:
         home();
     }
+    if (version !== routeVersion) return;
+    addBackButton(app);
     window.scrollTo(0, 0);
   } catch (e) {
     if (version === routeVersion) app.innerHTML = errorView(e);
@@ -177,8 +192,7 @@ document.querySelector("#modal").addEventListener("click", (e) => {
 });
 document.querySelector("#menu").onclick = () =>
   navigation.classList.toggle("expanded");
-document.querySelector("#settings-link").onclick = () =>
-  (location.hash = "/settings");
+document.querySelector("#settings-link").onclick = openPreferences;
 window.addEventListener("save-failed", () =>
   toast(
     "Не удалось записать файл. Прогресс остаётся в окне; сохраните резервную копию.",
