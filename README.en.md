@@ -13,3 +13,5 @@
 For a manual update, close the app and select its existing folder containing **EFT GPS.exe**. Your settings and progress are preserved. Automatic updates use a separate update window and detect the existing folder.
 
 See the complete guide for screenshots, GPS setup, requirements and troubleshooting.
+
+For Windows security messages, read [Windows warnings](README.md#windows-warnings): the installer is unsigned, but a detected threat should be investigated rather than ignored.

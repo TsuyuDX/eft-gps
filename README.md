@@ -41,6 +41,13 @@
 
 Для этого этапа нужен интернет. Полный комплект занимает около **2,6 ГБ**: время загрузки зависит от соединения. Во время загрузки доступны проценты и кнопка отмены.
 
+#### Предупреждения Windows
+
+> [!NOTE]
+> Текущий установщик пока **не имеет цифровой подписи издателя**. Windows SmartScreen может предупреждать о неизвестном или малоизвестном приложении. Это связано с подписью и репутацией файла, а не с «лицензией»; само по себе такое предупреждение не означает обнаружение вируса. [Объяснение Microsoft](https://learn.microsoft.com/windows/apps/package-and-deploy/smartscreen-reputation).
+>
+> Если Microsoft Defender сообщает **об обнаруженной угрозе**, не игнорируйте её и не отключайте защиту. Сообщите автору название обнаружения и версию приложения через [Issues](https://github.com/TsuyuDX/eft-gps/issues), чтобы проверить файл. Скачивайте установщик из этого репозитория.
+
 ### 3. Выберите папку и установите
 
 В установщике нажмите **«Обзор…»** и выберите, где хранить программу. Внутри выбранного места автоматически создастся папка **EFT GPS**. Например, при выборе `D:\Games` приложение установится в `D:\Games\EFT GPS`.
@@ -100,6 +107,13 @@ To find the file manually, open **Releases** on the right side of the repository
 Open **EFT-GPS-Setup.exe** from your browser downloads or your **Downloads** folder. Click **Download and install**, then wait for setup to open.
 
 This step requires internet. The complete package is approximately **2.6 GB**, so download time depends on your connection. The downloader shows percentages and lets you cancel.
+
+#### Windows warnings
+
+> [!NOTE]
+> The current installer **does not yet have a publisher's digital signature**. Windows SmartScreen may warn about an unknown or uncommon application. This relates to signing and file reputation, not a missing “license”; the warning alone does not mean a virus was detected. [Microsoft's explanation](https://learn.microsoft.com/windows/apps/package-and-deploy/smartscreen-reputation).
+>
+> If Microsoft Defender reports **a detected threat**, do not ignore it or disable protection. Report the detection name and application version in [Issues](https://github.com/TsuyuDX/eft-gps/issues) so the file can be investigated. Download the installer from this repository.
 
 ### 3. Choose a folder and install
 
