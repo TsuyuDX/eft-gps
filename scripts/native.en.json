@@ -74,7 +74,7 @@
   "Сначала закройте окно EFT GPS": "Close the EFT GPS window first",
   "Microsoft WebView2 установлен.": "Microsoft WebView2 installed.",
   "Создать ярлык на рабочем столе": "Create a desktop shortcut",
-  "УСТАНОВКА ПРИЛОЖЕНИЯ  /  1.8.0": "APPLICATION SETUP  /  1.8.0",
+  "УСТАНОВКА ПРИЛОЖЕНИЯ  /  1.8.1": "APPLICATION SETUP  /  1.8.1",
   "Резервная копия (*.json)": "Backup (*.json)",
   "Файл установки является ссылкой": "The installation file is a link",
   "Путь выходит за папку приложения": "The path is outside the application folder",
@@ -187,5 +187,13 @@
   "✓ Всё необходимое уже установлено": "✓ All required components are already installed",
   "Проверьте папку и нажмите «Установить».": "Check the folder and click Install.",
   "При выборе места создадим папку EFT GPS.": "An EFT GPS folder will be created in the selected location.",
-  "Обновление будет установлено в эту папку.": "The update will be installed in this folder."
+  "Обновление будет установлено в эту папку.": "The update will be installed in this folder.",
+  "Рекомендуемая папка": "Recommended folder",
+  "Программы": "Applications",
+  "Проверяем доступ к выбранной папке…": "Checking write access to the selected folder…",
+  "Нет прав записи в выбранную папку. Выберите другую папку через «Обзор», например папку в вашем профиле пользователя. Путь: ": "You cannot write to this folder. Choose another folder using Browse, such as a folder in your user profile. Path: ",
+  "Приложение установлено. Запустите его с ярлыка на рабочем столе.": "The application is installed. Launch it using the desktop shortcut.",
+  "Выбрана рекомендуемая папка.": "Recommended folder selected.",
+  "Нет прав записи в выбранную папку": "You cannot write to the selected folder",
+  "Выберите рекомендуемую папку или другое место установки.": "Choose the recommended folder or another installation location."
 }

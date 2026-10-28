@@ -69,6 +69,7 @@ export class AppUpdater {
     this.root=root;this.version=version;this.fetcher=fetcher;this.temporary=temporary;
     this.launch=launch || (async(exe,args)=>{
       const child=spawn(exe,args,{cwd:path.dirname(exe),detached:true,stdio:'ignore',windowsHide:false});
+      child.once('exit',code=>{if(code===1223 && this.state.phase==='installer')this.state.phase='cancelled';});
       await once(child,'spawn');child.unref();
     });
     this.state={phase:'idle',percent:0,downloaded:0,total:0,file:'',version:''};

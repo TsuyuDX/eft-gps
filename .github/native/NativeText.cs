@@ -8,7 +8,7 @@ using System.Web.Script.Serialization;
 using System.Windows.Forms;
 public static class NativeText {
  public const string Brand="T_S_U_Y_U EFT GPS";
- public const string Version="1.8.0";
+ public const string Version="1.8.1";
  public static bool English;
  static readonly Dictionary<string,string> words=Load();
  class Record {public string Source,Output;}

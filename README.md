@@ -31,6 +31,8 @@
 
 Нажмите большую кнопку **«Скачать для Windows»** вверху этой страницы. В загрузках браузера появится **EFT-GPS-Setup.exe**.
 
+При запуске установщика появится стандартный запрос прав администратора Windows. Подтвердите его для установки. Обычный запуск EFT GPS повышения прав не требует.
+
 Для обычной установки нужен **только этот файл**. Кнопка **Code → Download ZIP** скачивает проект для работы с исходниками; для установки приложения она не нужна.
 
 Если хотите найти файл вручную: справа на странице репозитория откройте **Releases**, выберите выпуск с пометкой **Latest**, раскройте **Assets** и нажмите **EFT-GPS-Setup.exe**. Части `.part01`, `.part02` и **Source code** выбирать не нужно — загрузчик скачает нужное сам.
@@ -50,7 +52,9 @@
 
 ### 3. Выберите папку и установите
 
-В установщике нажмите **«Обзор…»** и выберите, где хранить программу. Внутри выбранного места автоматически создастся папка **EFT GPS**. Например, при выборе `D:\Games` приложение установится в `D:\Games\EFT GPS`.
+Рекомендуемое место — **`%LOCALAPPDATA%\Programs\EFT GPS`**, стандартная папка программ вашего пользователя. Она выбрана по умолчанию; вернуть её можно ссылкой **«Рекомендуемая папка»**.
+
+В установщике нажмите **«Обзор…»**, если хотите выбрать другое место. Внутри выбранного места автоматически создастся папка **EFT GPS**. Например, при выборе `D:\Games` приложение установится в `D:\Games\EFT GPS`.
 
 Оставьте галочку **«Создать ярлык на рабочем столе»**, если хотите запускать приложение с рабочего стола. Затем нажмите **«Далее»**, проверьте путь и нажмите **«Установить»**.
 
@@ -83,6 +87,7 @@
 | Скачался ZIP с исходниками | Вернитесь к кнопке скачивания вверху. Нужен **EFT-GPS-Setup.exe**. |
 | Загрузка прервалась | Откройте загрузчик снова и нажмите **«Повторить»**. Проверенные части используются повторно. |
 | Не найдена папка скриншотов | Укажите её в разделе **GPS**. Карты и справочник доступны и без настроенного GPS. |
+| Отказано в доступе к папке | Нажмите **«Рекомендуемая папка»** или выберите место, куда у вас есть право записи. Не меняйте права всего диска. |
 | Не хватает места | Выберите диск с достаточным свободным местом для приложения и временных файлов. |
 | Обновление не завершается | Дождитесь сообщения об ошибке или отмене. Откройте **«Подробнее»** и приложите текст ошибки к [сообщению о проблеме](https://github.com/TsuyuDX/eft-gps/issues/new). Не публикуйте личные данные. |
 
@@ -97,6 +102,8 @@
 ### 1. Download the installer
 
 Click the large **Download for Windows** image at the top of this page. Your browser will download **EFT-GPS-Setup.exe**.
+
+Windows will request administrator permission when setup starts. Confirm it to install. Normal EFT GPS use does not require elevation.
 
 This is the **only file needed for normal installation**. **Code → Download ZIP** downloads the project source; it is not needed to install the application.
 
@@ -117,7 +124,9 @@ This step requires internet. The complete package is approximately **2.6 GB**, s
 
 ### 3. Choose a folder and install
 
-Click **Browse…** and select where to store the application. An **EFT GPS** subfolder will be created automatically. For example, selecting `D:\Games` installs the app in `D:\Games\EFT GPS`.
+The recommended location is **`%LOCALAPPDATA%\Programs\EFT GPS`**, the standard per-user Programs folder. It is selected by default; use **Recommended folder** to restore it.
+
+Click **Browse…** if you want a different location. An **EFT GPS** subfolder will be created automatically. For example, selecting `D:\Games` installs the app in `D:\Games\EFT GPS`.
 
 Keep **Create a desktop shortcut** checked if you want a shortcut. Click **Next**, check the folder, then click **Install**.
 
@@ -150,6 +159,7 @@ To update manually, download the installer using the image above and use **Brows
 | You downloaded a source ZIP | Use the download image at the top. You need **EFT-GPS-Setup.exe**. |
 | A download was interrupted | Reopen the downloader and click **Retry**. Verified parts are reused. |
 | The screenshots folder was not found | Select it in **GPS**. Maps and reference data also work without GPS configured. |
+| Access to a folder is denied | Use **Recommended folder** or choose a writable location. Do not change permissions for the entire drive. |
 | Not enough disk space | Choose a drive with enough free space for the application and temporary files. |
 | An update fails | Wait for the error or cancellation to finish. Open **Details** and include the error text in an [issue](https://github.com/TsuyuDX/eft-gps/issues/new). Do not publish personal data. |
 

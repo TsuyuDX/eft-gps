@@ -12,13 +12,112 @@ using System.Collections.Generic;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.IO.Pipes;
+using System.Security.AccessControl;
+using System.Security.Principal;
+
+public static class InstallerElevation {
+    public static string UserSid=WindowsIdentity.GetCurrent().User.Value;
+    public static string Programs=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"Programs");
+    public static string Desktop=Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+    static string parentPipe;
+    public static bool IsAdministrator {get{return new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);}}
+    public static string Quote(string value) {
+        var result=new StringBuilder("\"");int slashes=0;
+        foreach(char c in value) {if(c=='\\'){slashes++;continue;}result.Append('\\',c=='\"'?slashes*2+1:slashes);result.Append(c);slashes=0;}
+        result.Append('\\',slashes*2);result.Append('"');return result.ToString();
+    }
+    public static bool RelaunchIfNeeded(ref string[] args) {
+        if(IsAdministrator) {
+            if(args.Length>=5 && args[0]=="--installer-elevated") {
+                UserSid=new SecurityIdentifier(args[1]).Value;Programs=Path.GetFullPath(args[2]);Desktop=Path.GetFullPath(args[3]);parentPipe=args[4];
+                Guid id;if(!parentPipe.StartsWith("EFTGPS-install-") || !Guid.TryParseExact(parentPipe.Substring(15),"N",out id))throw new IOException("Некорректный сеанс установки");
+                var remaining=new string[args.Length-5];Array.Copy(args,5,remaining,0,remaining.Length);args=remaining;
+            }
+            return false;
+        }
+        string name="EFTGPS-install-"+Guid.NewGuid().ToString("N");
+        var security=new PipeSecurity();security.AddAccessRule(new PipeAccessRule(new SecurityIdentifier(UserSid),PipeAccessRights.FullControl,AccessControlType.Allow));security.AddAccessRule(new PipeAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid,null),PipeAccessRights.ReadWrite,AccessControlType.Allow));
+        using(var server=new NamedPipeServerStream(name,PipeDirection.In,1,PipeTransmissionMode.Byte,PipeOptions.Asynchronous,4096,4096,security)) {
+            var request=Task.Run((Func<string>)delegate {server.WaitForConnection();using(var reader=new StreamReader(server,Encoding.UTF8))return reader.ReadLine();});
+            request.ContinueWith(t=>{var ignored=t.Exception;},TaskContinuationOptions.OnlyOnFaulted);
+            var forwarded=new List<string>{"--installer-elevated",UserSid,Programs,Desktop,name};forwarded.AddRange(args);var command=new StringBuilder();foreach(var value in forwarded){if(command.Length>0)command.Append(' ');command.Append(Quote(value));}
+            try {
+                using(var child=Process.Start(new ProcessStartInfo(Application.ExecutablePath,command.ToString()){UseShellExecute=true,Verb="runas",WorkingDirectory=AppDomain.CurrentDomain.BaseDirectory})) {
+                    if(child==null)throw new IOException("Не удалось запустить установщик");child.WaitForExit();Environment.ExitCode=child.ExitCode;
+                }
+                if(!request.IsCompleted)try{request.Wait(1000);}catch(AggregateException){}
+                if(request.Status==TaskStatus.RanToCompletion && !String.IsNullOrEmpty(request.Result)) {
+                    string application=Path.GetFullPath(request.Result);
+                    if(Path.GetFileName(application)=="EFT GPS.exe" && File.Exists(application))Process.Start(new ProcessStartInfo(application){UseShellExecute=false,WorkingDirectory=Path.GetDirectoryName(application)});
+                }
+            } catch(System.ComponentModel.Win32Exception e) {if(e.NativeErrorCode!=1223)throw;Environment.ExitCode=1223;}
+        }
+        return true;
+    }
+    public static void PrepareUserData(string target) {
+        string data=Path.Combine(target,"userdata");Directory.CreateDirectory(data);
+        var acl=Directory.GetAccessControl(data);acl.AddAccessRule(new FileSystemAccessRule(new SecurityIdentifier(UserSid),FileSystemRights.Modify,InheritanceFlags.ContainerInherit|InheritanceFlags.ObjectInherit,PropagationFlags.None,AccessControlType.Allow));Directory.SetAccessControl(data,acl);
+    }
+    public static void OpenApplication(string target) {
+        string application=Path.Combine(target,"EFT GPS.exe");
+        if(parentPipe!=null) {
+            using(var pipe=new NamedPipeClientStream(".",parentPipe,PipeDirection.Out)) {pipe.Connect(3000);using(var writer=new StreamWriter(pipe,new UTF8Encoding(false))){writer.WriteLine(application);writer.Flush();}}
+        } else if(IsAdministrator) Process.Start(new ProcessStartInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows),"explorer.exe"),Quote(application)){UseShellExecute=true});
+        else Process.Start(new ProcessStartInfo(application){UseShellExecute=false,WorkingDirectory=target});
+    }
+}
 
 public class ReleaseFile { public string path; public string sha256; public long size; }
 public class ReleaseInfo { public int format; public string app; public string version, baseVersion; public ReleaseFile[] files; public string[] removed; }
 public class InstallStatus { public string phase,file; public long done,total; public int percent; }
+public sealed class InstallWorkspace : IDisposable {
+    public readonly string Target,Stage;
+    readonly bool createdTarget;
+    public InstallWorkspace(string target,string stage,bool created) {Target=target;Stage=stage;createdTarget=created;}
+    public void Dispose() {
+        string full=Path.GetFullPath(Stage);
+        if(Path.GetDirectoryName(full).Equals(Target,StringComparison.OrdinalIgnoreCase) && Path.GetFileName(full).StartsWith(".EFTGPS-stage-") && Directory.Exists(full)) Directory.Delete(full,true);
+        if(createdTarget && !File.Exists(Path.Combine(Target,"Tarkov Offline.exe"))) RemoveEmpty(Target);
+    }
+    static void RemoveEmpty(string folder) {
+        if(!Directory.Exists(folder) || (File.GetAttributes(folder)&FileAttributes.ReparsePoint)!=0)return;
+        foreach(var child in Directory.GetDirectories(folder)) RemoveEmpty(child);
+        try {Directory.Delete(folder,false);}catch(IOException){}catch(UnauthorizedAccessException){}
+    }
+}
 public static class PackageInstaller {
+    public static string RecommendedFolder {get{return Path.Combine(InstallerElevation.Programs,"EFT GPS");}}
     [ThreadStatic] static HashSet<string> safeDirectories;
     static void ResetPaths() { safeDirectories=new HashSet<string>(StringComparer.OrdinalIgnoreCase); }
+    static string Normalized(string folder) {string full=Path.GetFullPath(folder);return full.Length>Path.GetPathRoot(full).Length?full.TrimEnd(Path.DirectorySeparatorChar):full;}
+    static bool EmptyTree(string folder) {
+        foreach(string entry in Directory.EnumerateFileSystemEntries(folder)) if(!Directory.Exists(entry) || (File.GetAttributes(entry)&FileAttributes.ReparsePoint)!=0 || !EmptyTree(entry))return false;
+        return true;
+    }
+    public static bool TargetAllowed(string target,string ownedStage=null) {
+        target=Normalized(target);
+        if(!Directory.Exists(target) || File.Exists(Path.Combine(target,"Tarkov Offline.exe")))return true;
+        foreach(string entry in Directory.EnumerateFileSystemEntries(target)) {
+            if(ownedStage!=null && Path.GetFullPath(entry).Equals(Path.GetFullPath(ownedStage),StringComparison.OrdinalIgnoreCase) && Path.GetDirectoryName(Path.GetFullPath(ownedStage)).Equals(target,StringComparison.OrdinalIgnoreCase) && Path.GetFileName(ownedStage).StartsWith(".EFTGPS-stage-")) continue;
+            if(!Directory.Exists(entry) || (File.GetAttributes(entry)&FileAttributes.ReparsePoint)!=0 || !EmptyTree(entry)) return false;
+        }
+        return true;
+    }
+    public static InstallWorkspace PrepareWorkspace(string target) {
+        target=Normalized(target);bool created=!Directory.Exists(target);string stage=Path.Combine(target,".EFTGPS-stage-"+Guid.NewGuid().ToString("N"));
+        if(!TargetAllowed(target))throw new IOException("Выберите пустую папку или папку установленного EFT GPS");
+        ResetPaths();string probe=SafePath(target,"EFTGPS-access-"+Guid.NewGuid().ToString("N")+".tmp");
+        try {
+            Directory.CreateDirectory(target);
+            using(var file=new FileStream(probe,FileMode.CreateNew,FileAccess.Write,FileShare.None,4096,FileOptions.DeleteOnClose)) file.WriteByte(1);
+            Directory.CreateDirectory(stage);
+            return new InstallWorkspace(target,stage,created);
+        } catch(UnauthorizedAccessException e) {
+            if(created)try{Directory.Delete(target,false);}catch{}
+            throw new IOException("Нет прав записи в выбранную папку. Выберите другую папку через «Обзор», например папку в вашем профиле пользователя. Путь: "+target,e);
+        }
+    }
     static void Notify(Action<InstallStatus> progress,string phase,string file,long done,long total,int start,int span) {
         if(progress!=null) progress(new InstallStatus {phase=phase,file=file,done=done,total=total,percent=start+(int)(total==0?0:Math.Min(span,done*(double)span/total))});
     }
@@ -44,7 +143,7 @@ public static class PackageInstaller {
         if (String.IsNullOrWhiteSpace(relative) || relative.IndexOf('\\') >= 0 || relative.IndexOf(':') >= 0 || relative.StartsWith("/")) throw new IOException("Некорректный путь в пакете");
         foreach (string segment in relative.Split('/')) if (segment == "." || segment == ".." || segment.Length == 0 || segment.EndsWith(".") || segment.EndsWith(" ")) throw new IOException("Некорректный путь в пакете");
         string first = relative.Split('/')[0].ToLowerInvariant();
-        if (first == "userdata" || first == "work" || first.StartsWith("snapshot-backup") || first == "update-staging") throw new IOException("Пакет пытается изменить пользовательские файлы");
+        if (first == "userdata" || first == "work" || first.StartsWith("snapshot-backup") || first.StartsWith(".eftgps-") || first == "update-staging") throw new IOException("Пакет пытается изменить пользовательские файлы");
         string full = Path.GetFullPath(Path.Combine(root, relative.Replace('/', Path.DirectorySeparatorChar)));
         string prefix = Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
         if (!full.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)) throw new IOException("Путь выходит за папку приложения");
@@ -117,11 +216,11 @@ public static class PackageInstaller {
         }
     }
     static bool TryAddCompat<T>(this Dictionary<string,T> map, string key, T value) { if (map.ContainsKey(key)) return false; map.Add(key, value); return true; }
-    public static string Install(string target, string staged, ReleaseInfo release, Action<string> progress, Action<InstallStatus> detail=null,CancellationToken cancellation=default(CancellationToken)) {
+    public static string Install(string target, string staged, ReleaseInfo release, Action<string> progress, Action<InstallStatus> detail=null,CancellationToken cancellation=default(CancellationToken),Action beforeCommit=null) {
         cancellation.ThrowIfCancellationRequested();
         ResetPaths(); CheckBase(target,release);
         target = Path.GetFullPath(target);
-        if (Directory.Exists(target) && Directory.GetFileSystemEntries(target).Length > 0 && !File.Exists(Path.Combine(target, "Tarkov Offline.exe"))) throw new IOException("Выберите пустую папку или папку установленного EFT GPS");
+        if (!TargetAllowed(target,staged)) throw new IOException("Выберите пустую папку или папку установленного EFT GPS");
         Directory.CreateDirectory(target);
         string backup = Path.Combine(target, "work", "install-backup-" + DateTime.Now.ToString("yyyyMMdd-HHmmss-fff"));
         string work = Path.Combine(target, "work");
@@ -165,6 +264,7 @@ public static class PackageInstaller {
                 if (changed.Count % 100 == 0) progress("Установка: " + changed.Count + " файлов");
             }
             cancellation.ThrowIfCancellationRequested();
+            if(beforeCommit!=null)beforeCommit();
             var installed=new ReleaseInfo {format=1,app=release.app,version=release.version,files=new List<ReleaseFile>(merged.Values).ToArray()};
             string nextManifest=Path.Combine(target,"release.json.install-new");
             File.WriteAllText(nextManifest,new JavaScriptSerializer { MaxJsonLength = 16 * 1024 * 1024 }.Serialize(installed),Encoding.UTF8);
@@ -301,8 +401,8 @@ class DarkFolderPicker : DarkWindow {
         address.SetBounds(134,115,570,29);address.BackColor=Color.FromArgb(19,19,18);address.ForeColor=ForeColor;address.BorderStyle=BorderStyle.FixedSingle;address.AccessibleName="Путь к папке";
         address.KeyDown+=delegate(object sender,KeyEventArgs e) {if(e.KeyCode==Keys.Enter) {e.SuppressKeyPress=true;Navigate(address.Text,true);}};
         var go=ButtonAt("Перейти",716,108,100,false);go.Click+=delegate {Navigate(address.Text,true);};
-        string[] names={"Этот компьютер","Рабочий стол","Документы","Моя папка","Папка программы"};
-        string[] paths={"",Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory),Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),initial};
+        string[] names={"Этот компьютер","Рабочий стол","Документы","Моя папка","Программы","Program Files"};
+        string[] paths={"",Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory),Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),Path.GetDirectoryName(PackageInstaller.RecommendedFolder),Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)};
         for(int n=0;n<names.Length;n++) {string location=paths[n];var quick=ButtonAt(names[n],24,172+n*48,164,false);quick.Click+=delegate {Navigate(location,true);};Controls.Add(quick);}
         folders.SetBounds(208,172,608,302);folders.ForeColor=ForeColor;
         folders.SelectionChanged=delegate {if(folders.Selected>=0) {selected=folders.Items[folders.Selected].Path;choose.Enabled=true;hint.Text=NativeText.T("Выбрано: "+selected);}};
@@ -428,6 +528,7 @@ class Maintenance : DarkWindow {
     readonly Stopwatch elapsed=new Stopwatch();
     readonly System.Windows.Forms.Timer displayClock=new System.Windows.Forms.Timer {Interval=500};
     Button details;
+    LinkLabel recommended;
     bool expanded,prepared;
     CancellationTokenSource cancellation;
     string operation, target, package, expectedHash, expectedVersion;
@@ -446,12 +547,15 @@ class Maintenance : DarkWindow {
             } catch (Exception e) { File.WriteAllText(args[2] + ".error.txt", e.ToString()); Environment.Exit(1); }
             return;
         }
+        #if !INSTALLER_PREVIEW
+        try {if(InstallerElevation.RelaunchIfNeeded(ref args))return;}catch(Exception e){MessageBox.Show(e.Message,"EFT GPS",MessageBoxButtons.OK,MessageBoxIcon.Error);return;}
+        #endif
         Application.EnableVisualStyles(); Application.SetCompatibleTextRenderingDefault(false);
-        Application.Run(new Maintenance(args));
+        var window=new Maintenance(args);Application.Run(window);if(!window.complete)Environment.ExitCode=1223;
     }
     Maintenance(string[] args) {
         operation = args.Length > 0 ? args[0] : "--setup";
-        target = args.Length > 1 ? Path.GetFullPath(args[1]) : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "EFTGPS");
+        target = args.Length > 1 ? Path.GetFullPath(args[1]) : PackageInstaller.RecommendedFolder;
         package = args.Length > 2 ? args[2] : null;
         updating = operation == "--update";
         expectedHash = args.Length > 3 ? args[3] : null;
@@ -467,14 +571,16 @@ class Maintenance : DarkWindow {
         var logo=new PictureBox { Bounds=new Rectangle(28,24,62,62), Image=branding, SizeMode=PictureBoxSizeMode.Zoom };
         Controls.Add(logo);
         TextAt("T_S_U_Y_U EFT GPS",106,22,520,40,22,ForeColor);
-        TextAt(data ? "ОБНОВЛЕНИЕ СПРАВОЧНИКА" : updating ? "ОБНОВЛЕНИЕ ПРИЛОЖЕНИЯ" : "УСТАНОВКА ПРИЛОЖЕНИЯ  /  1.8.0",108,67,500,24,9,muted);
+        TextAt(data ? "ОБНОВЛЕНИЕ СПРАВОЧНИКА" : updating ? "ОБНОВЛЕНИЕ ПРИЛОЖЕНИЯ" : "УСТАНОВКА ПРИЛОЖЕНИЯ  /  1.8.1",108,67,500,24,9,muted);
         steps.SetBounds(28,108,764,32); steps.Text="01  Подготовка     /     02  Установка     /     03  Готово"; steps.ForeColor=Color.FromArgb(185,171,130);
         Controls.Add(steps);
         TextAt(data ? "Свежая база — привычный прогресс" : updating ? "Новая версия — ваш прогресс на месте" : "Тарков под рукой. Даже без интернета.",28,154,764,38,18,ForeColor);
         TextAt(updating ? "Установим новую версию в ту же папку.\nВаши настройки, метки и прогресс сохранятся." : data ? "Обновим карты и справочник.\nВаши настройки и прогресс сохранятся." : "Выберите папку и установите приложение.\nКарты и справочник будут доступны без интернета.",28,201,764,55,10,muted);
         TextAt("ПАПКА ПРИЛОЖЕНИЯ",28,274,764,23,9,muted);
         folder.SetBounds(28,305,620,30); folder.Text=target; folder.BackColor=Color.FromArgb(19,19,18); folder.ForeColor=ForeColor; folder.BorderStyle=BorderStyle.FixedSingle;
-        TextAt(updating||data?"Обновление будет установлено в эту папку.":"При выборе места создадим папку EFT GPS.",28,337,764,22,9,muted);
+        TextAt(updating||data?"Обновление будет установлено в эту папку.":"При выборе места создадим папку EFT GPS.",28,337,550,22,9,muted);
+        recommended=new LinkLabel {Text="Рекомендуемая папка",Bounds=new Rectangle(592,337,200,24),LinkColor=Color.FromArgb(185,171,130),ActiveLinkColor=ForeColor,VisitedLinkColor=Color.FromArgb(185,171,130),TextAlign=ContentAlignment.TopRight,Visible=operation=="--setup",Font=new Font("Segoe UI",9)};
+        recommended.LinkClicked+=delegate {folder.Text=PackageInstaller.RecommendedFolder;status.Text=NativeText.T("Выбрана рекомендуемая папка.");status.Visible=true;progress.Visible=percentage.Visible=timing.Visible=fileStatus.Visible=log.Visible=details.Visible=false;expanded=false;LayoutOperation(false);};Controls.Add(recommended);
         browse=ButtonAt("Обзор…",660,299,132,false);
         browse.Click+=delegate { using(var picker=new DarkFolderPicker(folder.Text)) if(picker.ShowDialog(this)==DialogResult.OK) {string selected=picker.SelectedPath;string name=Path.GetFileName(selected.TrimEnd(Path.DirectorySeparatorChar));folder.Text=File.Exists(Path.Combine(selected,"EFT GPS.exe"))||name.Equals("EFT GPS",StringComparison.OrdinalIgnoreCase)||name.Equals("EFTGPS",StringComparison.OrdinalIgnoreCase)?selected:Path.Combine(selected,"EFT GPS");} };
         shortcut.SetBounds(28,365,764,26); shortcut.Text="Создать ярлык на рабочем столе"; shortcut.Checked=true; shortcut.Visible=!data && !updating; shortcut.Checked=!updating;
@@ -497,23 +603,23 @@ class Maintenance : DarkWindow {
         displayClock.Tick+=delegate {RenderTiming();};displayClock.Start();
         cancel=ButtonAt("Отмена",448,651,132,false); cancel.Visible=prepared;cancel.Click+=delegate {
             if(busy){if(cancellation!=null)cancellation.Cancel();status.Text=NativeText.T("Отменяем операцию…");cancel.Enabled=false;return;}
-            if(prepared&&!complete&&!data&&!updating){prepared=false;action.Text=NativeText.T("Далее");cancel.Visible=false;folder.ReadOnly=false;browse.Enabled=true;progress.Visible=percentage.Visible=timing.Visible=fileStatus.Visible=status.Visible=details.Visible=log.Visible=false;expanded=false;LayoutOperation(false);return;}
+            if(prepared&&!complete&&!data&&!updating){prepared=false;recommended.Enabled=true;action.Text=NativeText.T("Далее");cancel.Visible=false;folder.ReadOnly=false;browse.Enabled=true;progress.Visible=percentage.Visible=timing.Visible=fileStatus.Visible=status.Visible=details.Visible=log.Visible=false;expanded=false;LayoutOperation(false);return;}
             Close();
         };
         action=ButtonAt(data ? "Обновить базу" : updating ? "Обновить приложение" : "Далее",592,651,200,true);
         progress.Visible=percentage.Visible=timing.Visible=fileStatus.Visible=status.Visible=details.Visible=false;
         action.Click+=async delegate {
-            if(complete) { Process.Start(new ProcessStartInfo(Path.Combine(target,"Tarkov Offline.exe")) {WorkingDirectory=target,UseShellExecute=false}); Close(); return; }
+            if(complete) {try{InstallerElevation.OpenApplication(target);Close();}catch(Exception e){status.Text=NativeText.T("Приложение установлено. Запустите его с ярлыка на рабочем столе.");Append(e.Message);}return;}
             try {
                 target=Path.GetFullPath(folder.Text.Trim());
                 if(String.IsNullOrWhiteSpace(folder.Text)) throw new IOException("Выберите папку приложения.");
-                if(!data && Directory.Exists(target) && Directory.GetFileSystemEntries(target).Length>0 && !File.Exists(Path.Combine(target,"Tarkov Offline.exe"))) throw new IOException("В этой папке уже есть другие файлы. Выберите пустую папку или папку EFT GPS.");
+                if(!data && !PackageInstaller.TargetAllowed(target)) throw new IOException("В этой папке уже есть другие файлы. Выберите пустую папку или папку EFT GPS.");
                 CheckPlatform();
-                if(!prepared){prepared=true;action.Text=NativeText.T("Установить");cancel.Text=NativeText.T("Назад");cancel.Visible=true;folder.ReadOnly=true;browse.Enabled=false;status.Visible=true;status.Text=NativeText.T("Проверьте папку и нажмите «Установить».");return;}
+                if(!prepared){prepared=true;recommended.Enabled=false;action.Text=NativeText.T("Установить");cancel.Text=NativeText.T("Назад");cancel.Visible=true;folder.ReadOnly=true;browse.Enabled=false;status.Visible=true;status.Text=NativeText.T("Проверьте папку и нажмите «Установить».");return;}
                 if(data||updating) using(var confirm=new InstallConfirmation(data ? "Обновить локальную базу?" : updating ? "Обновить EFT GPS?" : "Установить EFT GPS?",
                     "Папка: "+target+"\n\nОкно приложения будет закрыто перед обновлением. Автосъёмку GPS после запуска нужно будет включить заново.\n\n"+(data ? "Понадобится интернет. Предыдущая база будет сохранена." : updating ? "Проверим загруженный пакет и заменим файлы приложения. Резервная копия изменённых файлов будет сохранена." : "Проверим файлы и подготовим приложение.\nЯрлык на рабочем столе: "+(shortcut.Checked ? "создать / обновить" : "не создавать"))+"\nЛичный прогресс и настройки останутся на месте.",data || updating ? "Обновить" : "Установить")) if(confirm.ShowDialog(this)!=DialogResult.OK) return;
                 writeShortcut=shortcut.Checked;
-                cancellation=new CancellationTokenSource();busy=true;elapsed.Restart();progress.Value=0; action.Enabled=false;cancel.Text=NativeText.T("Отмена");cancel.Enabled=true;cancel.Visible=true; browse.Enabled=false; folder.Enabled=false; shortcut.Enabled=false;
+                cancellation=new CancellationTokenSource();busy=true;recommended.Enabled=false;elapsed.Restart();progress.Value=0; action.Enabled=false;cancel.Text=NativeText.T("Отмена");cancel.Enabled=true;cancel.Visible=true; browse.Enabled=false; folder.Enabled=false; shortcut.Enabled=false;
                 progress.Visible=percentage.Visible=timing.Visible=fileStatus.Visible=status.Visible=details.Visible=true;
                 LayoutOperation(true);
                 steps.Text="✓  Подготовка     /     02  Установка     /     03  Готово"; status.Text="Подготовка файлов…"; progress.Running=data; NativeText.Apply(this);
@@ -527,9 +633,11 @@ class Maintenance : DarkWindow {
             } catch(Exception e) {
                 status.Visible=true;details.Visible=true;
                 status.Text="Не удалось завершить "+(data ? "обновление базы" : "установку");
+                if(e.InnerException is UnauthorizedAccessException){status.Text="Нет прав записи в выбранную папку";fileStatus.Text="Выберите рекомендуемую папку или другое место установки.";fileStatus.Visible=true;}
                 Append(e.Message+"\r\nИсправьте причину и повторите попытку. Личный прогресс не изменён.");
-                try { Directory.CreateDirectory(Path.Combine(target,"userdata")); File.WriteAllText(Path.Combine(target,"userdata","maintenance-error.log"),e.ToString()); } catch {}
+                try { string logs=File.Exists(Path.Combine(target,"Tarkov Offline.exe"))?Path.Combine(target,"userdata"):Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"EFTGPS","InstallerLogs");Directory.CreateDirectory(logs);File.WriteAllText(Path.Combine(logs,"maintenance-error.log"),e.ToString()); } catch {}
                 action.Text="Повторить"; folder.Enabled=!updating; browse.Enabled=operation=="--setup"; shortcut.Enabled=true;
+                if(!data&&!updating){prepared=false;folder.ReadOnly=false;recommended.Enabled=true;action.Text="Далее";cancel.Visible=false;}
             } finally { busy=false;elapsed.Stop();if(cancellation!=null){cancellation.Dispose();cancellation=null;}RenderTiming(); action.Enabled=true; cancel.Enabled=true; progress.Running=false; progress.Invalidate(); NativeText.Apply(this); }
         };
         FormClosing+=delegate(object sender,FormClosingEventArgs e) { if(busy) {e.Cancel=true;if(cancellation!=null)cancellation.Cancel();status.Text=NativeText.T("Отменяем операцию…");} };
@@ -589,8 +697,9 @@ class Maintenance : DarkWindow {
         if(drive.IsReady && drive.AvailableFreeSpace<bytes) throw new IOException("Недостаточно места на диске "+root+". Для этого этапа нужно не менее "+Math.Ceiling(bytes/1073741824d)+" ГБ свободного места.");
     }
     void StopServer() {
+        if(!File.Exists(Path.Combine(target,"EFT GPS.exe")))return;
         foreach (var p in Process.GetProcessesByName("TarkovDesktopHost")) {
-            try { if (String.Equals(p.MainModule.FileName, Path.Combine(target, "runtime", "TarkovDesktopHost.exe"), StringComparison.OrdinalIgnoreCase) ) { if(updating) p.CloseMainWindow(); if(!p.WaitForExit(10000)) throw new IOException("Сначала закройте окно EFT GPS"); } } catch (System.ComponentModel.Win32Exception) {}
+                try { if (String.Equals(p.MainModule.FileName, Path.Combine(target, "runtime", "TarkovDesktopHost.exe"), StringComparison.OrdinalIgnoreCase) ) { p.CloseMainWindow(); if(!p.WaitForExit(10000)) throw new IOException("Сначала закройте окно EFT GPS"); } } catch (System.ComponentModel.Win32Exception) {}
         }
         try {
             var request = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:38471/api/desktop/stop");
@@ -604,6 +713,7 @@ class Maintenance : DarkWindow {
             Thread.Sleep(800);
         } catch (WebException e) {
             if (e.Status == WebExceptionStatus.ConnectFailure) return;
+            var response=e.Response as HttpWebResponse;if(response!=null && response.StatusCode==HttpStatusCode.Conflict){response.Dispose();return;}
             throw new IOException("Не удалось завершить локальную службу. Закройте приложение и повторите через две минуты.", e);
         }
     }
@@ -631,10 +741,11 @@ class Maintenance : DarkWindow {
             }
             return;
         }
+        Append("Проверяем доступ к выбранной папке…");
+        InstallWorkspace workspace=PackageInstaller.PrepareWorkspace(target);
         Append("Проверяем пакет и распаковываем файлы за один проход.");
         bool embedded = package == null;
-        string stageParent=Path.GetDirectoryName(Path.GetFullPath(target));
-        string staged = Path.Combine(stageParent, ".EFTGPS-stage-" + Guid.NewGuid().ToString("N"));
+        string staged = workspace.Stage;
         try {
             if(updating) PackageInstaller.CheckUpdateHash(package,expectedHash,cancellation.Token);
             Report(new InstallStatus {phase="Проверка пакета",percent=1});
@@ -647,14 +758,13 @@ class Maintenance : DarkWindow {
             EnsureRuntime(staged);
             cancellation.Token.ThrowIfCancellationRequested();
             StopServer();
-            string backup = PackageInstaller.Install(target, staged, release, Append,Report,cancellation.Token);
+            string backup = PackageInstaller.Install(target, staged, release, Append,Report,cancellation.Token,delegate {InstallerElevation.PrepareUserData(target);});
             Append("Установлена версия " + release.version + ". Резервная копия изменённых файлов: " + backup);
             if(writeShortcut) CreateShortcut();
             if(updating) { try {File.Delete(package);} catch {} }
         } finally {
-            string resolved = Path.GetFullPath(staged);
             try {
-                if (Path.GetDirectoryName(resolved).Equals(stageParent,StringComparison.OrdinalIgnoreCase) && Path.GetFileName(resolved).StartsWith(".EFTGPS-stage-") && Directory.Exists(resolved)) Directory.Delete(resolved, true);
+                workspace.Dispose();
             } catch(Exception cleanup) {Append("Не удалось удалить временные файлы: "+cleanup.Message);}
         }
     }
@@ -684,7 +794,7 @@ class Maintenance : DarkWindow {
     void CreateShortcut() {
         Type type = Type.GetTypeFromProgID("WScript.Shell");
         object shell = Activator.CreateInstance(type);
-        string location = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "T_S_U_Y_U EFT GPS.lnk");
+        string location = Path.Combine(InstallerElevation.Desktop, "T_S_U_Y_U EFT GPS.lnk");
         object shortcut = type.InvokeMember("CreateShortcut", System.Reflection.BindingFlags.InvokeMethod, null, shell, new object[] { location });
         shortcut.GetType().InvokeMember("TargetPath", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { Path.Combine(target, "EFT GPS.exe") });
         shortcut.GetType().InvokeMember("WorkingDirectory", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { target });
