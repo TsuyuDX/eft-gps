@@ -1,92 +1,165 @@
 # T_S_U_Y_U EFT GPS
 
-**Карты, GPS по игровым скриншотам и подготовка к рейду. Бесплатное приложение для Windows.**  
-**Offline maps, screenshot GPS and raid preparation. Free Windows app.**
+**Карты, задания и GPS для Escape from Tarkov — в одном бесплатном приложении.**  
+**Maps, quests and screenshot GPS for Escape from Tarkov — one free application.**
 
-[![Скачать для Windows / Download for Windows](download.svg)](https://github.com/TsuyuDX/eft-gps/releases/latest/download/EFT-GPS-Setup.exe)
+<p align="center">
+  <a href="https://github.com/TsuyuDX/eft-gps/releases/latest/download/EFT-GPS-Setup.exe">
+    <img src="download.svg" alt="Скачать установщик для Windows / Download Windows installer" width="560" />
+  </a>
+</p>
 
-[Все версии / All versions](https://github.com/TsuyuDX/eft-gps/releases) · [Сообщить об ошибке / Report a bug](https://github.com/TsuyuDX/eft-gps/issues/new/choose) · [Поддержать / Support](https://boosty.to/tsuyueftgps)
+<p align="center">
+  Нажмите на картинку — установщик скачается сразу, открывать Releases не нужно.<br />
+  Click the image to download the latest installer directly. No need to open Releases.
+</p>
 
-**T_S_U_Y_U · Windows 10/11 x64 · Русский / English · Ранний доступ / Early access**
+<p align="center">
+  <strong>Windows 10 / 11 · x64 · Русский / English · Бесплатно / Free</strong>
+</p>
 
-## Скачать и установить
+**[Инструкция на русском](#ru) · [Installation in English](#en)**  
+[Скачать без картинки / Direct download](https://github.com/TsuyuDX/eft-gps/releases/latest/download/EFT-GPS-Setup.exe) · [Все версии / All versions](https://github.com/TsuyuDX/eft-gps/releases) · [Сообщить об ошибке / Report a bug](https://github.com/TsuyuDX/eft-gps/issues)
 
-1. Нажмите большую кнопку **«Скачать / Download»** выше. Нужен один небольшой файл **EFT-GPS-Setup.exe**.
-2. Откройте его и нажмите **«Скачать и установить»**. Загрузчик сам скачает части пакета, проверит SHA-256 и откроет установщик.
-3. Выберите место установки: внутри создастся папка **EFT GPS**. Нажмите **«Далее → Установить»**. При обновлении выберите уже существующую папку: прогресс, настройки и личные метки сохраняются.
+---
 
-Для первой загрузки нужен интернет. После установки карты, справочник и GPS работают офлайн. Полный комплект занимает несколько гигабайт; загрузчик показывает объём и прогресс. Язык установщика определяется по Windows; язык приложения выбирается отдельно.
+<a id="ru"></a>
 
-**В приложении возможны ошибки:** проект находится в раннем доступе. Пишите о проблемах и предложениях в [Issues](https://github.com/TsuyuDX/eft-gps/issues).
+## Установка — русский
+
+### 1. Скачайте установщик
+
+Нажмите большую кнопку **«Скачать для Windows»** вверху этой страницы. В загрузках браузера появится **EFT-GPS-Setup.exe**.
+
+Для обычной установки нужен **только этот файл**. Кнопка **Code → Download ZIP** скачивает проект для работы с исходниками; для установки приложения она не нужна.
+
+Если хотите найти файл вручную: справа на странице репозитория откройте **Releases**, выберите выпуск с пометкой **Latest**, раскройте **Assets** и нажмите **EFT-GPS-Setup.exe**. Части `.part01`, `.part02` и **Source code** выбирать не нужно — загрузчик скачает нужное сам.
+
+### 2. Загрузите файлы приложения
+
+Откройте **EFT-GPS-Setup.exe** из загрузок браузера или папки **«Загрузки»**. Нажмите **«Скачать и установить»** и дождитесь открытия установщика.
+
+Для этого этапа нужен интернет. Полный комплект занимает около **2,6 ГБ**: время загрузки зависит от соединения. Во время загрузки доступны проценты и кнопка отмены.
+
+### 3. Выберите папку и установите
+
+В установщике нажмите **«Обзор…»** и выберите, где хранить программу. Внутри выбранного места автоматически создастся папка **EFT GPS**. Например, при выборе `D:\Games` приложение установится в `D:\Games\EFT GPS`.
+
+Оставьте галочку **«Создать ярлык на рабочем столе»**, если хотите запускать приложение с рабочего стола. Затем нажмите **«Далее»**, проверьте путь и нажмите **«Установить»**.
+
+После начала операции появятся **проценты, текущий файл, прошедшее время и примерное оставшееся время**. Подробный журнал открывается кнопкой **«Подробнее»**. При отмене дождитесь сообщения о завершении отмены.
+
+Когда появится **100%**, нажмите **«Открыть приложение»**.
+
+Язык установщика выбирается по Windows. Переключить его можно кнопками **RU / EN** справа вверху. Нужные компоненты проверяются автоматически; отдельные драйверы GPS устанавливать не нужно.
+
+### 4. Первый запуск
+
+Выберите **«Русский»** или **English** в самом приложении. Дождитесь проверки локальных данных и пройдите короткий обзор. Повторно открыть его можно через **«Помощь»**.
+
+Выберите режим **PvP** или **PvE**. Карты и справочник доступны без интернета после установки.
+
+Для GPS откройте раздел **GPS** и проверьте папку внутриигровых скриншотов. Если она не найдена, сделайте скриншот в Tarkov и укажите его папку. Автосъёмка включается вручную. GPS показывает последнюю позицию из скриншота; между снимками положение не обновляется непрерывно.
+
+### Как обновлять
+
+При запуске приложение один раз проверяет новую версию. Если обновление есть, внизу появится полоса загрузки. После скачивания откроется окно **«Обновление приложения»**: нажмите **«Обновить приложение»** и подтвердите действие.
+
+Текущая папка определяется автоматически. **Прогресс, метки и настройки сохраняются.** Начиная с 1.8.0 скачиваются только изменения, если для вашей версии подготовлен небольшой пакет. Иначе используется полный комплект. Для автоматического перехода с 1.7.1–1.7.2 полный комплект потребуется один раз.
+
+Для ручного обновления скачайте установщик кнопкой выше и через **«Обзор…»** выберите **существующую папку приложения** — ту, где лежит **EFT GPS.exe**. Новая вложенная папка в этом случае не создаётся. Перед ручной установкой закройте приложение. Версии 1.7.0 и старше обновляются вручную.
+
+### Если возникла проблема
+
+| Что произошло | Что сделать |
+| --- | --- |
+| Скачался ZIP с исходниками | Вернитесь к кнопке скачивания вверху. Нужен **EFT-GPS-Setup.exe**. |
+| Загрузка прервалась | Откройте загрузчик снова и нажмите **«Повторить»**. Проверенные части используются повторно. |
+| Не найдена папка скриншотов | Укажите её в разделе **GPS**. Карты и справочник доступны и без настроенного GPS. |
+| Не хватает места | Выберите диск с достаточным свободным местом для приложения и временных файлов. |
+| Обновление не завершается | Дождитесь сообщения об ошибке или отмене. Откройте **«Подробнее»** и приложите текст ошибки к [сообщению о проблеме](https://github.com/TsuyuDX/eft-gps/issues/new). Не публикуйте личные данные. |
+
+**Системные требования:** Windows 10 версии 1903 или новее либо Windows 11, **x64**; .NET Framework 4.7.2 или новее. Совместимость проверяет установщик. Проект находится в раннем доступе: возможны ошибки.
+
+---
+
+<a id="en"></a>
+
+## Installation — English
+
+### 1. Download the installer
+
+Click the large **Download for Windows** image at the top of this page. Your browser will download **EFT-GPS-Setup.exe**.
+
+This is the **only file needed for normal installation**. **Code → Download ZIP** downloads the project source; it is not needed to install the application.
+
+To find the file manually, open **Releases** on the right side of the repository page, select the release marked **Latest**, expand **Assets**, and click **EFT-GPS-Setup.exe**. Do not select the `.part01`, `.part02` files or **Source code**. The downloader handles the package parts automatically.
+
+### 2. Download the application files
+
+Open **EFT-GPS-Setup.exe** from your browser downloads or your **Downloads** folder. Click **Download and install**, then wait for setup to open.
+
+This step requires internet. The complete package is approximately **2.6 GB**, so download time depends on your connection. The downloader shows percentages and lets you cancel.
+
+### 3. Choose a folder and install
+
+Click **Browse…** and select where to store the application. An **EFT GPS** subfolder will be created automatically. For example, selecting `D:\Games` installs the app in `D:\Games\EFT GPS`.
+
+Keep **Create a desktop shortcut** checked if you want a shortcut. Click **Next**, check the folder, then click **Install**.
+
+Once installation starts, you will see the **percentage, current file, elapsed time and estimated remaining time**. Technical logs are hidden under **Details**. If you cancel, wait for the cancellation to finish.
+
+At **100%**, click **Open application**.
+
+Setup initially uses your Windows language. Switch with **RU / EN** in the upper-right corner. Required components are checked automatically; no separate GPS drivers are needed.
+
+### 4. First launch
+
+Choose **English** or **Русский** in the application. Wait for local data checks, then follow the brief introduction. You can replay it from **Help**.
+
+Select **PvP** or **PvE**. Maps and reference data work offline after installation.
+
+For GPS, open **GPS** and check the in-game screenshots folder. If it is missing, take a screenshot in Tarkov and select its folder. Enable automatic capture manually. GPS shows the last position read from a screenshot; it does not continuously track movement between screenshots.
+
+### Updating
+
+The application checks for a new version once at startup. An available update downloads with a progress bar at the bottom. After downloading, the **Application update** window opens. Click **Update application** and confirm.
+
+The current installation folder is detected automatically. **Your progress, markers and settings are preserved.** From 1.8.0, only changed files are downloaded when a matching incremental package is available; otherwise a full package is used. Versions 1.7.1–1.7.2 need one full automatic upgrade to receive the new mechanism.
+
+To update manually, download the installer using the image above and use **Browse…** to select your **existing application folder**, containing **EFT GPS.exe**. An extra nested folder is not created in this case. Close the application before manual installation. Version 1.7.0 and earlier require a manual upgrade.
+
+### Troubleshooting
+
+| Problem | What to do |
+| --- | --- |
+| You downloaded a source ZIP | Use the download image at the top. You need **EFT-GPS-Setup.exe**. |
+| A download was interrupted | Reopen the downloader and click **Retry**. Verified parts are reused. |
+| The screenshots folder was not found | Select it in **GPS**. Maps and reference data also work without GPS configured. |
+| Not enough disk space | Choose a drive with enough free space for the application and temporary files. |
+| An update fails | Wait for the error or cancellation to finish. Open **Details** and include the error text in an [issue](https://github.com/TsuyuDX/eft-gps/issues/new). Do not publish personal data. |
+
+**Requirements:** Windows 10 version 1903 or later, or Windows 11, **x64**; .NET Framework 4.7.2 or later. Setup checks compatibility. This is an early-access project and may contain bugs.
+
+---
+
+<details>
+<summary><strong>Скриншоты приложения / Application screenshots</strong></summary>
 
 ![Главная страница / Overview](screenshots/overview.png)
 
-**1.8.0:** ускоренная установка, небольшие пакеты обновлений, проценты и время установки, скрытый журнал и безопасная отмена. / Faster setup, incremental updates, percentage and time estimates, collapsed details and cancellation with rollback.
+![Карты / Maps](screenshots/map.png)
 
-## Возможности / Features
+</details>
 
-- Интерактивные карты, этажи, зоны опасностей и отдельные фильтры типов меток и контейнеров.
-- Задания с целями, ключами, сохранёнными прохождениями и иллюстрациями. Поиск по названиям и инструкциям.
-- GPS по новым внутриигровым скриншотам: последняя определённая позиция и её возраст.
-- Автосъёмка только при активном окне игры. Очистка обработанных скриншотов текущего сеанса по желанию.
-- Локальный справочник предметов, торговцев, боссов, событий, убежища и трекер предметов.
-- Отдельный PvP/PvE-прогресс, заметки, личные метки и экспорт резервной копии.
-- Русский и английский интерфейс, справочник и сохранённые руководства.
-- Проверка запуска, поиск папок игры, первый обзор и раздел помощи.
-- Начиная с **1.7.1**: проверка обновления один раз при запуске, автоматическая загрузка с процентами и отдельный режим обновления текущей папки с сохранением данных.
+## Помощь и поддержка / Help and support
 
-![Карта и фильтры / Map](screenshots/map.png)
+[Сообщить об ошибке / Report a bug](https://github.com/TsuyuDX/eft-gps/issues) · [История версий / Release history](https://github.com/TsuyuDX/eft-gps/releases) · [Для разработчиков / Development](GIT-CHECKOUT.md)
 
-## Download and install
+[Разовый донат / One-time donation](https://boosty.to/tsuyueftgps/donate) · [Подписка / Membership](https://boosty.to/tsuyueftgps/purchase/4150607)
 
-1. **[Download EFT-GPS-Setup.exe](https://github.com/TsuyuDX/eft-gps/releases/latest/download/EFT-GPS-Setup.exe).** This is the only download needed for normal installation.
-2. Run it and choose **Download and install**. Parts are downloaded and verified automatically.
-3. Choose an application folder. For an update, select your existing folder to preserve personal data.
+Поддержка добровольна; приложение бесплатно. Discord — скоро.  
+Support is optional; the application is free. Discord — coming soon.
 
-Requires **Windows 10 version 1903 or newer / Windows 11, x64**, .NET Framework 4.7.2 or newer. Node.js, production dependencies and the offline WebView2 installer are bundled; no separate GPS drivers are required. This early-access application may contain bugs.
-
-From **1.7.1**, the app checks the latest stable GitHub release once at startup, downloads newer versions with a bottom progress bar, and opens a dedicated update window for the current installation directory. Checksums are verified before installation. A failed check or download leaves the current application available offline. Install 1.7.1 manually once to enable updates from older builds.
-
-![Установщик / Setup](screenshots/setup.png)
-
-## GPS: что важно / GPS limitations
-
-GPS читает координаты из имён **новых внутриигровых скриншотов**. Он показывает последнюю определённую позицию, а не непрерывное движение между снимками. Приложение не читает память игрового процесса и не отслеживает других игроков или ботов. Статические метки — справочные данные карты.
-
-Если путь не найден автоматически, сделайте скриншот в игре и выберите его папку в разделе GPS. Автосъёмка включается вручную после запуска. Проверяйте время последнего определения позиции. Очистка удаляет обработанные снимки сеанса автосъёмки, включая ручные снимки этого сеанса; старые снимки и файлы вне сеанса сохраняются.
-
-GPS uses newly created in-game screenshot filenames. It shows the last screenshot position, not continuous movement or other players. Automatic capture is enabled manually per session. Optional cleanup applies only to processed screenshots from that capture session; older screenshots remain untouched.
-
-## Офлайн и сохранения / Offline data and saves
-
-Карты, данные и изображения хранятся локально. Цены, события и шансы появления отражают сохранённую базу, а не текущие значения в игре. Некоторые иллюстрации могут отсутствовать; полнота руководств зависит от сохранённых материалов.
-
-Настройки, прогресс и GPS хранятся в **userdata**. Эта папка не публикуется в Git. Сохраняйте её при переносе установленного приложения и используйте экспорт прогресса перед тестированием старой версии. GitHub получает запрос проверки версии, но не ваши координаты, скриншоты или прогресс.
-
-Maps, reference data and saved illustrations are local. Prices and events reflect the saved snapshot. Keep **userdata** when moving the installed app; export progress before testing an old version. Personal data is not included in this repository or sent in update checks.
-
-## Для разработки и ноутбука / Development
-
-Основная ветка содержит полный проект: исходники, карты, данные, runtime и production-зависимости. После Clone запустите **Start EFT GPS.cmd**. Отдельный npm install для обычного запуска не нужен. Для дальнейшей работы используйте **development**; изменения сохраняйте коммитами.
-
-Исторические снимки помечены тегами **app-v1.0.0, app-v1.1.0, app-v1.4.0, app-v1.5.0, app-v1.6.0, app-v1.7.0** и **v1.7.1**. Все промежуточные коммиты сохранены; частичные контрольные коммиты первой загрузки не являются готовыми версиями для запуска. Версии 1.2 и 1.3 отдельно не сохранились и не воссоздавались.
-
-Первоначальная история только с исходниками сохранена в ветке **archive/original-source-history**. Для запуска используйте полные снимки, а не эту архивную ветку.
-
-Старые теги v1.5.0–v1.7.0 сохранены без перезаписи: они относятся к прежней странице документации. Для полных исходников соответствующих версий используйте теги **app-v...**. Старые выпуски могут работать иначе, чем текущая версия.
-
-Clone the full repository and run **Start EFT GPS.cmd**. Use completed version tags for rollback, rather than partial upload checkpoints. Export personal progress separately and close the app before switching versions. Archived downloadable packages are rebuilt from verified historical snapshots; original local archives were retained unchanged.
-
-## Помощь и сообщество / Help and community
-
-**Ctrl+K** — поиск / search · **Esc** — закрыть карточку / close details · **Колесо / Wheel** — масштаб / zoom · **Перетаскивание / Drag** — перемещение карты / pan.
-
-![Помощь / Help](screenshots/help.png)
-
-![Первый запуск / Tour](screenshots/tour.png)
-
-Discord и Ko-fi **скоро будут доступны / coming soon**.
-
-Разовый донат: **[Boosty](https://boosty.to/tsuyueftgps/donate)**. Подписка: **[Поддержать разработку](https://boosty.to/tsuyueftgps/purchase/4150607)**. Поддержка добровольна; приложение и стабильные обновления бесплатны. Подписчики Boosty видят анонсы нововведений на три дня раньше их открытой публикации. Никнеймы в благодарностях публикуются только с согласия.
-
-Game-related names and materials belong to Battlestate Games. EFT GPS is an independent fan project. Official game news: [Escape from Tarkov](https://www.escapefromtarkov.com/).
+Игровые материалы принадлежат Battlestate Games. Независимый фанатский проект.  
+Game materials belong to Battlestate Games. An independent fan project.
