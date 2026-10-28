@@ -1,3 +1,13 @@
 # Keep offline content and bundled binaries byte-identical across checkouts.
 # This disables line-ending conversion, not normal textual diffs.
 * -text
+
+# Language statistics should describe application source, not the offline archive.
+public/data/** linguist-vendored
+public/assets/** linguist-vendored
+node_modules/** linguist-vendored
+runtime/** linguist-vendored
+distribution/components/** linguist-vendored
+
+# Native release templates are generated copies of scripts/ sources.
+.github/native/** linguist-generated
