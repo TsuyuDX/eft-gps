@@ -1,25 +1,19 @@
-# Обновления приложения / Application updates
+# Обновления EFT GPS / EFT GPS updates
 
-Приложение один раз за запуск локальной службы запрашивает публичный последний стабильный выпуск `TsuyuDX/eft-gps` через GitHub Releases API. Повторное открытие страниц и интерфейса не запускает новую проверку. Токен GitHub не нужен. GPS, прогресс и другие личные данные не отправляются.
+При запуске приложение один раз проверяет последний стабильный выпуск на GitHub. Личные данные и настройки не отправляются.
 
-Если версия новее установленной, приложение автоматически загружает пакет. Внизу окна отображаются версия, имя загружаемой части, объём и проценты. Части и итоговый ZIP проверяются SHA-256. Старые версии и предварительные выпуски не устанавливаются. Ошибка сети или проверки не меняет установленные файлы; повторная проверка выполняется при следующем запуске службы.
+С версии 1.8.0, если для установленной версии есть пакет изменений, скачиваются и проверяются только изменённые файлы. Остальная офлайн-база остаётся на месте. Если подходящего пакета нет, используется полный. Части скачиваются параллельно, максимум в три соединения; размеры и SHA-256 проверяются перед установкой.
 
-После загрузки открывается отдельный режим **«Обновление приложения»**. Текущая папка определяется автоматически и заблокирована для изменения. Нажатие «Обновить приложение» и подтверждение закрывают окно именно этой установки и останавливают её локальную службу. Обновление проверяет версию, создаёт резервные копии изменённых файлов и заменяет их; при ошибке выполняется откат. `userdata` и личные настройки не входят в пакет. Автосъёмка GPS после перезапуска включается пользователем заново.
+Обновление устанавливается в текущую папку. Файлы проверяются во время распаковки, без повторного чтения каждого распакованного файла. На одном диске подготовленные файлы перемещаются, а не копируются ещё раз. Создаётся резервная копия заменяемых файлов; отмена или ошибка во время замены запускает откат. Пользовательские данные не входят в пакет.
 
-Обычный установщик первой установки продолжает предлагать выбор папки. Чтобы получить функцию автообновления из версии 1.7.0 или старше, сначала установите версию 1.7.1 вручную в существующую папку. Наличие ссылки или загрузка пакета сами по себе не подтверждают успешную установку.
+Обычная установка: выберите родительскую папку в «Обзоре», внутри появится папка EFT GPS; затем «Далее → Установить». При выборе существующей установки используется её текущая папка. Во время операции показаны проценты, текущий файл, прошедшее время и примерный остаток. Журнал скрыт под «Подробнее». Отмена остаётся доступной; при откате нужно дождаться его завершения.
 
-## Публикация следующей версии
+Версии 1.7.1–1.7.2 имеют старый механизм и для перехода на 1.8.0 автоматически загрузят полный пакет один раз. Можно вместо этого вручную установить 1.8.0 в текущую папку. Следующие выпуски используют небольшие пакеты, если в выпуске указан подходящий baseVersion. Версия 1.7.0 и старше требует ручной установки нового выпуска.
 
-1. Измените версию приложения, интерфейса и native-компонентов, пересоберите EXE и полный ZIP обычным процессом выпуска.
-2. `scripts/build-release.ps1` создаёт также каталог `Releases/<version>/AutoUpdate`. Если ZIP уже подготовлен, выполните:
+## Публикация / Publishing
 
-   `runtime\node.exe scripts\build-app-update.mjs <полный ZIP> <новая пустая папка AutoUpdate> <версия>`
+В `.github/release-plan.json` для новой версии указываются фиксированный коммит и `deltaBases` — список поддерживаемых базовых версий. Workflow собирает полный установщик и отдельные ZIP с изменениями. Данные об этих пакетах добавляются в `deltas` манифеста `EFTGPS-update.json`. Все части загружаются до публикации Latest. Не изменяйте уже опубликованные assets или теги.
 
-3. В черновик GitHub Release с тегом `v<версия>` загрузите **все** файлы из AutoUpdate: `EFTGPS-update.json` и `EFTGPS-update-<версия>.zip.partNN`. Это отдельные release assets, не файлы репозитория и не исходники GitHub Source code.zip. Каждая часть не больше 1 ГиБ. Манифест содержит версию, размеры и SHA-256 частей и всего ZIP.
-4. Только после загрузки всех частей публикуйте стабильный выпуск и отмечайте его Latest. Не меняйте файлы уже опубликованного пакета. Пока публичный репозиторий недоступен, автозагрузка с GitHub недоступна, приложение работает офлайн.
+The application checks GitHub once per local-service launch. Version 1.8.0 supports exact-base incremental packages, with a full-package fallback. Downloads use up to three concurrent connections. Every part and the resulting archive are SHA-256 verified. Extraction verifies each file while writing it, and same-volume installation moves staged files instead of copying them again. Changed files are backed up; cancellation or failure rolls back replacements. Personal data stays untouched.
 
-## English
-
-The local service checks the latest public stable GitHub release once per launch. Newer releases download automatically with a bottom progress indicator showing the version, current part, size and percentage. Every part and the assembled ZIP are SHA-256 verified. Failed or unavailable updates leave the current application unchanged.
-
-The dedicated update window uses the existing application directory and preserves personal data. Confirming the update closes that installation, backs up changed files and replaces them, with rollback on failure. Install 1.7.1 manually once to enable automatic updates from future releases. Upload the generated update manifest and **all** parts as release assets before publishing a stable release as Latest. Public GitHub availability is required for updates, but not for the offline application.
+Setup uses Next → Install, creates an EFT GPS folder in the chosen parent, and displays percentages, the current file, elapsed time and an approximate remaining time only while installing. Technical logs are collapsed under Details. Version 1.7.1–1.7.2 needs one full upgrade to receive this mechanism.

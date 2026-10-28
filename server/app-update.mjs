@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises';
-import { createWriteStream } from 'node:fs';
+import { createReadStream } from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import crypto from 'node:crypto';
@@ -29,13 +29,19 @@ export function validateUpdate(manifest, release, current) {
     !/^[a-f0-9]{64}$/.test(manifest.sha256)) throw Error('invalid-manifest');
   let total=0;const names=new Set();
   for(const part of manifest.parts) {
-    if(!/^EFTGPS-update-[0-9.]+\.zip\.part\d{2}$/.test(part.name) || names.has(part.name) ||
+    if(!/^EFTGPS-update-(?:from-[0-9.]+-)?[0-9.]+\.zip\.part\d{2}$/.test(part.name) || names.has(part.name) ||
        !Number.isSafeInteger(part.size) || part.size<=0 || !/^[a-f0-9]{64}$/.test(part.sha256)) throw Error('invalid-part');
     names.add(part.name);total+=part.size;
     if(releaseAsset(release,part.name).size!==part.size) throw Error('invalid-part-size');
   }
   if(total!==manifest.size) throw Error('invalid-total');
   return manifest;
+}
+export function selectUpdate(manifest,release,current) {
+  const delta=manifest?.deltas?.find(d=>d.baseVersion===current);
+  if(!delta) return validateUpdate(manifest,release,current);
+  if(delta.baseVersion!==current || delta.size>=manifest.size) throw Error('invalid-delta');
+  return {...validateUpdate({...delta,format:1,app:'EFTGPS',version:manifest.version},release,current),kind:'delta'};
 }
 async function request(url, fetcher, signal) {
   for(let redirects=0;redirects<6;redirects++) {
@@ -76,35 +82,40 @@ export class AppUpdater {
       const release=await readJSON(`https://api.github.com/repos/${UPDATE_REPO}/releases/latest`,this.fetcher);
       if(release.draft || release.prerelease || !newerVersion(release.tag_name,this.version)) {this.state.phase='current';return;}
       const metadata=releaseAsset(release,'EFTGPS-update.json');
-      const manifest=validateUpdate(await readJSON(metadata.browser_download_url,this.fetcher),release,this.version);
+      const manifest=selectUpdate(await readJSON(metadata.browser_download_url,this.fetcher),release,this.version);
       directory=await fs.mkdtemp(path.join(this.temporary,'EFTGPS-update-'));
       const space=await fs.statfs(directory);
       if(space.bavail*space.bsize<manifest.size+256*1024**2) throw Error('disk-space');
-      Object.assign(this.state,{phase:'downloading',version:manifest.version,total:manifest.size});
+      Object.assign(this.state,{phase:'downloading',version:manifest.version,total:manifest.size,kind:manifest.kind||'full'});
       const zip=path.join(directory,'update.zip');const whole=crypto.createHash('sha256');
-      const output=createWriteStream(zip,{flags:'wx'});
-      let writeError;output.on('error',error=>{writeError=error;});
-      try {
-        for(const part of manifest.parts) {
+      const output=await fs.open(zip,'wx');const abort=new AbortController();
+      const offsets=[];let offset=0;for(const part of manifest.parts){offsets.push(offset);offset+=part.size;}
+      let cursor=0;const started=Date.now();
+      const download=async()=>{
+        while(cursor<manifest.parts.length) {
+          const index=cursor++,part=manifest.parts[index];let size=0;
           this.state.file=part.name;
-          const response=await request(releaseAsset(release,part.name).browser_download_url,this.fetcher,AbortSignal.timeout(30*60*1000));
-          const hash=crypto.createHash('sha256');let size=0;
+          const response=await request(releaseAsset(release,part.name).browser_download_url,this.fetcher,AbortSignal.any([abort.signal,AbortSignal.timeout(30*60*1000)]));
+          const hash=crypto.createHash('sha256');
           for await(const chunk of response.body) {
-            size+=chunk.length;if(size>part.size) throw Error('download-size');
-            if(writeError) throw writeError;
-            hash.update(chunk);whole.update(chunk);
-            if(!output.write(chunk)) await once(output,'drain');
-            this.state.downloaded+=chunk.length;
+            if(size+chunk.length>part.size) throw Error('download-size');
+            hash.update(chunk);if(manifest.parts.length===1)whole.update(chunk);
+            let written=0;while(written<chunk.length){const result=await output.write(chunk,written,chunk.length-written,offsets[index]+size+written);if(!result.bytesWritten)throw Error('disk-write');written+=result.bytesWritten;}
+            size+=chunk.length;this.state.downloaded+=chunk.length;
             this.state.percent=Math.min(99,Math.floor(this.state.downloaded/manifest.size*100));
+            this.state.elapsedSeconds=Math.floor((Date.now()-started)/1000);
           }
           if(size!==part.size || hash.digest('hex')!==part.sha256) throw Error('checksum');
         }
+      };
+      const workers=Array.from({length:Math.min(3,manifest.parts.length)},()=>download().catch(error=>{abort.abort();throw error;}));
+      try {
+        const results=await Promise.allSettled(workers);const failure=results.find(r=>r.status==='rejected');if(failure)throw failure.reason;
         this.state.phase='verifying';
-        output.end();await once(output,'finish');
       } finally {
-        output.destroy();
-        if(!output.closed) await once(output,'close').catch(()=>{});
+        await output.close();
       }
+      if(manifest.parts.length>1) for await(const chunk of createReadStream(zip))whole.update(chunk);
       if(whole.digest('hex')!==manifest.sha256) throw Error('checksum');
       // Run a copy outside the installation directory so the updater can replace itself.
       const helper=path.join(directory,'EFTGPS-Update.exe');

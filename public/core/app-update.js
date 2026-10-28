@@ -20,7 +20,7 @@ export function startAppUpdates() {
         panel.querySelector('progress').value=state.percent;
         const mb=value=>(value/1024**2).toFixed(1);
         panel.querySelector('.app-update-copy').textContent=state.phase==='downloading'
-          ? L('Загрузка обновления','Downloading update')+` ${state.version} · ${state.percent}% · ${state.file} · ${mb(state.downloaded)} / ${mb(state.total)} MB`
+          ? L(state.kind==='delta'?'Загрузка изменений':'Загрузка обновления',state.kind==='delta'?'Downloading changes':'Downloading update')+` ${state.version} · ${state.percent}% · ${state.file} · ${mb(state.downloaded)} / ${mb(state.total)} MB`
           : state.phase==='verifying' ? L('Проверка обновления…','Verifying update…')
           : state.phase==='installer' ? L('Обновление загружено · 100%. Открыто окно обновления.','Update downloaded · 100%. The update window is open.')
           : state.error==='disk-space' ? L('Для обновления не хватает места. Текущая версия продолжает работать.','Not enough disk space. Your current version remains available.')

@@ -3,7 +3,7 @@ branch="$(git symbolic-ref --quiet --short HEAD 2>/dev/null)"
 case "$branch" in
   main|master)
     echo "EFT GPS: stable branch is protected from accidental commits." >&2
-    echo "Switch to codex/eft-gps-1.7-development or create a codex/... branch." >&2
+    echo "Switch to development or create a feature/... branch." >&2
     exit 1
     ;;
   "")

@@ -30,6 +30,7 @@ import { startGpsClient } from "./core/gps-client.js";
 import { installAppNavigation } from "./core/navigation.js";
 import { installDesktopUi } from "./core/desktop-ui.js";
 document.title = APP_TITLE;
+document.querySelectorAll(".brand-version, .boot-version").forEach(element => { element.textContent = APP_VERSION; });
 installAppNavigation();
 installDesktopUi();
 installBackNavigation();

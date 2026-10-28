@@ -4,7 +4,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
 import crypto from 'node:crypto';
-import { AppUpdater, newerVersion, validateUpdate, UPDATE_REPO } from '../server/app-update.mjs';
+import { AppUpdater, newerVersion, validateUpdate, selectUpdate, UPDATE_REPO } from '../server/app-update.mjs';
+import {deltaManifest} from '../scripts/delta-manifest.mjs';
 import { buildAppUpdate } from '../scripts/build-app-update.mjs';
 import { parseHTML } from 'linkedom';
 import { setLanguage } from '../public/core/localization.js';
@@ -55,6 +56,26 @@ test('offline and unavailable repositories do not retry or modify application fi
 test('current release needs only one lookup and no downloads',async t=>{
   const f=await fixture(t);const updater=new AppUpdater(f.root,'1.8.0',{...f,temporary:f.directory});await updater.start();
   assert.equal(updater.state.phase,'current');assert.equal(f.checks(),1);assert.equal(f.launches.length,0);
+});
+test('delta contains only changed files and removals and selects an exact installed base',async t=>{
+  const f=await fixture(t);
+  const base={app:'TarkovOffline',version:'1.7.0',files:[{path:'package.json',size:1,sha256:'a'},{path:'map.svg',size:50,sha256:'same'},{path:'old.txt',size:1,sha256:'b'}]};
+  const current={...base,version:'1.8.0',files:[{path:'package.json',size:1,sha256:'new'},base.files[1]]};
+  const delta=deltaManifest(current,base);assert.deepEqual(delta.files.map(f=>f.path),['package.json']);assert.deepEqual(delta.removed,['old.txt']);
+  const manifest={...f.manifest,size:f.manifest.size+100,deltas:[{baseVersion:'1.7.0',...f.manifest}]};
+  assert.equal(selectUpdate(manifest,f.release,'1.7.0').kind,'delta');
+  assert.throws(()=>selectUpdate({...manifest,deltas:[{...manifest.deltas[0],sha256:'bad'}]},f.release,'1.7.0'));
+  assert.equal(selectUpdate(f.manifest,f.release,'1.7.0').kind,undefined);
+});
+test('multipart download uses bounded concurrency and preserves part order',async t=>{
+  const f=await fixture(t);let active=0,max=0;
+  const fetcher=async(url,options)=>{
+    if(url.endsWith('/releases/latest')||url.endsWith('.json'))return f.fetcher(url,options);
+    active++;max=Math.max(max,active);await new Promise(resolve=>setTimeout(resolve,10));
+    const response=await f.fetcher(url,options);active--;return response;
+  };
+  const updater=new AppUpdater(f.root,'1.7.0',{...f,fetcher,temporary:f.directory});await updater.start();
+  assert.equal(updater.state.phase,'installer');assert.equal(max,3);assert.deepEqual(f.launches[0].bytes,f.bytes);
 });
 test('rejects mismatched versions, malicious paths, outside assets, duplicate parts and invalid total sizes',async t=>{
   const f=await fixture(t);

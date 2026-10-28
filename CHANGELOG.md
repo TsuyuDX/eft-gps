@@ -1,5 +1,7 @@
 # История версий / Version history
 
+- **1.8.0** — пакеты только с изменёнными файлами, параллельная загрузка, проверка при распаковке, установка без лишних копий; «Далее → Установить», проценты, время и текущий файл, журнал по кнопке «Подробнее», безопасная отмена и исправленные RU/EN. / Incremental updates, parallel downloads, single-pass extraction/verification, fewer file copies, clear setup steps, progress and time estimates, collapsed details, cancellation with rollback and fixed language buttons.
+
 - **1.7.2** — номер версии на главной странице; небольшой выпуск для проверки полного пути автообновления. / Home-screen version badge; a small release for end-to-end update verification.
 
 - **1.7.1** — проверка обновлений при запуске, прогресс загрузки, режим обновления текущей папки, проверка SHA-256, сохранение данных и отдельные ссылки Boosty. / Startup update checks, download progress, dedicated update mode, integrity checks and Boosty links.

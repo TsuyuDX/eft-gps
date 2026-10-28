@@ -29,6 +29,7 @@ class PackRelease {
         }
         byte[] hash;
         using (var sha = SHA256.Create()) using (var input = File.OpenRead(zip)) hash = sha.ComputeHash(input);
+        if(setup=="-") {Console.WriteLine("Delta ready: "+new FileInfo(zip).Length+" bytes");return;}
         using (var output = File.Create(setup)) {
             using (var stub = File.OpenRead(args.Length > 4 ? args[4] : Path.Combine(root, "runtime", "TarkovMaintenance.exe"))) stub.CopyTo(output);
             using (var payload = File.OpenRead(zip)) payload.CopyTo(output);
