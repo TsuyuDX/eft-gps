@@ -1,3 +1,4 @@
+import { markerPresentation } from "./map-presentation.js";
 import { getMarkerStyle } from "../core/marker-style.js";
 import { uiIcon } from "../core/icons.js";
 import { clusterMarkers } from "./map-clusters.js";
@@ -417,6 +418,21 @@ export async function renderMap(root, slug) {
         all: showHazardZones,
         muted: (x) => floor && floorFor(x.position, m) !== Number(layer),
       });
+      let hoverRules = root.querySelector("#map-hazard-hover-rules");
+      if (!hoverRules) {
+        hoverRules = document.createElement("style");
+        hoverRules.id = "map-hazard-hover-rules";
+        root.append(hoverRules);
+      }
+      hoverRules.textContent = filtered
+        .flatMap((marker, index) =>
+          ["hazards", "artillery"].includes(marker.group)
+            ? [
+                `#map-canvas:has(.map-marker[data-marker="${index}"]:hover) .hazard-zone[data-hazard-zone="${index}"],#map-canvas:has(.map-marker[data-marker="${index}"]:focus-visible) .hazard-zone[data-hazard-zone="${index}"]{display:block!important;opacity:1!important;fill:#ff4747;fill-opacity:.36;stroke:#fff2b5;stroke-opacity:1;stroke-width:3;filter:drop-shadow(0 0 3px #ff4333)}`,
+              ]
+            : [],
+        )
+        .join("\n");
     }
     const clusters = clusterMarkers(
       visible,
@@ -428,7 +444,8 @@ export async function renderMap(root, slug) {
         .map((cluster, ci) => {
           const { x, i, p } = cluster.entries[0];
           const count = cluster.entries.length;
-          return `<button class="map-marker map-marker-icon${count > 1 ? " map-marker-cluster" : ""}${floor && floorFor(x.position, m) !== Number(layer) ? " other-floor" : ""}" ${count > 1 ? 'data-cluster="' + ci + '"' : 'data-marker="' + i + '"'} style="left:${p.x}%;top:${p.y}%;--marker:${x.color}" title="${esc(count > 1 ? "Рядом меток: " + count : x.title)}" aria-label="${esc(count > 1 ? "Рядом меток: " + count : x.title)}"><img src="${cachedMarkerIcon(x)}" alt="" width="32" height="32" draggable="false">${count > 1 ? '<span class="map-cluster-count">' + count + "</span>" : x.quest?.icon ? '<img class="quest-marker-badge" src="' + asset(x.quest.icon) + '" alt="">' : ""}</button>`;
+          const presentation = markerPresentation(x, m);
+          return `<button class="map-marker map-marker-icon${count > 1 ? " map-marker-cluster" : ""}${floor && floorFor(x.position, m) !== Number(layer) ? " other-floor" : ""}" ${count > 1 ? 'data-cluster="' + ci + '"' : 'data-marker="' + i + '"'} style="left:${p.x}%;top:${p.y}%;--marker:${x.color}" aria-label="${esc(count > 1 ? "Рядом меток: " + count : x.title)}"><img src="${cachedMarkerIcon(x)}" alt="" width="32" height="32" draggable="false">${count > 1 ? '<span class="map-cluster-count">' + count + "</span>" : x.quest?.icon ? '<img class="quest-marker-badge" src="' + asset(x.quest.icon) + '" alt="">' : ""}${presentation.label ? `<span class="map-destination-label">${esc(presentation.label)}</span>` : ""}<span class="map-marker-tooltip"><strong>${esc(count > 1 ? "Рядом меток: " + count : presentation.name)}</strong><small>${esc(count > 1 ? "Нажмите, чтобы выбрать объект" : presentation.description)}</small></span></button>`;
         })
         .join("") +
       pins()
@@ -451,38 +468,43 @@ export async function renderMap(root, slug) {
           )
           .join("");
     }
-    root.querySelectorAll("[data-cluster]").forEach(
-      (button) =>
-        (button.onclick = () => {
-          const entries = clusters[Number(button.dataset.cluster)].entries;
-          modal(
-            '<h2>Метки рядом</h2><p class="muted">Приблизьте карту или выберите объект из списка.</p><div class="map-cluster-list">' +
-              entries
-                .map(
-                  ({ x, i }) =>
-                    '<button type="button" data-open-cluster="' +
-                    i +
-                    '"><img src="' +
-                    cachedMarkerIcon(x) +
-                    '" alt=""><span>' +
-                    esc(x.title) +
-                    "</span></button>",
-                )
-                .join("") +
-              "</div>",
+    root.querySelectorAll("[data-cluster]").forEach((button) => {
+      button.onpointerenter = button.onfocus = () =>
+        hazardOverlay.highlight(
+          clusters[Number(button.dataset.cluster)].entries.map((e) => e.i),
+        );
+      button.onpointerleave = button.onblur = () =>
+        hazardOverlay.highlight(null);
+      return (button.onclick = () => {
+        const entries = clusters[Number(button.dataset.cluster)].entries;
+        modal(
+          '<h2>Метки рядом</h2><p class="muted">Приблизьте карту или выберите объект из списка.</p><div class="map-cluster-list">' +
+            entries
+              .map(
+                ({ x, i }) =>
+                  '<button type="button" data-open-cluster="' +
+                  i +
+                  '"><img src="' +
+                  cachedMarkerIcon(x) +
+                  '" alt=""><span>' +
+                  esc(x.title) +
+                  "</span></button>",
+              )
+              .join("") +
+            "</div>",
+        );
+        document
+          .querySelectorAll("[data-open-cluster]")
+          .forEach(
+            (item) =>
+              (item.onclick = () =>
+                showMarker(
+                  filtered[Number(item.dataset.openCluster)],
+                  Number(item.dataset.openCluster),
+                )),
           );
-          document
-            .querySelectorAll("[data-open-cluster]")
-            .forEach(
-              (item) =>
-                (item.onclick = () =>
-                  showMarker(
-                    filtered[Number(item.dataset.openCluster)],
-                    Number(item.dataset.openCluster),
-                  )),
-            );
-        }),
-    );
+      });
+    });
     root.querySelectorAll("[data-marker]").forEach((b) => {
       const index = Number(b.dataset.marker);
       b.onclick = () => showMarker(filtered[index], index);

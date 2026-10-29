@@ -1,4 +1,18 @@
 export const englishUi = {
+  Предмет: "Item",
+  Контейнер: "Container",
+  Выход: "Extraction",
+  Переход: "Transit",
+  "Точка появления": "Spawn point",
+  Снайперы: "Snipers",
+  "Миномётный обстрел": "Mortar strike",
+  Задание: "Quest",
+  "Ключ / дверь": "Key / door",
+  Переключатель: "Switch",
+  "Стационарное оружие": "Mounted weapon",
+  "Сезонный документ": "Seasonal document",
+  "Совместный выход": "Co-op extraction",
+
   "Стиль меток": "Marker style",
   "Новые метки": "New markers",
   "Классические метки": "Classic markers",

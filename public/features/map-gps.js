@@ -1,3 +1,5 @@
+import { getMarkerStyle } from "../core/marker-style.js";
+import { gpsPointerSvg } from "./map-presentation.js";
 import { gpsState } from "../core/gps-client.js";
 import { floorFor } from "../core/gps-format.js";
 import { projectPoint } from "../core/domain.js";
@@ -7,8 +9,13 @@ export function bindMapGps(root, map, { setFloor, center }) {
     label = document.createElement("div");
   dot.className = "gps-player";
   dot.hidden = true;
-  dot.innerHTML =
-    '<svg class="gps-arrow" viewBox="0 0 32 32" aria-hidden="true"><path class="gps-arrow-shadow" d="M16 3 29 29 16 23 3 29Z"/><path class="gps-arrow-outline" d="M16 3 29 29 16 23 3 29Z"/></svg><span class="gps-player-label">Я</span>';
+  function applyPointer() {
+    dot.dataset.markerStyle = getMarkerStyle();
+    dot.innerHTML =
+      gpsPointerSvg(getMarkerStyle()) +
+      '<span class="gps-player-label">Я</span>';
+  }
+  applyPointer();
   dot.setAttribute("aria-label", "Моя позиция");
   canvas.append(dot);
   label.className = "gps-map-status";
@@ -28,6 +35,14 @@ export function bindMapGps(root, map, { setFloor, center }) {
       clearInterval(timer);
     },
     { once: true },
+  );
+  window.addEventListener(
+    "map-marker-style-changed",
+    () => {
+      applyPointer();
+      update(gpsState);
+    },
+    { signal: controller.signal },
   );
   let lastFix = 0;
   function update(s) {

@@ -7,6 +7,13 @@ export function clusterMarkers(entries, width, height, distance = 36) {
       y = (entry.p.y * height) / 100,
       cx = Math.floor(x / distance),
       cy = Math.floor(y / distance);
+    // Keep named destinations and danger markers directly reachable even at low zoom.
+    if (
+      ["extracts", "transits", "hazards", "artillery"].includes(entry.x?.group)
+    ) {
+      groups.push({ x, y, p: entry.p, entries: [entry] });
+      continue;
+    }
     let found;
     for (let dx = -1; dx <= 1 && !found; dx++)
       for (let dy = -1; dy <= 1 && !found; dy++)

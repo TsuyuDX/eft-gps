@@ -784,3 +784,115 @@ input[type="search"]::-webkit-search-results-decoration {
   appearance: none;
   display: none;
 }
+/* Readable descriptions without changing the source marker coordinates. */
+.map-marker-tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 260px;
+  padding: 9px 12px;
+  background: #101416f5;
+  border: 1px solid #99b5bd;
+  border-radius: 7px;
+  box-shadow: 0 4px 18px #000b;
+  pointer-events: none;
+  text-align: left;
+  white-space: normal;
+  color: #f3f5f6;
+  font:
+    13px/1.4 Arial,
+    sans-serif;
+  z-index: 30;
+}
+.map-marker-tooltip strong,
+.map-marker-tooltip small {
+  display: block;
+}
+.map-marker-tooltip small {
+  margin-top: 3px;
+  color: #c9d7dc;
+}
+.map-marker:hover .map-marker-tooltip,
+.map-marker:focus-visible .map-marker-tooltip {
+  display: block;
+}
+.map-destination-label {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 3px 6px;
+  max-width: 190px;
+  width: max-content;
+  white-space: normal;
+  color: #ecfff8;
+  background: #07130fed;
+  border: 1px solid #70bf9d;
+  border-radius: 4px;
+  font:
+    600 12px/1.25 Arial,
+    sans-serif;
+  text-shadow: 0 1px 2px #000;
+  pointer-events: none;
+}
+.map-marker:has(.map-destination-label) {
+  z-index: 5;
+}
+.map-marker:hover,
+.map-marker:focus-visible {
+  z-index: 35 !important;
+}
+.hazard-zone.highlighted,
+.hazard-zone.other-floor.highlighted {
+  opacity: 1 !important;
+  fill: #ff4747;
+  fill-opacity: 0.36;
+  stroke: #fff2b5;
+  stroke-opacity: 1;
+  stroke-width: 3;
+  filter: drop-shadow(0 0 3px #ff4333);
+}
+.gps-player {
+  width: 40px;
+  height: 40px;
+  margin: -20px;
+}
+.gps-player .gps-arrow {
+  width: 40px;
+  height: 40px;
+}
+.gps-player .gps-pointer-shadow {
+  fill: #091014;
+  stroke: #030609;
+  stroke-width: 6;
+  stroke-linejoin: round;
+}
+.gps-player .gps-classic-pointer {
+  fill: #f5f8fa;
+  stroke: #8598a3;
+  stroke-width: 1.4;
+}
+.gps-player .gps-classic-spine {
+  stroke: #1e3847;
+  stroke-width: 2;
+}
+.gps-player .gps-new-ring {
+  fill: #061b26b0;
+  stroke: #55dbff;
+  stroke-width: 1.5;
+  stroke-dasharray: 5 3;
+}
+.gps-player .gps-new-pointer {
+  fill: #64e6ff;
+  stroke: #e1fbff;
+  stroke-width: 1.7;
+  stroke-linejoin: round;
+}
+.gps-player .gps-new-dot {
+  fill: #f7db75;
+  stroke: #062633;
+  stroke-width: 1.5;
+}

@@ -42,18 +42,6 @@ const P = {
   info: '<circle cx="22" cy="14" r="1"/><path d="M19 21h3v11M18 32h8"/>',
   flag: '<path d="M15 34V11l17 3-5 7-12-2"/>',
 };
-const colors = {
-  container: "#ffcb67",
-  extract: "#65e4b0",
-  spawn: "#83b8ff",
-  hazard: "#ff737d",
-  quest: "#cf9eff",
-  loot: "#f4db8b",
-  document: "#7fe4d7",
-  transit: "#55d5ee",
-  btr: "#73c7ff",
-  custom: "#f2e1ab",
-};
 const specs = new Map();
 const add = (name, group, glyph, shape = "square") =>
   specs.set(name, { group, glyph, shape });
@@ -192,9 +180,19 @@ function shape(kind) {
 }
 await fs.mkdir(out, { recursive: true });
 const manifest = { format: 1, icons: {}, categories: categoryNames };
+const usedColors = new Set();
 for (const [name, s] of specs) {
-  const color = colors[s.group],
-    frame = shape(s.shape);
+  const hue =
+    parseInt(
+      crypto.createHash("sha256").update(name).digest("hex").slice(0, 6),
+      16,
+    ) % 360;
+  let color =
+    s.group === "hazard" ? `hsl(${hue % 30} 95% 70%)` : `hsl(${hue} 85% 74%)`;
+  let tint = 0;
+  while (usedColors.has(color)) color = `hsl(${(hue + ++tint) % 360} 85% 74%)`;
+  usedColors.add(color);
+  const frame = shape(s.shape);
   const badge =
     s.badge ||
     (name.startsWith("document_")
@@ -233,7 +231,9 @@ for (const [name, s] of specs) {
     color +
     '" stroke-width="2.1" stroke-linejoin="round">' +
     frame +
-    '</g><g fill="none" stroke="#f9f7ed" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">' +
+    '</g><g fill="none" stroke="' +
+    color +
+    '" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">' +
     (s.glyph === "arrow"
       ? '<g transform="translate(-1 0)">' + P[s.glyph] + "</g>"
       : P[s.glyph]) +
