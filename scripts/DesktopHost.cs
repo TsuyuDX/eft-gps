@@ -103,7 +103,8 @@ class DesktopHost : Form {
                     if (e.MenuItems.Count == 0) e.Handled = true;
                 };
                 core.NavigationStarting += delegate(object sender, CoreWebView2NavigationStartingEventArgs e) {
-                    if (IsLocal(e.Uri) || e.Uri == "about:blank") return;
+                    if (IsLocal(e.Uri)) { SetSecretBrand(false); return; }
+                    if (e.Uri == "about:blank") return;
                     e.Cancel = true;
                     if (e.IsUserInitiated) OpenExternal(e.Uri);
                 };
@@ -126,6 +127,8 @@ class DesktopHost : Form {
                     if (!IsLocal(e.Source)) return;
                     string command;
                     try { command = e.TryGetWebMessageAsString(); } catch { return; }
+                    if (command == "secret-brand-on") { SetSecretBrand(true); return; }
+                    if (command == "secret-brand-off") { SetSecretBrand(false); return; }
                     if (command == "open-folder") { Process.Start(new ProcessStartInfo("explorer.exe", "\"" + root + "\"") { UseShellExecute = false }); return; }
                     if (command == "reload-interface") { web.Reload(); return; }
                     if (command == "update-data") StartMaintenance("--data", null);
@@ -183,6 +186,11 @@ class DesktopHost : Form {
         };
         panel.Controls.AddRange(new Control[] { title, description, retry });
         Controls.Add(panel); panel.BringToFront();NativeText.Apply(panel);
+    }
+    void SetSecretBrand(bool enabled) {
+        Text = enabled ? "Индекс Карты · Тарков" : NativeText.Brand+" "+NativeText.Version;
+        string iconPath = Path.Combine(root,"public","icons",enabled ? "index-maps.ico" : "app.ico");
+        if(File.Exists(iconPath)) { var next = new Icon(iconPath); var old = Icon; Icon=next; if(old!=null)old.Dispose(); }
     }
     bool IsLocal(string value) {
         Uri uri;
