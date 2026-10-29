@@ -188,6 +188,15 @@ class DesktopHost : Form {
         Controls.Add(panel); panel.BringToFront();NativeText.Apply(panel);
     }
     void SetSecretBrand(bool enabled) {
+        try {
+            int caption = enabled ? 0x003b2c23 : 0;
+            int border = enabled ? 0x00635146 : 0;
+            int text = 0x00ffffff;
+            DwmSetWindowAttribute(Handle,35,ref caption,4);
+            DwmSetWindowAttribute(Handle,34,ref border,4);
+            DwmSetWindowAttribute(Handle,36,ref text,4);
+        } catch {}
+
         Text = enabled ? "Индекс Карты · Тарков" : NativeText.Brand+" "+NativeText.Version;
         string iconPath = Path.Combine(root,"public","icons",enabled ? "index-maps.ico" : "app.ico");
         if(File.Exists(iconPath)) { var next = new Icon(iconPath); var old = Icon; Icon=next; if(old!=null)old.Dispose(); }
