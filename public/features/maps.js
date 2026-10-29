@@ -1,3 +1,4 @@
+import { isSecretThemeActive } from "../core/secret-theme.js";
 import { markerPresentation } from "./map-presentation.js";
 import { getMarkerStyle } from "../core/marker-style.js";
 import { uiIcon } from "../core/icons.js";
@@ -328,7 +329,7 @@ export async function renderMap(root, slug) {
   let iconStyle = "";
   const iconCache = new Map();
   function cachedMarkerIcon(marker) {
-    const style = getMarkerStyle();
+    const style = getMarkerStyle() + (isSecretThemeActive() ? ":secret" : "");
     if (iconStyle !== style) {
       iconCache.clear();
       iconStyle = style;
@@ -455,7 +456,8 @@ export async function renderMap(root, slug) {
             `<button class="map-marker custom-pin" data-pin="${pins().indexOf(p)}" style="left:${p.x}%;top:${p.y}%;--marker:#fff" title="${esc(p.name)}"><img src="${mapIcon("custom_pin")}" alt="" width="30" height="30"></button>`,
         )
         .join("");
-    const nextList = getMarkerStyle() + ":" + selectionSignature;
+    const nextList =
+      getMarkerStyle() + ":" + isSecretThemeActive() + ":" + selectionSignature;
     if (nextList !== listSignature) {
       listSignature = nextList;
       root.querySelector("#marker-list").innerHTML =

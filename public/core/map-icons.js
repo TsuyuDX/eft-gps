@@ -1,3 +1,4 @@
+import { isSecretThemeActive, secretMarkerIcon } from "./secret-theme.js";
 import { getMarkerStyle } from "./marker-style.js";
 import { classicMapIcon, classicMarkerIcon } from "./map-icons-classic.js";
 // EFT GPS vector markers; original aliases remain compatible with offline data.
@@ -66,6 +67,7 @@ const themedIcon = (name) =>
   markerTheme.icons[mapIconNames[name]] ||
   markerTheme.icons.loose_loot;
 export function mapIcon(name) {
+  if (isSecretThemeActive()) return secretMarkerIcon(themedIcon(name));
   if (getMarkerStyle() !== "classic" || name === "custom_pin")
     return themedIcon(name);
   const original =
@@ -113,6 +115,8 @@ export function markerIconName(marker, map = {}) {
   }
 }
 export function markerIcon(marker, map = {}) {
+  if (isSecretThemeActive())
+    return secretMarkerIcon(themedIcon(markerIconName(marker, map)));
   if (getMarkerStyle() === "classic") {
     const original = classicMarkerIcon(marker, map);
     if (original !== "/assets/fallback.svg") return original;
