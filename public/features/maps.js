@@ -1,3 +1,4 @@
+import { getMarkerStyle } from "../core/marker-style.js";
 import { uiIcon } from "../core/icons.js";
 import { clusterMarkers } from "./map-clusters.js";
 import { createUnifiedMapSearch } from "./map-search.js";
@@ -8,7 +9,6 @@ import {
 } from "../core/window-settings.js";
 import { bindMapExpansion } from "./map-expand.js";
 import { floorLabel } from "../core/map-labels.js";
-import { openPreferences } from "../core/preferences.js";
 import { db, json, asset } from "../core/data.js";
 import { current, save } from "../core/state.js";
 import { projectPoint } from "../core/domain.js";
@@ -159,7 +159,7 @@ export async function renderMap(root, slug) {
     quests: "quest_objective",
     seasonalDocuments: null,
   };
-  root.innerHTML = `<section class="map-workspace"><div class="map-top"><div class="row"><a href="#/map/${db.mode}">← Карты</a><h1>${esc(m.name)}</h1><span class="badge">${esc(String(m.duration).replace("min", "мин"))}</span><span class="badge map-test-badge" data-no-translate>TEST</span></div><div class="row"><select id="floor" aria-label="Этаж карты"><option value="">Основной слой</option>${(m.layers || []).map((x, i) => `<option value="${i}">${esc(floorLabel(x.name))}</option>`).join("")}</select><button id="map-preferences" aria-label="Настройки карты" title="Скрыть панели и лишние элементы">⚙ Настройки</button><button id="map-full">⛶ Развернуть карту</button></div></div><div class="map-searchbar"><div class="map-panel-toggles"><button type="button" data-toggle-panel="sidebar" aria-controls="map-filters-panel">☷ Фильтры</button><button type="button" data-toggle-panel="questBrowser" aria-controls="map-tasks-panel">☷ Задания</button></div><div class="map-unified-search" id="map-search"></div></div><div class="map-layout"><aside class="map-controls" id="map-filters-panel"><div class="map-panel-heading"><strong>Фильтры карты</strong><button type="button" data-toggle-panel="sidebar" aria-label="Скрыть фильтры">‹</button></div><div class="map-panel-scroll"><h3>Слои карты</h3><label class="check hazard-display"><input id="hazard-show-all" type="checkbox" ${showHazardZones ? "checked" : ""}> Показывать все зоны опасностей</label>${Object.entries(
+  root.innerHTML = `<section class="map-workspace"><div class="map-top"><div class="row"><a href="#/map/${db.mode}">← Карты</a><h1>${esc(m.name)}</h1><span class="badge">${esc(String(m.duration).replace("min", "мин"))}</span><span class="badge map-test-badge" data-no-translate>TEST</span></div><div class="row"><select id="floor" aria-label="Этаж карты"><option value="">Основной слой</option>${(m.layers || []).map((x, i) => `<option value="${i}">${esc(floorLabel(x.name))}</option>`).join("")}</select><button id="map-full">⛶ Развернуть карту</button></div></div><div class="map-searchbar"><div class="map-panel-toggles"><button type="button" data-toggle-panel="sidebar" aria-controls="map-filters-panel">☷ Фильтры</button><button type="button" data-toggle-panel="questBrowser" aria-controls="map-tasks-panel">☷ Задания</button></div><div class="map-unified-search" id="map-search"></div></div><div class="map-layout"><aside class="map-controls" id="map-filters-panel"><div class="map-panel-heading"><strong>Фильтры карты</strong><button type="button" data-toggle-panel="sidebar" aria-label="Скрыть фильтры">‹</button></div><div class="map-panel-scroll"><h3>Слои карты</h3><label class="check hazard-display"><input id="hazard-show-all" type="checkbox" ${showHazardZones ? "checked" : ""}> Показывать все зоны опасностей</label>${Object.entries(
     groups,
   )
     .map(([k, [name]]) => {
@@ -172,9 +172,9 @@ export async function renderMap(root, slug) {
           : k === "seasonalDocuments"
             ? mapIcon("seasonal_document")
             : mapIcon(layerIcons[k]);
-      const master = `<label class="layer"><input type="checkbox" data-group="${k}" aria-label="${esc(name)}" ${active.has(k) ? "checked" : ""}><img class="map-layer-icon" src="${icon}" alt=""> ${name}<small class="muted">${markers.filter((x) => x.group === k).length}</small></label>`;
+      const master = `<label class="layer"><input type="checkbox" data-group="${k}" aria-label="${esc(name)}" ${active.has(k) ? "checked" : ""}><img class="map-layer-icon" data-layer-icon="${k}" src="${icon}" alt=""> ${name}<small class="muted">${markers.filter((x) => x.group === k).length}</small></label>`;
       return entries.length
-        ? `<details class="map-layer-group" ${k === "lootContainers" ? "open" : ""}><summary>${master}</summary><div class="map-subtypes">${entries.map((e) => `<label class="layer subtype"><input type="checkbox" data-subtype="${esc(e.key)}" data-parent="${k}" aria-label="${esc(e.label)}" ${active.has(k) && !disabledTypes.has(e.key) ? "checked" : ""}><img class="map-layer-icon" src="${markerIcon(e.marker, m)}" alt=""><span>${esc(e.label)}</span><small class="muted">${e.count}</small></label>`).join("")}</div></details>`
+        ? `<details class="map-layer-group" ${k === "lootContainers" ? "open" : ""}><summary>${master}</summary><div class="map-subtypes">${entries.map((e) => `<label class="layer subtype"><input type="checkbox" data-subtype="${esc(e.key)}" data-parent="${k}" aria-label="${esc(e.label)}" ${active.has(k) && !disabledTypes.has(e.key) ? "checked" : ""}><img class="map-layer-icon" data-subtype-icon="${esc(e.key)}" src="${markerIcon(e.marker, m)}" alt=""><span>${esc(e.label)}</span><small class="muted">${e.count}</small></label>`).join("")}</div></details>`
         : master;
     })
     .join(
@@ -222,8 +222,6 @@ export async function renderMap(root, slug) {
     ty = -(p.y / 100 - 0.5) * baseHeight * zoom;
     transform();
   }
-  root.querySelector("#map-preferences").onclick = () =>
-    openPreferences("Карта");
   const questPanel = createMapQuestPanel(root.querySelector("#map-quests"), {
     markers,
     metadata: questMetadata,
@@ -266,6 +264,32 @@ export async function renderMap(root, slug) {
     },
   );
   bindMapPanels(root);
+  window.addEventListener(
+    "map-marker-style-changed",
+    () => {
+      root.querySelectorAll("[data-layer-icon]").forEach((image) => {
+        const key = image.dataset.layerIcon;
+        image.src = mapIcon(
+          key === "btr"
+            ? "btr"
+            : key === "seasonalDocuments"
+              ? "seasonal_document"
+              : layerIcons[key],
+        );
+      });
+      root.querySelectorAll("[data-subtype-icon]").forEach((image) => {
+        for (const group of subgroups.values()) {
+          const entry = group.get(image.dataset.subtypeIcon);
+          if (entry) {
+            image.src = markerIcon(entry.marker, m);
+            break;
+          }
+        }
+      });
+      draw();
+    },
+    { signal: viewController.signal },
+  );
   for (const [id, name] of [
     ["zoom-in", "plus"],
     ["zoom-out", "minus"],
@@ -294,6 +318,25 @@ export async function renderMap(root, slug) {
   window.addEventListener("view-changing", () => resizeObserver.disconnect(), {
     once: true,
   });
+  let markerFrame = 0;
+  const markerIds = new Map(markers.map((x, i) => [x, i]));
+  const projectedMarkers = new Map(
+    markers.map((x) => [x, projectPoint(x.position, m)]),
+  );
+  const markerTypes = new Map(markers.map((x) => [x, markerSubtype(x, m)]));
+  let iconStyle = "";
+  const iconCache = new Map();
+  function cachedMarkerIcon(marker) {
+    const style = getMarkerStyle();
+    if (iconStyle !== style) {
+      iconCache.clear();
+      iconStyle = style;
+    }
+    if (!iconCache.has(marker)) iconCache.set(marker, markerIcon(marker, m));
+    return iconCache.get(marker);
+  }
+  let overlaySignature = "",
+    listSignature = "";
   function transform() {
     const width = baseWidth * zoom,
       height = baseHeight * zoom;
@@ -312,7 +355,9 @@ export async function renderMap(root, slug) {
     const size = Math.round(width) + ":" + Math.round(height);
     if (size !== markerLayoutSize) {
       markerLayoutSize = size;
-      requestAnimationFrame(() => {
+      cancelAnimationFrame(markerFrame);
+      markerFrame = requestAnimationFrame(() => {
+        markerFrame = 0;
         if (root.isConnected) draw();
       });
     }
@@ -354,19 +399,25 @@ export async function renderMap(root, slug) {
           (!selectedQuest ||
             x.group !== "quests" ||
             x.quest?.normalizedName === selectedQuest) &&
-          (!markerSubtype(x, m) ||
-            !disabledTypes.has(x.group + "|" + markerSubtype(x, m).id)),
+          (!markerTypes.get(x) ||
+            !disabledTypes.has(x.group + "|" + markerTypes.get(x).id)),
     );
     const visible = filtered
       .map((x, i) => {
-        const p = projectPoint(x.position, m);
+        const p = projectedMarkers.get(x);
         return { x, i, p };
       })
       .filter(({ p }) => p.x >= 0 && p.x <= 100 && p.y >= 0 && p.y <= 100);
-    hazardOverlay.render(filtered, {
-      all: showHazardZones,
-      muted: (x) => floor && floorFor(x.position, m) !== Number(layer),
-    });
+    const selectionSignature = filtered.map((x) => markerIds.get(x)).join(",");
+    const nextOverlay =
+      layer + ":" + showHazardZones + ":" + selectionSignature;
+    if (nextOverlay !== overlaySignature) {
+      overlaySignature = nextOverlay;
+      hazardOverlay.render(filtered, {
+        all: showHazardZones,
+        muted: (x) => floor && floorFor(x.position, m) !== Number(layer),
+      });
+    }
     const clusters = clusterMarkers(
       visible,
       baseWidth * zoom,
@@ -377,7 +428,7 @@ export async function renderMap(root, slug) {
         .map((cluster, ci) => {
           const { x, i, p } = cluster.entries[0];
           const count = cluster.entries.length;
-          return `<button class="map-marker map-marker-icon${count > 1 ? " map-marker-cluster" : ""}${floor && floorFor(x.position, m) !== Number(layer) ? " other-floor" : ""}" ${count > 1 ? 'data-cluster="' + ci + '"' : 'data-marker="' + i + '"'} style="left:${p.x}%;top:${p.y}%;--marker:${x.color}" title="${esc(count > 1 ? "Рядом меток: " + count : x.title)}" aria-label="${esc(count > 1 ? "Рядом меток: " + count : x.title)}"><img src="${markerIcon(x, m)}" alt="" width="32" height="32" draggable="false">${count > 1 ? '<span class="map-cluster-count">' + count + "</span>" : x.quest?.icon ? '<img class="quest-marker-badge" src="' + asset(x.quest.icon) + '" alt="">' : ""}</button>`;
+          return `<button class="map-marker map-marker-icon${count > 1 ? " map-marker-cluster" : ""}${floor && floorFor(x.position, m) !== Number(layer) ? " other-floor" : ""}" ${count > 1 ? 'data-cluster="' + ci + '"' : 'data-marker="' + i + '"'} style="left:${p.x}%;top:${p.y}%;--marker:${x.color}" title="${esc(count > 1 ? "Рядом меток: " + count : x.title)}" aria-label="${esc(count > 1 ? "Рядом меток: " + count : x.title)}"><img src="${cachedMarkerIcon(x)}" alt="" width="32" height="32" draggable="false">${count > 1 ? '<span class="map-cluster-count">' + count + "</span>" : x.quest?.icon ? '<img class="quest-marker-badge" src="' + asset(x.quest.icon) + '" alt="">' : ""}</button>`;
         })
         .join("") +
       pins()
@@ -387,15 +438,19 @@ export async function renderMap(root, slug) {
             `<button class="map-marker custom-pin" data-pin="${pins().indexOf(p)}" style="left:${p.x}%;top:${p.y}%;--marker:#fff" title="${esc(p.name)}"><img src="${mapIcon("custom_pin")}" alt="" width="30" height="30"></button>`,
         )
         .join("");
-    root.querySelector("#marker-list").innerHTML =
-      `<p class="muted small">Показано ${visible.length} меток</p>` +
-      visible
-        .slice(0, 120)
-        .map(
-          ({ x, i }) =>
-            `<button class="marker-row" data-marker="${i}"><img class="map-layer-icon" src="${markerIcon(x, m)}" alt=""> ${esc(x.title)}</button>`,
-        )
-        .join("");
+    const nextList = getMarkerStyle() + ":" + selectionSignature;
+    if (nextList !== listSignature) {
+      listSignature = nextList;
+      root.querySelector("#marker-list").innerHTML =
+        `<p class="muted small">Показано ${visible.length} меток</p>` +
+        visible
+          .slice(0, 120)
+          .map(
+            ({ x, i }) =>
+              `<button class="marker-row" data-marker="${i}"><img class="map-layer-icon" src="${cachedMarkerIcon(x)}" alt=""> ${esc(x.title)}</button>`,
+          )
+          .join("");
+    }
     root.querySelectorAll("[data-cluster]").forEach(
       (button) =>
         (button.onclick = () => {
@@ -408,7 +463,7 @@ export async function renderMap(root, slug) {
                     '<button type="button" data-open-cluster="' +
                     i +
                     '"><img src="' +
-                    markerIcon(x, m) +
+                    cachedMarkerIcon(x) +
                     '" alt=""><span>' +
                     esc(x.title) +
                     "</span></button>",

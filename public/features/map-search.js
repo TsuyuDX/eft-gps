@@ -293,7 +293,11 @@ export function createUnifiedMapSearch(
                   esc(row.id) +
                   '"') +
               ' class="map-search-result-main"><img src="' +
-              esc(row.icon) +
+              esc(
+                row.type === "marker"
+                  ? markerIcon(markers[row.index], map)
+                  : row.icon,
+              ) +
               '" alt=""><span>' +
               esc(row.name) +
               "<small>" +

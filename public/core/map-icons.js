@@ -1,3 +1,5 @@
+import { getMarkerStyle } from "./marker-style.js";
+import { classicMapIcon, classicMarkerIcon } from "./map-icons-classic.js";
 // EFT GPS vector markers; original aliases remain compatible with offline data.
 import { markerTheme } from "./map-marker-theme.js";
 import { asset } from "./data.js";
@@ -59,11 +61,21 @@ export const mapIconNames = {
   switch: "switch",
 };
 
-export const mapIcon = (name) =>
+const themedIcon = (name) =>
   markerTheme.icons[name] ||
   markerTheme.icons[mapIconNames[name]] ||
   markerTheme.icons.loose_loot;
-
+export function mapIcon(name) {
+  if (getMarkerStyle() !== "classic" || name === "custom_pin")
+    return themedIcon(name);
+  const original =
+    name === "btr"
+      ? asset("/api/media/file/btr-icon.png")
+      : name === "seasonal_document"
+        ? asset("/api/media/file/season-1-doc-financial-documentation.webp")
+        : classicMapIcon(name);
+  return original === "/assets/fallback.svg" ? themedIcon(name) : original;
+}
 export function markerIconName(marker, map = {}) {
   switch (marker.group) {
     case "lootLoose":
@@ -100,8 +112,13 @@ export function markerIconName(marker, map = {}) {
       return "loose_loot";
   }
 }
-export const markerIcon = (marker, map = {}) =>
-  mapIcon(markerIconName(marker, map));
+export function markerIcon(marker, map = {}) {
+  if (getMarkerStyle() === "classic") {
+    const original = classicMarkerIcon(marker, map);
+    if (original !== "/assets/fallback.svg") return original;
+  }
+  return themedIcon(markerIconName(marker, map));
+}
 
 export function spawnType(marker, map = {}) {
   let type = "scav";

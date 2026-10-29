@@ -18,7 +18,7 @@
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="stylesheet" href="/gps.css" />
     <link rel="stylesheet" href="/quests.css" />
-      <link rel="stylesheet" href="/workspace.css">
+    <link rel="stylesheet" href="/workspace.css" />
   </head>
   <body class="booting">
     <section id="boot-screen" role="region" aria-label="Запуск EFT GPS">
@@ -90,7 +90,6 @@
       <div class="statusline">
         <div class="row">
           <span class="time" id="raid-time"></span
-          ><span class="pill online-dot">Локальная база</span
           ><span class="muted" id="snapshot-date">Подготовка базы…</span>
         </div>
         <div class="row">
@@ -136,7 +135,10 @@
       ><span>EFT GPS · <a href="#/settings">Состояние офлайн-базы</a></span>
     </footer>
     <dialog id="modal">
-      <div class="modal-chrome"><span>EFT GPS</span><button class="close" aria-label="Закрыть">×</button></div>
+      <div class="modal-chrome">
+        <span>EFT GPS</span
+        ><button class="close" aria-label="Закрыть">×</button>
+      </div>
       <div id="modal-content"></div>
     </dialog>
     <div id="toast" role="status"></div>
