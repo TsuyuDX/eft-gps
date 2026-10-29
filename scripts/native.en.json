@@ -195,5 +195,8 @@
   "Приложение установлено. Запустите его с ярлыка на рабочем столе.": "The application is installed. Launch it using the desktop shortcut.",
   "Выбрана рекомендуемая папка.": "Recommended folder selected.",
   "Нет прав записи в выбранную папку": "You cannot write to the selected folder",
-  "Выберите рекомендуемую папку или другое место установки.": "Choose the recommended folder or another installation location."
+  "Выберите рекомендуемую папку или другое место установки.": "Choose the recommended folder or another installation location.",
+  "Папка пользовательских данных содержит перенаправление": "The user data folder contains a filesystem redirect.",
+  "Пакет содержит служебный временный файл": "The package contains a reserved temporary file.",
+  "Описание установленной версии является ссылкой": "The installed version manifest is a filesystem link."
 }

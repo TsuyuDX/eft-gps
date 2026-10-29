@@ -1,3 +1,4 @@
+import { validProfile } from "./profile-schema.js";
 const blank = () => ({
   quests: {},
   objectives: {},
@@ -15,26 +16,7 @@ let state = {
   },
   pending = Promise.resolve();
 export function validate(p) {
-  if (!p || p.version !== 1 || !p.modes)
-    throw Error("Неверный формат резервной копии");
-  for (const mode of ["regular", "pve"]) {
-    const m = p.modes[mode];
-    if (!m || typeof m !== "object")
-      throw Error("В копии отсутствует режим " + mode);
-    for (const k of ["quests", "objectives", "inventory", "hideout", "pins"]) {
-      if (!m[k] || typeof m[k] !== "object" || Array.isArray(m[k]))
-        throw Error("Неверное поле " + k);
-    }
-    if (
-      !Array.isArray(m.favorites) ||
-      !Array.isArray(m.modifiers) ||
-      typeof m.notes !== "string"
-    )
-      throw Error("Повреждён профиль");
-    for (const v of Object.values(m.inventory))
-      if (!Number.isFinite(v) || v < 0)
-        throw Error("Неверное количество предметов");
-  }
+  if (!validProfile(p)) throw Error("Неверный или повреждённый формат резервной копии");
   return p;
 }
 export async function loadState() {
@@ -100,7 +82,7 @@ export function toggleObjective(id) {
   save();
 }
 export function setHideout(id, level) {
-  current().hideout[id] = Math.max(0, Number(level) || 0);
+  current().hideout[id] = Math.max(0, Math.floor(Number(level) || 0));
   save();
 }
 export function exportProfile() {

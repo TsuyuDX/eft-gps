@@ -73,19 +73,23 @@ export async function loadMode(mode, locale = language()) {
     }
   } else db.tracker = await json("tracker.json", locale);
 }
-export const asset = (u) =>
-  db.assets[u] || (u?.startsWith("/assets/") ? u : "/assets/fallback.svg");
+export function asset(u) {
+  const value = Object.hasOwn(db.assets, u) ? db.assets[u] : u;
+  return typeof value === "string" && /^\/assets\/[A-Za-z0-9_./%()+@-]+$/.test(value) &&
+    !value.split("/").some(segment => segment === "." || segment === "..")
+    ? value : "/assets/fallback.svg";
+}
 export const itemBySlug = (slug) =>
   db.items.find((x) => x.normalizedName === slug);
 export function localHref(href) {
-  if (!href) return "#/";
+  if (typeof href !== "string" || /[\u0000-\u0020\u007f]/.test(href)) return "#/";
   if (href.startsWith("#")) return href;
   let h = href
     .replace(/^https:\/\/www\.tarkovhead\.com/, "")
     .replace(/^\/(ru|en)/, "")
     .replaceAll(":mode", db.mode);
   if (h.startsWith("/")) return "#" + h;
-  return href;
+  return /^https?:\/\//i.test(href) ? href : "#/";
 }
 export async function detail(type, slug) {
   const d = await json(

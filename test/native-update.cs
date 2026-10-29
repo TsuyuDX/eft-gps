@@ -22,6 +22,7 @@ class NativeUpdateTest {
         return zip;
     }
     static int Main(string[] args) {
+        if(args.Length==2 && args[0]=="--check-userdata") {try{InstallerElevation.PrepareUserData(args[1]);return 0;}catch(IOException){return 23;}}
         if(args.Length>0 && args[0]=="--argument-roundtrip") {Console.OutputEncoding=new UTF8Encoding(false);var output=new string[args.Length-1];Array.Copy(args,1,output,0,output.Length);Console.WriteLine(new JavaScriptSerializer().Serialize(output));return 0;}
         AppContext.SetSwitch("Switch.System.IO.UseLegacyPathHandling",false);
         AppContext.SetSwitch("Switch.System.IO.BlockLongPaths",false);
@@ -50,6 +51,14 @@ class NativeUpdateTest {
         Check(File.ReadAllText(Path.Combine(target,"userdata","window-settings.json"))=="keep settings","Settings changed");
         Reject(()=>PackageInstaller.CheckUpdateVersion(target,release,"1.8.0"),"Same version accepted");
         Reject(()=>PackageInstaller.Stage(Package(fixture,"traversal","1.9.0","bad",true),Path.Combine(fixture,"bad-stage"),delegate{}),"Traversal accepted");
+        foreach(string unsafePath in new[]{"public/CON.txt","public/NUL","public/file:stream","public/file.install-new","release.json.install-new","userdata/profile.json","../outside.txt"}) {
+            string badZip=Path.Combine(fixture,"unsafe-"+Guid.NewGuid().ToString("N")+".zip");
+            using(var archive=ZipFile.Open(badZip,ZipArchiveMode.Create)) {
+                using(var writer=new StreamWriter(archive.CreateEntry(unsafePath).Open()))writer.Write("bad");
+                using(var writer=new StreamWriter(archive.CreateEntry("release.json").Open()))writer.Write(new JavaScriptSerializer().Serialize(new ReleaseInfo{format=1,app="TarkovOffline",version="9.0.0",files=new[]{new ReleaseFile{path=unsafePath,size=3,sha256=new string('0',64)}}}));
+            }
+            Reject(()=>PackageInstaller.Stage(badZip,Path.Combine(fixture,"unsafe-stage-"+Guid.NewGuid().ToString("N")),delegate{}),"Unsafe package path accepted: "+unsafePath);
+        }
         string untouched=Path.Combine(target,"server.mjs");var before=File.GetLastWriteTimeUtc(untouched);
         File.WriteAllText(Path.Combine(target,"obsolete.txt"),"old asset");
         stage=Path.Combine(fixture,"delta-stage");int reported=0,last=0;
@@ -72,6 +81,10 @@ class NativeUpdateTest {
         Check(File.ReadAllText(Path.Combine(target,"server.mjs"))=="new","Cancellation damaged unchanged files");
         Reject(()=>PackageInstaller.Install(target,stage,cancelRelease,delegate{},null,default(System.Threading.CancellationToken),delegate{throw new IOException("Permission preparation failed");}),"User-data permission failure did not abort installation");
         Check(File.ReadAllText(Path.Combine(target,"package.json")).Contains("1.8.1"),"Permission failure did not roll back application files");
+        string manifestTemp=Path.Combine(target,"release.json.install-new");File.WriteAllText(manifestTemp,"unrelated temporary file");
+        Reject(()=>PackageInstaller.Install(target,stage,cancelRelease,delegate{}),"Existing service file was overwritten");
+        Check(File.ReadAllText(manifestTemp)=="unrelated temporary file","Existing service file changed");File.Delete(manifestTemp);
+        Check(File.ReadAllText(Path.Combine(target,"package.json")).Contains("1.8.1"),"Manifest write failure did not roll back the application");
         // A writable install folder must not require write access to its parent.
         string parent=Path.Combine(fixture,"read-only parent"),child=Path.Combine(parent,"EFT GPS");Directory.CreateDirectory(child);
         var originalAcl=Directory.GetAccessControl(parent);

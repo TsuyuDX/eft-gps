@@ -58,7 +58,7 @@ test("static server confines files to the public folder", () => {
   );
   assert.equal(
     validProfile({ version: 1, modes: { regular: {}, pve: {} } }),
-    true,
+    false,
   );
   assert.equal(validProfile({ version: 0 }), false);
 });

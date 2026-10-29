@@ -75,7 +75,7 @@ export class GpsService {
     for (const key of ["screenshotsPath", "logsPath"])
       if (key in next) {
         const value = String(next[key] || "").trim();
-        if (value && (!path.isAbsolute(value) || value.startsWith("\\\\")))
+        if (value && (!path.isAbsolute(value) || /^[\\\\/]{2}/.test(value)))
           throw Error("Укажите локальный абсолютный путь");
         if (value && fs.existsSync(value) && !fs.statSync(value).isDirectory())
           throw Error("Нужно выбрать папку");

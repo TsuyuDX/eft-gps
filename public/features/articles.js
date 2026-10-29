@@ -83,7 +83,7 @@ export async function renderArticle(root, path) {
     `<div id="article-interactive"></div><div class="article-frame-wrap"><iframe id="article-frame" title="${esc(a.title)}" sandbox="allow-same-origin allow-top-navigation-by-user-activation allow-popups allow-popups-to-escape-sandbox"></iframe></div>`;
   const doc = new DOMParser().parseFromString(a.html, "text/html");
   doc
-    .querySelectorAll("script,iframe,object,embed,form,template,style,link")
+    .querySelectorAll("script,iframe,object,embed,form,template,style,link,meta,base")
     .forEach((e) => e.remove());
   doc.querySelectorAll("*").forEach((e) => {
     for (const attr of [...e.attributes])
@@ -106,7 +106,7 @@ export async function renderArticle(root, path) {
       const h = e.getAttribute("href") || "";
       e.href = localHref(h).startsWith("#")
         ? location.origin + "/" + localHref(h)
-        : h;
+        : localHref(h);
       e.target = localHref(h).startsWith("#") ? "_top" : "_blank";
       e.rel = "noopener";
       if (h.startsWith("#")) {

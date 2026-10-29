@@ -1,4 +1,5 @@
 export const englishUi = {
+  "Неверный или повреждённый формат резервной копии": "Invalid or damaged backup format",
   "ё": "yo",
   "е": "e",
   "Я": "Me",
