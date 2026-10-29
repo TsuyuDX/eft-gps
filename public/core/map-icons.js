@@ -1,4 +1,5 @@
-// Icon names used by TarkovHead; images are stored locally for offline use.
+// EFT GPS vector markers; original aliases remain compatible with offline data.
+import { markerTheme } from "./map-marker-theme.js";
 import { asset } from "./data.js";
 export const mapIconNames = {
   "container_bank-cash-register": "container_cash-register",
@@ -59,42 +60,48 @@ export const mapIconNames = {
 };
 
 export const mapIcon = (name) =>
-  asset(
-    `https://tarkov.dev/maps/interactive/${mapIconNames[name] || name}.png`,
-  );
+  markerTheme.icons[name] ||
+  markerTheme.icons[mapIconNames[name]] ||
+  markerTheme.icons.loose_loot;
 
-export function markerIcon(marker, map = {}) {
+export function markerIconName(marker, map = {}) {
   switch (marker.group) {
     case "lootLoose":
-      return marker.iconUrl ? asset(marker.iconUrl) : mapIcon("loose_loot");
+      return markerTheme.categories[marker.category] || "loose_loot";
     case "lootContainers":
-      return mapIcon(`container_${marker.lootContainer?.normalizedName}`);
+      return "container_" + (marker.lootContainer?.normalizedName || "other");
     case "extracts":
-      return mapIcon(`extract_${marker.faction || "shared"}`);
+      return "extract_" + (marker.faction || "shared");
     case "transits":
-      return mapIcon("extract_transit");
+      return "extract_transit";
     case "locks":
-      return mapIcon("lock");
+      return "lock";
     case "hazards":
-      return mapIcon("hazard");
+      return ["sniper", "minefield"].includes(marker.hazardType)
+        ? "hazard_" + marker.hazardType
+        : "hazard";
     case "artillery":
-      return mapIcon("hazard_mortar");
+      return "hazard_mortar";
     case "switches":
-      return mapIcon("switch");
+      return "switch";
     case "stationaryWeapons":
-      return mapIcon("stationarygun");
+      return "stationarygun";
     case "quests":
-      return mapIcon(marker.questItem ? "quest_item" : "quest_objective");
+      return marker.questItem ? "quest_item" : "quest_objective";
     case "seasonalDocuments":
-      return asset(`/api/media/file/season-1-doc-${marker.iconType}.webp`);
+      return marker.iconType
+        ? "document_" + marker.iconType
+        : "seasonal_document";
     case "btr":
-      return asset("/api/media/file/btr-stop-icon.png");
+      return "btr";
     case "spawns":
-      return mapIcon("spawn_" + spawnType(marker, map));
+      return "spawn_" + spawnType(marker, map);
     default:
-      return mapIcon("loose_loot");
+      return "loose_loot";
   }
 }
+export const markerIcon = (marker, map = {}) =>
+  mapIcon(markerIconName(marker, map));
 
 export function spawnType(marker, map = {}) {
   let type = "scav";

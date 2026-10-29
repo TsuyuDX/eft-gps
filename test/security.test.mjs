@@ -37,7 +37,7 @@ test('live server blocks foreign origins, rebinding, static junction escapes and
  const outside=path.join(directory,'private');await fs.mkdir(outside);await fs.writeFile(path.join(outside,'secret.txt'),'private test secret');
  await fs.symlink(outside,path.join(directory,'public/escape'),process.platform==='win32'?'junction':'dir');
  const listener=net.createServer();listener.listen(0,'127.0.0.1');await once(listener,'listening');const port=listener.address().port;await new Promise(resolve=>listener.close(resolve));
- child=spawn(process.execPath,[path.join(directory,'server.mjs')],{cwd:directory,env:{...process.env,PORT:String(port)},stdio:['ignore','pipe','pipe'],windowsHide:true});
+ child=spawn(process.execPath,[path.join(directory,'server.mjs')],{cwd:directory,env:{...process.env,PORT:String(port),EFTGPS_PREVIEW:"1"},stdio:['ignore','pipe','pipe'],windowsHide:true});
 
  let errors='';child.stderr.on('data',b=>errors+=b);const origin='http://127.0.0.1:'+port;
  let ready=false;for(let i=0;i<120;i++){try{const r=await fetch(origin+'/api/health');if(r.ok){ready=true;break;}}catch{}await new Promise(resolve=>setTimeout(resolve,50));}assert.equal(ready,true,errors);
@@ -48,6 +48,8 @@ test('live server blocks foreign origins, rebinding, static junction escapes and
  assert.equal((await fetch(origin+'/escape/secret.txt')).status,404);
  assert.equal((await fetch(origin+'/%')).status,400);
  const headers={Origin:origin,'Content-Type':'application/json'};
+ assert.equal((await fetch(origin+'/api/app-update/start',{method:'POST',headers})).status,202);
+ assert.deepEqual(await fetch(origin+'/api/app-update/state').then(r=>r.json()),{phase:'current',preview:true});
  assert.equal((await fetch(origin+'/api/profile',{method:'PUT',headers,body:'{bad'})).status,400);
  const invalid=profile();invalid.modes.regular.hideout.heating='unsafe';
  assert.equal((await fetch(origin+'/api/profile',{method:'PUT',headers,body:JSON.stringify(invalid)})).status,400);

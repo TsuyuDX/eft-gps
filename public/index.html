@@ -18,6 +18,7 @@
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="stylesheet" href="/gps.css" />
     <link rel="stylesheet" href="/quests.css" />
+      <link rel="stylesheet" href="/workspace.css">
   </head>
   <body class="booting">
     <section id="boot-screen" role="region" aria-label="Запуск EFT GPS">
@@ -135,7 +136,7 @@
       ><span>EFT GPS · <a href="#/settings">Состояние офлайн-базы</a></span>
     </footer>
     <dialog id="modal">
-      <button class="close" aria-label="Закрыть">×</button>
+      <div class="modal-chrome"><span>EFT GPS</span><button class="close" aria-label="Закрыть">×</button></div>
       <div id="modal-content"></div>
     </dialog>
     <div id="toast" role="status"></div>

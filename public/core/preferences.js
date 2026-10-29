@@ -27,12 +27,12 @@ export const preferenceGroups = [
       [
         "sidebar",
         "Панель слоёв",
-        "Поиск, категории меток и свои отметки слева от карты.",
+        "Категории меток и свои отметки слева от карты.",
       ],
       [
         "questBrowser",
-        "Поиск заданий на карте",
-        "Список заданий над слоями карты.",
+        "Панель заданий",
+        "Список заданий справа от карты. Общий поиск находится сверху.",
       ],
       [
         "markerList",
@@ -136,4 +136,9 @@ export function openPreferences(selected = "Интерфейс") {
     '<h2 id="preferences-title">Настройки интерфейса</h2><div id="preferences-controls"></div><p><a class="button" href="#/settings">Данные, резервные копии и заметки →</a></p>',
   );
   renderPreferences(document.querySelector("#preferences-controls"), selected);
+}
+
+export function setPreference(key, value) {
+  if (!(key in preferenceDefaults)) return;
+  storePreferences({ ...getPreferences(), [key]: Boolean(value) });
 }

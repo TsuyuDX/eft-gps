@@ -40,7 +40,10 @@ export function safePath(base, name) {
 }
 let lastPing = Date.now();
 const gps = new GpsService(root);
-const appUpdater = new AppUpdater(root, appVersion);
+// Preview windows must never replace a working source checkout with a release.
+const appUpdater = process.env.EFTGPS_PREVIEW === "1"
+  ? { state: { phase: "current", preview: true }, start: () => Promise.resolve() }
+  : new AppUpdater(root, appVersion);
 const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, "http://127.0.0.1:" + port);

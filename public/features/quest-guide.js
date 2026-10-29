@@ -1,3 +1,4 @@
+import { uiIcon } from "../core/icons.js";
 import { asset, localHref } from "../core/data.js";
 import { esc } from "../core/ui.js";
 export const guideAvailable = (q) =>
@@ -163,7 +164,7 @@ export function bindGuideImages(root) {
             if (event.target === viewer) viewer.close();
           });
         }
-        viewer.innerHTML = `<button class="close" aria-label="Закрыть изображение">×</button><h3>${esc(button.dataset.caption)}</h3><img src="${esc(button.dataset.questImage)}" alt="${esc(button.dataset.caption)}">`;
+        viewer.innerHTML = `<div class="modal-chrome"><span>${esc(button.dataset.caption)}</span><button class="close" aria-label="Закрыть изображение">${uiIcon("close", 22)}</button></div><div class="image-viewer-body"><img src="${esc(button.dataset.questImage)}" alt="${esc(button.dataset.caption)}"></div>`;
         viewer.querySelector("button").onclick = () => viewer.close();
         viewer.showModal();
       }),

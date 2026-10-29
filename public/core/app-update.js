@@ -3,7 +3,7 @@ let started=false;
 export function startAppUpdates() {
   if(started) return;started=true;
   const panel=document.createElement('aside');panel.className='app-update';panel.hidden=true;panel.dataset.noTranslate='';
-  panel.innerHTML='<div class="app-update-copy" role="status" aria-live="polite"></div><button class="app-update-dismiss" aria-label="Close">×</button><progress max="100" value="0"></progress>';
+  panel.innerHTML='<div class="app-update-copy" role="status" aria-live="polite"></div><button class="app-update-dismiss" aria-label="Close"><svg class="ui-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button><progress max="100" value="0"></progress>';
   document.body.append(panel);
   let dismissed=false;
   panel.querySelector('button').onclick=()=>{dismissed=true;panel.hidden=true;};

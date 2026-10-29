@@ -1,3 +1,7 @@
+import { uiIcon } from "../core/icons.js";
+import { clusterMarkers } from "./map-clusters.js";
+import { createUnifiedMapSearch } from "./map-search.js";
+import { bindMapPanels } from "./map-panels.js";
 import {
   readWindowSetting,
   writeWindowSetting,
@@ -109,6 +113,7 @@ export async function renderMap(root, slug) {
     drag = null,
     layer = "",
     search = "",
+    searchMatches = null,
     adding = false,
     showHazardZones = true,
     selectedQuest = "",
@@ -154,7 +159,7 @@ export async function renderMap(root, slug) {
     quests: "quest_objective",
     seasonalDocuments: null,
   };
-  root.innerHTML = `<div class="map-top"><div class="row"><a href="#/map/${db.mode}">← Карты</a><h1>${esc(m.name)}</h1><span class="badge">${esc(String(m.duration).replace("min", "мин"))}</span></div><div class="row"><select id="floor" aria-label="Этаж карты"><option value="">Основной слой</option>${(m.layers || []).map((x, i) => `<option value="${i}">${esc(floorLabel(x.name))}</option>`).join("")}</select><button id="map-preferences" aria-label="Настройки карты" title="Скрыть панели и лишние элементы">⚙ Настройки</button><button id="map-full">⛶ Развернуть карту</button></div></div><div class="map-layout"><aside class="map-controls"><input type="search" id="marker-search" placeholder="Найти выход, задание, ключ…"><div id="map-quests"></div><h3>Слои карты</h3><label class="check hazard-display"><input id="hazard-show-all" type="checkbox" ${showHazardZones ? "checked" : ""}> Показывать все зоны опасностей</label>${Object.entries(
+  root.innerHTML = `<section class="map-workspace"><div class="map-top"><div class="row"><a href="#/map/${db.mode}">← Карты</a><h1>${esc(m.name)}</h1><span class="badge">${esc(String(m.duration).replace("min", "мин"))}</span><span class="badge map-test-badge" data-no-translate>TEST</span></div><div class="row"><select id="floor" aria-label="Этаж карты"><option value="">Основной слой</option>${(m.layers || []).map((x, i) => `<option value="${i}">${esc(floorLabel(x.name))}</option>`).join("")}</select><button id="map-preferences" aria-label="Настройки карты" title="Скрыть панели и лишние элементы">⚙ Настройки</button><button id="map-full">⛶ Развернуть карту</button></div></div><div class="map-searchbar"><div class="map-panel-toggles"><button type="button" data-toggle-panel="sidebar" aria-controls="map-filters-panel">☷ Фильтры</button><button type="button" data-toggle-panel="questBrowser" aria-controls="map-tasks-panel">☷ Задания</button></div><div class="map-unified-search" id="map-search"></div></div><div class="map-layout"><aside class="map-controls" id="map-filters-panel"><div class="map-panel-heading"><strong>Фильтры карты</strong><button type="button" data-toggle-panel="sidebar" aria-label="Скрыть фильтры">‹</button></div><div class="map-panel-scroll"><h3>Слои карты</h3><label class="check hazard-display"><input id="hazard-show-all" type="checkbox" ${showHazardZones ? "checked" : ""}> Показывать все зоны опасностей</label>${Object.entries(
     groups,
   )
     .map(([k, [name]]) => {
@@ -163,9 +168,9 @@ export async function renderMap(root, slug) {
       );
       const icon =
         k === "btr"
-          ? asset("/api/media/file/btr-icon.png")
+          ? mapIcon("btr")
           : k === "seasonalDocuments"
-            ? asset("/api/media/file/season-1-doc-financial-documentation.webp")
+            ? mapIcon("seasonal_document")
             : mapIcon(layerIcons[k]);
       const master = `<label class="layer"><input type="checkbox" data-group="${k}" aria-label="${esc(name)}" ${active.has(k) ? "checked" : ""}><img class="map-layer-icon" src="${icon}" alt=""> ${name}<small class="muted">${markers.filter((x) => x.group === k).length}</small></label>`;
       return entries.length
@@ -174,7 +179,7 @@ export async function renderMap(root, slug) {
     })
     .join(
       "",
-    )}<hr><details><summary>Боссы и шанс появления</summary>${(m.bosses || []).map((b) => '<p class="small"><a href="#/boss/' + db.mode + "/" + b.normalizedName + '">' + esc(b.name) + "</a> · " + Math.round(b.spawnChance * 100) + "%<br>" + b.spawnLocations.map((l) => esc(l.name)).join(", ") + "</p>").join("")}</details><hr><button id="add-pin">＋ Своя метка</button><p class="small muted">Колесо — масштаб · перетаскивание — перемещение. Свои метки сохраняются в профиле.</p><section class="map-marker-list"><h3>Видимые метки</h3><div id="marker-list"></div></section><p class="small muted">${esc(m.author || "Tarkov.dev")}<br>${esc(m.description)}</p></aside><div class="map-viewport" id="map-viewport"><div class="map-canvas" id="map-canvas"><img class="map-image" id="map-image" alt="${esc(m.name)}" draggable="false"><img class="map-floor-image" id="map-floor-image" alt="" draggable="false" hidden><div id="map-base-detail" class="map-detail"></div><div id="map-floor-detail" class="map-detail"></div><svg id="hazard-zones" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg><div id="markers"></div></div><div class="zoom-controls"><button id="zoom-in" aria-label="Приблизить">＋</button><button id="zoom-out" aria-label="Отдалить">−</button><button id="zoom-reset" aria-label="Сбросить масштаб">⌂</button></div><div class="map-caption">${esc(m.name)} · <span id="map-scale">100%</span> · EFT GPS</div></div></div>`;
+    )}<hr><details><summary>Боссы и шанс появления</summary>${(m.bosses || []).map((b) => '<p class="small"><a href="#/boss/' + db.mode + "/" + b.normalizedName + '">' + esc(b.name) + "</a> · " + Math.round(b.spawnChance * 100) + "%<br>" + b.spawnLocations.map((l) => esc(l.name)).join(", ") + "</p>").join("")}</details><hr><button id="add-pin">＋ Своя метка</button><p class="small muted">Колесо — масштаб · перетаскивание — перемещение. Свои метки сохраняются в профиле.</p><section class="map-marker-list"><h3>Видимые метки</h3><div id="marker-list"></div></section><p class="small muted">${esc(m.author || "Tarkov.dev")}<br>${esc(m.description)}</p></div></aside><div class="map-viewport" id="map-viewport"><div class="map-canvas" id="map-canvas"><img class="map-image" id="map-image" alt="${esc(m.name)}" draggable="false"><img class="map-floor-image" id="map-floor-image" alt="" draggable="false" hidden><div id="map-base-detail" class="map-detail"></div><div id="map-floor-detail" class="map-detail"></div><svg id="hazard-zones" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg><div id="markers"></div></div><div class="zoom-controls"><button id="zoom-in" aria-label="Приблизить">＋</button><button id="zoom-out" aria-label="Отдалить">−</button><button id="zoom-reset" aria-label="Сбросить масштаб">⌂</button></div><div class="map-caption">${esc(m.name)} · <span id="map-scale">100%</span> · EFT GPS</div></div><aside class="map-quest-side" id="map-tasks-panel"><div class="map-panel-heading"><strong>Задания на карте</strong><button type="button" data-toggle-panel="questBrowser" aria-label="Скрыть задания">›</button></div><div class="map-panel-scroll"><div id="map-quests"></div><p class="small muted">Выберите несколько заданий через общий поиск сверху. Нажмите ⓘ, чтобы открыть прохождение.</p></div></aside></div></section>`;
   const viewport = root.querySelector("#map-viewport"),
     canvas = root.querySelector("#map-canvas"),
     image = root.querySelector("#map-image");
@@ -183,7 +188,8 @@ export async function renderMap(root, slug) {
       ? asset(m.svgPath)
       : m.renderedPath) || asset(m.image);
   let baseWidth = 1,
-    baseHeight = 1;
+    baseHeight = 1,
+    markerLayoutSize = "";
   const baseDetail = createMapDetail(
     root.querySelector("#map-base-detail"),
     viewport,
@@ -222,22 +228,52 @@ export async function renderMap(root, slug) {
     markers,
     metadata: questMetadata,
     onSelect(value) {
-      selectedQuest = value;
-      active.add("quests");
-      disabledTypes.delete("quests|item");
-      disabledTypes.delete("quests|objective");
-      search = "";
-      root.querySelector("#marker-search").value = "";
-      syncFilters();
-      draw();
-      questPanel.setSelected(value);
-      const marker = markers.find((x) => x.quest?.normalizedName === value);
-      if (marker) focusQuestPoint(marker);
+      unifiedSearch.selectQuest(value);
     },
     onOpen(value) {
       openQuestPreview(value, { mapName: m.name });
     },
   });
+  const unifiedSearch = createUnifiedMapSearch(
+    root.querySelector("#map-search"),
+    {
+      markers,
+      metadata: questMetadata,
+      map: m,
+      onChange(value) {
+        search = value.query;
+        searchMatches = value.indices;
+        selectedQuest = "";
+        questPanel.setSelected(value.selectedQuests);
+        questPanel.setQuery(search);
+        draw();
+      },
+      onMarker(marker) {
+        showMarker(marker, -1);
+      },
+      onQuest(value) {
+        openQuestPreview(value, { mapName: m.name });
+      },
+      onFocus(marker) {
+        const targetFloor = floorFor(marker.position, m);
+        if (targetFloor != null && m.layers?.[targetFloor]) {
+          layer = String(targetFloor);
+          root.querySelector("#floor").value = layer;
+          draw();
+        }
+        focusQuestPoint(marker);
+      },
+    },
+  );
+  bindMapPanels(root);
+  for (const [id, name] of [
+    ["zoom-in", "plus"],
+    ["zoom-out", "minus"],
+    ["zoom-reset", "home"],
+  ])
+    root.querySelector("#" + id).innerHTML = uiIcon(name, 22);
+  root.querySelector("#add-pin").innerHTML =
+    uiIcon("plus", 18) + "<span>Своя метка</span>";
   const fit = () => {
     const ratio = (image.naturalWidth || 1) / (image.naturalHeight || 1),
       w = viewport.clientWidth,
@@ -273,13 +309,20 @@ export async function renderMap(root, slug) {
     root.querySelector("#map-scale").textContent = Math.round(zoom * 100) + "%";
     baseDetail.update();
     floorDetail.update();
+    const size = Math.round(width) + ":" + Math.round(height);
+    if (size !== markerLayoutSize) {
+      markerLayoutSize = size;
+      requestAnimationFrame(() => {
+        if (root.isConnected) draw();
+      });
+    }
   }
   function showMarker(x, index, pin = false) {
     if (x.quest?.normalizedName) {
       openQuestPreview(x.quest.normalizedName, { marker: x, mapName: m.name });
       return;
     }
-    if (!pin) hazardOverlay.highlight(index);
+    if (!pin) hazardOverlay.highlight(index >= 0 ? index : null);
     modal(
       `<span class="eyebrow">${esc(pin ? "Своя метка" : groups[x.group]?.[0])}</span><h2>${esc(x.title || x.name)}</h2>${x.quest ? `<p><a href="#/quest/${db.mode}/${x.quest.normalizedName}">${esc(x.quest.name)} →</a></p>` : ""}${x.key ? `<a href="#/item/${db.mode}/${x.key.normalizedName}">${esc(x.key.name)}</a>` : ""}<div class="guide">${rich(x.description || x.objDescription || x.details)}</div>${x.image ? img(x.image, x.title, "guide-image") : ""}${x.items ? "<h3>Возможный лут</h3>" + x.items.map((i) => '<p><a href="#/item/' + db.mode + "/" + i.normalizedName + '">' + esc(i.name) + "</a></p>").join("") : ""}${x.faction ? `<p>Сторона: ${esc(x.faction)}</p>` : ""}${x.position ? `<p class="muted small">X: ${Number(x.position.x).toFixed(1)} · Y: ${Number(x.position.y).toFixed(1)} · Z: ${Number(x.position.z).toFixed(1)}</p>` : ""}${pin ? `<button id="delete-pin">Удалить свою метку</button>` : ""}`,
     );
@@ -304,18 +347,15 @@ export async function renderMap(root, slug) {
     floorImage.hidden = !showFloor || highFloor;
     if (showFloor && floorImage.getAttribute("src") !== floorSource)
       floorImage.src = floorSource;
-    const filtered = markers.filter(
-      (x) =>
-        (active.has(x.group) || search) &&
-        (x.group !== "quests" ||
-          !selectedQuest ||
-          x.quest?.normalizedName === selectedQuest) &&
-        (!markerSubtype(x, m) ||
-          !disabledTypes.has(x.group + "|" + markerSubtype(x, m).id)) &&
-        (!search ||
-          (x.title + " " + (x.quest?.name || ""))
-            .toLowerCase()
-            .includes(search)),
+    const filtered = markers.filter((x, index) =>
+      searchMatches !== null
+        ? searchMatches.has(index)
+        : active.has(x.group) &&
+          (!selectedQuest ||
+            x.group !== "quests" ||
+            x.quest?.normalizedName === selectedQuest) &&
+          (!markerSubtype(x, m) ||
+            !disabledTypes.has(x.group + "|" + markerSubtype(x, m).id)),
     );
     const visible = filtered
       .map((x, i) => {
@@ -327,18 +367,24 @@ export async function renderMap(root, slug) {
       all: showHazardZones,
       muted: (x) => floor && floorFor(x.position, m) !== Number(layer),
     });
+    const clusters = clusterMarkers(
+      visible,
+      baseWidth * zoom,
+      baseHeight * zoom,
+    );
     root.querySelector("#markers").innerHTML =
-      visible
-        .map(
-          ({ x, i, p }) =>
-            `<button class="map-marker map-marker-icon${floor && floorFor(x.position, m) !== Number(layer) ? " other-floor" : ""}" data-marker="${i}" style="left:${p.x}%;top:${p.y}%;--marker:${x.color}" title="${esc(x.title)}" aria-label="${esc(x.title)}"><img src="${markerIcon(x, m)}" alt="" draggable="false" style="width:${x.iconSize?.[0] || 24}px;height:${x.iconSize?.[1] || 24}px">${x.quest?.icon ? `<img class="quest-marker-badge" src="${asset(x.quest.icon)}" alt="">` : ""}</button>`,
-        )
+      clusters
+        .map((cluster, ci) => {
+          const { x, i, p } = cluster.entries[0];
+          const count = cluster.entries.length;
+          return `<button class="map-marker map-marker-icon${count > 1 ? " map-marker-cluster" : ""}${floor && floorFor(x.position, m) !== Number(layer) ? " other-floor" : ""}" ${count > 1 ? 'data-cluster="' + ci + '"' : 'data-marker="' + i + '"'} style="left:${p.x}%;top:${p.y}%;--marker:${x.color}" title="${esc(count > 1 ? "Рядом меток: " + count : x.title)}" aria-label="${esc(count > 1 ? "Рядом меток: " + count : x.title)}"><img src="${markerIcon(x, m)}" alt="" width="32" height="32" draggable="false">${count > 1 ? '<span class="map-cluster-count">' + count + "</span>" : x.quest?.icon ? '<img class="quest-marker-badge" src="' + asset(x.quest.icon) + '" alt="">' : ""}</button>`;
+        })
         .join("") +
       pins()
         .filter((p) => p.layer === layer)
         .map(
           (p) =>
-            `<button class="map-marker custom-pin" data-pin="${pins().indexOf(p)}" style="left:${p.x}%;top:${p.y}%;--marker:#fff" title="${esc(p.name)}">⚑</button>`,
+            `<button class="map-marker custom-pin" data-pin="${pins().indexOf(p)}" style="left:${p.x}%;top:${p.y}%;--marker:#fff" title="${esc(p.name)}"><img src="${mapIcon("custom_pin")}" alt="" width="30" height="30"></button>`,
         )
         .join("");
     root.querySelector("#marker-list").innerHTML =
@@ -350,6 +396,38 @@ export async function renderMap(root, slug) {
             `<button class="marker-row" data-marker="${i}"><img class="map-layer-icon" src="${markerIcon(x, m)}" alt=""> ${esc(x.title)}</button>`,
         )
         .join("");
+    root.querySelectorAll("[data-cluster]").forEach(
+      (button) =>
+        (button.onclick = () => {
+          const entries = clusters[Number(button.dataset.cluster)].entries;
+          modal(
+            '<h2>Метки рядом</h2><p class="muted">Приблизьте карту или выберите объект из списка.</p><div class="map-cluster-list">' +
+              entries
+                .map(
+                  ({ x, i }) =>
+                    '<button type="button" data-open-cluster="' +
+                    i +
+                    '"><img src="' +
+                    markerIcon(x, m) +
+                    '" alt=""><span>' +
+                    esc(x.title) +
+                    "</span></button>",
+                )
+                .join("") +
+              "</div>",
+          );
+          document
+            .querySelectorAll("[data-open-cluster]")
+            .forEach(
+              (item) =>
+                (item.onclick = () =>
+                  showMarker(
+                    filtered[Number(item.dataset.openCluster)],
+                    Number(item.dataset.openCluster),
+                  )),
+            );
+        }),
+    );
     root.querySelectorAll("[data-marker]").forEach((b) => {
       const index = Number(b.dataset.marker);
       b.onclick = () => showMarker(filtered[index], index);
@@ -432,10 +510,6 @@ export async function renderMap(root, slug) {
   root.querySelector("#hazard-show-all").onchange = (e) => {
     showHazardZones = e.target.checked;
     syncFilters();
-    draw();
-  };
-  root.querySelector("#marker-search").oninput = (e) => {
-    search = e.target.value.toLowerCase();
     draw();
   };
   root.querySelector("#floor").onchange = (e) => {
@@ -526,7 +600,7 @@ export async function renderMap(root, slug) {
     disabledTypes.delete("quests|item");
     disabledTypes.delete("quests|objective");
     pendingFocus = linkedMarker;
-    questPanel.setSelected(selectedQuest);
+    unifiedSearch.selectQuest(selectedQuest);
     syncFilters();
   } else if (questSlug || pointId) {
     toast(
