@@ -1,3 +1,4 @@
+import { supportUrl } from "./core/support-config.js";
 import {
   refreshEventContent,
   startEventContent,
@@ -40,6 +41,12 @@ document
   .forEach((element) => {
     element.textContent = APP_VERSION;
   });
+const communityLink = document.querySelector("#discord-link");
+const communityUrl = supportUrl("discord");
+if (communityLink && communityUrl) {
+  communityLink.href = communityUrl;
+  communityLink.hidden = false;
+}
 installAppNavigation();
 installDesktopUi();
 installBackNavigation();

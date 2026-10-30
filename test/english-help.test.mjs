@@ -125,13 +125,17 @@ test("first-run tour completes all steps, persists dismissal and replays from He
     document
       .querySelector('[data-help-action="discord"]')
       .hasAttribute("disabled"),
-    true,
+    false,
   );
   assert.equal(
     document
       .querySelector('[data-help-action="support"]')
       .hasAttribute("disabled"),
     false,
+  );
+  assert.equal(
+    document.querySelector('[data-help-action="discord"]').getAttribute("href"),
+    "https://discord.gg/ESMU7RDUEq",
   );
   document.querySelector('[data-help-action="support"]').onclick();
   assert.match(document.querySelector("#support-title").textContent, /Support/);

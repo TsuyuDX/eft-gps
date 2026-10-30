@@ -60,7 +60,7 @@ test('temporary fictional supporters exercise chips, consent filtering and goal 
   assert.equal(document.querySelectorAll('progress').length,0);
   assert.doesNotMatch(document.querySelector('.support-panel').textContent,/DEMO_/);
   assert.equal(supportCommunity.goal,null);assert.deepEqual(supportCommunity.sponsors,[]);assert.deepEqual(supportCommunity.boosters,[]);
-  assert.equal(supportLinks.discord,'');
+  assert.equal(supportLinks.discord,'https://discord.gg/ESMU7RDUEq');
 });
 test('a verified profile enables only its own external link while missing or invalid profiles stay disabled',()=>{
   const document=dom('en');openSupport({boosty:'https://boosty.to/example_creator',kofi:'https://bad.test/fake'});
