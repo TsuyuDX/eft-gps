@@ -198,5 +198,6 @@
   "Выберите рекомендуемую папку или другое место установки.": "Choose the recommended folder or another installation location.",
   "Папка пользовательских данных содержит перенаправление": "The user data folder contains a filesystem redirect.",
   "Пакет содержит служебный временный файл": "The package contains a reserved temporary file.",
-  "Описание установленной версии является ссылкой": "The installed version manifest is a filesystem link."
+  "Описание установленной версии является ссылкой": "The installed version manifest is a filesystem link.",
+  "Обновление базы нужно запускать без прав администратора.": "Refresh the reference data without administrator privileges."
 }

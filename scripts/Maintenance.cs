@@ -27,6 +27,13 @@ public static class InstallerElevation {
         foreach(char c in value) {if(c=='\\'){slashes++;continue;}result.Append('\\',c=='\"'?slashes*2+1:slashes);result.Append(c);slashes=0;}
         result.Append('\\',slashes*2);result.Append('"');return result.ToString();
     }
+    public static bool RequiresElevation(string[] args) {
+        // Per-user installation and data refresh do not need administrative rights.
+        if(args.Length>0 && args[0]=="--data")return false;
+        string target=Path.GetFullPath(args.Length>1?args[1]:PackageInstaller.RecommendedFolder);
+        string programs=Path.GetFullPath(Programs).TrimEnd(Path.DirectorySeparatorChar);
+        return !(target.Equals(programs,StringComparison.OrdinalIgnoreCase) || target.StartsWith(programs+Path.DirectorySeparatorChar,StringComparison.OrdinalIgnoreCase));
+    }
     public static bool RelaunchIfNeeded(ref string[] args) {
         if(IsAdministrator) {
             if(args.Length>=5 && args[0]=="--installer-elevated") {
@@ -36,6 +43,7 @@ public static class InstallerElevation {
             }
             return false;
         }
+        if(!RequiresElevation(args))return false;
         string name="EFTGPS-install-"+Guid.NewGuid().ToString("N");
         var security=new PipeSecurity();security.AddAccessRule(new PipeAccessRule(new SecurityIdentifier(UserSid),PipeAccessRights.FullControl,AccessControlType.Allow));security.AddAccessRule(new PipeAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid,null),PipeAccessRights.ReadWrite,AccessControlType.Allow));
         using(var server=new NamedPipeServerStream(name,PipeDirection.In,1,PipeTransmissionMode.Byte,PipeOptions.Asynchronous,4096,4096,security)) {
@@ -60,6 +68,7 @@ public static class InstallerElevation {
         for(string current=data;current!=null;current=Path.GetDirectoryName(current))
             if((Directory.Exists(current)||File.Exists(current)) && (File.GetAttributes(current)&FileAttributes.ReparsePoint)!=0)throw new IOException("Папка пользовательских данных содержит перенаправление");
         Directory.CreateDirectory(data);
+        if(!IsAdministrator)return;
         var acl=Directory.GetAccessControl(data);acl.AddAccessRule(new FileSystemAccessRule(new SecurityIdentifier(UserSid),FileSystemRights.Modify,InheritanceFlags.ContainerInherit|InheritanceFlags.ObjectInherit,PropagationFlags.None,AccessControlType.Allow));Directory.SetAccessControl(data,acl);
     }
     public static void OpenApplication(string target) {
@@ -554,12 +563,13 @@ class Maintenance : DarkWindow {
             return;
         }
         #if !INSTALLER_PREVIEW
-        try {if(InstallerElevation.RelaunchIfNeeded(ref args))return;}catch(Exception e){MessageBox.Show(e.Message,"EFT GPS",MessageBoxButtons.OK,MessageBoxIcon.Error);return;}
+        try {if(InstallerElevation.IsAdministrator)InstallerElevation.RelaunchIfNeeded(ref args);}catch(Exception e){MessageBox.Show(e.Message,"EFT GPS",MessageBoxButtons.OK,MessageBoxIcon.Error);return;}
         #endif
         Application.EnableVisualStyles(); Application.SetCompatibleTextRenderingDefault(false);
         var window=new Maintenance(args);Application.Run(window);if(!window.complete)Environment.ExitCode=1223;
     }
     Maintenance(string[] args) {
+        var options=new List<string>(args);bool suppressShortcut=options.Remove("--no-shortcut");args=options.ToArray();
         operation = args.Length > 0 ? args[0] : "--setup";
         target = args.Length > 1 ? Path.GetFullPath(args[1]) : PackageInstaller.RecommendedFolder;
         package = args.Length > 2 ? args[2] : null;
@@ -589,7 +599,7 @@ class Maintenance : DarkWindow {
         recommended.LinkClicked+=delegate {folder.Text=PackageInstaller.RecommendedFolder;status.Text=NativeText.T("Выбрана рекомендуемая папка.");status.Visible=true;progress.Visible=percentage.Visible=timing.Visible=fileStatus.Visible=log.Visible=details.Visible=false;expanded=false;LayoutOperation(false);};Controls.Add(recommended);
         browse=ButtonAt("Обзор…",660,299,132,false);
         browse.Click+=delegate { using(var picker=new DarkFolderPicker(folder.Text)) if(picker.ShowDialog(this)==DialogResult.OK) {string selected=picker.SelectedPath;string name=Path.GetFileName(selected.TrimEnd(Path.DirectorySeparatorChar));folder.Text=File.Exists(Path.Combine(selected,"EFT GPS.exe"))||name.Equals("EFT GPS",StringComparison.OrdinalIgnoreCase)||name.Equals("EFTGPS",StringComparison.OrdinalIgnoreCase)?selected:Path.Combine(selected,"EFT GPS");} };
-        shortcut.SetBounds(28,365,764,26); shortcut.Text="Создать ярлык на рабочем столе"; shortcut.Checked=true; shortcut.Visible=!data && !updating; shortcut.Checked=!updating;
+        shortcut.SetBounds(28,365,764,26); shortcut.Text="Создать ярлык на рабочем столе"; shortcut.Checked=true; shortcut.Visible=!data && !updating; shortcut.Checked=!updating && !suppressShortcut;
         components.SetBounds(28,400,764,72); components.ForeColor=muted;
         string runtime=RuntimeVersion();
         string systemStatus; try {CheckPlatform();systemStatus="✓ Windows и .NET Framework — готовы к работе";} catch(Exception e) {systemStatus="○ "+e.Message;}
@@ -624,6 +634,23 @@ class Maintenance : DarkWindow {
                 if(!prepared){prepared=true;recommended.Enabled=false;action.Text=NativeText.T("Установить");cancel.Text=NativeText.T("Назад");cancel.Visible=true;folder.ReadOnly=true;browse.Enabled=false;status.Visible=true;status.Text=NativeText.T("Проверьте папку и нажмите «Установить».");return;}
                 if(data||updating) using(var confirm=new InstallConfirmation(data ? "Обновить локальную базу?" : updating ? "Обновить EFT GPS?" : "Установить EFT GPS?",
                     "Папка: "+target+"\n\nОкно приложения будет закрыто перед обновлением. Автосъёмку GPS после запуска нужно будет включить заново.\n\n"+(data ? "Понадобится интернет. Предыдущая база будет сохранена." : updating ? "Проверим загруженный пакет и заменим файлы приложения. Резервная копия изменённых файлов будет сохранена." : "Проверим файлы и подготовим приложение.\nЯрлык на рабочем столе: "+(shortcut.Checked ? "создать / обновить" : "не создавать"))+"\nЛичный прогресс и настройки останутся на месте.",data || updating ? "Обновить" : "Установить")) if(confirm.ShowDialog(this)!=DialogResult.OK) return;
+                #if !INSTALLER_PREVIEW
+                if(!InstallerElevation.IsAdministrator) {
+                    var forwarded=new List<string>{operation,target};
+                    if(package!=null)forwarded.Add(package);
+                    if(expectedHash!=null)forwarded.Add(expectedHash);
+                    if(expectedVersion!=null)forwarded.Add(expectedVersion);
+                    if(!shortcut.Checked)forwarded.Add("--no-shortcut");
+                    string[] arguments=forwarded.ToArray();
+                    if(InstallerElevation.RequiresElevation(arguments)) {
+                        Hide();
+                        try {await Task.Run(delegate {InstallerElevation.RelaunchIfNeeded(ref arguments);});}
+                        finally {Show();}
+                        if(Environment.ExitCode==0){complete=true;Close();}
+                        return;
+                    }
+                }
+                #endif
                 writeShortcut=shortcut.Checked;
                 cancellation=new CancellationTokenSource();busy=true;recommended.Enabled=false;elapsed.Restart();progress.Value=0; action.Enabled=false;cancel.Text=NativeText.T("Отмена");cancel.Enabled=true;cancel.Visible=true; browse.Enabled=false; folder.Enabled=false; shortcut.Enabled=false;
                 progress.Visible=percentage.Visible=timing.Visible=fileStatus.Visible=status.Visible=details.Visible=true;
@@ -737,6 +764,7 @@ class Maintenance : DarkWindow {
     }
     void RunOperationCore() {
         if (operation == "--data") {
+            if(InstallerElevation.IsAdministrator)throw new IOException("Обновление базы нужно запускать без прав администратора.");
             StopServer();
             var start = new ProcessStartInfo(Path.Combine(target, "runtime", "node.exe"), "\"" + Path.Combine(target, "scripts", "refresh.mjs") + "\"") { WorkingDirectory = target, UseShellExecute = false, CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true, StandardOutputEncoding = Encoding.UTF8, StandardErrorEncoding = Encoding.UTF8 };
             using (var process = Process.Start(start)) {

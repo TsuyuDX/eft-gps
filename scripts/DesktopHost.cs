@@ -151,7 +151,7 @@ class DesktopHost : Form {
                 Close();
             }
         };
-        FormClosing += delegate { if (!maintenance) StopAutoCapture(); };
+        FormClosing += delegate { if (!maintenance) {StopAutoCapture();StopLocalService();} };
     }
     void HideNativeLoading() {
         if(nativeLoading!=null) {var old=nativeLoading;nativeLoading=null;Controls.Remove(old);old.Dispose();}
@@ -209,6 +209,24 @@ class DesktopHost : Form {
         Uri uri;
         if (Uri.TryCreate(value, UriKind.Absolute, out uri) && (uri.Scheme == "https" || uri.Scheme == "http") && !IsLocal(value))
             Process.Start(new ProcessStartInfo(value) { UseShellExecute = true });
+    }
+    void StopLocalService() {
+        try {
+            // Let an in-progress download finish; never kill arbitrary Node processes.
+            var stateRequest=WebRequest.Create(origin+"/api/app-update/state");stateRequest.Timeout=1000;
+            using(var response=stateRequest.GetResponse()) using(var reader=new StreamReader(response.GetResponseStream())) {
+                var state=new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<System.Collections.Generic.Dictionary<string,object>>(reader.ReadToEnd());
+                string phase=Convert.ToString(state["phase"]);
+                if(phase=="checking" || phase=="downloading" || phase=="verifying")return;
+            }
+            string instance;
+            using(var sha=System.Security.Cryptography.SHA256.Create())instance=BitConverter.ToString(sha.ComputeHash(Encoding.UTF8.GetBytes(Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar).ToLowerInvariant()))).Replace("-","").ToLowerInvariant();
+            var request=(HttpWebRequest)WebRequest.Create(origin+"/api/desktop/stop");
+            request.Method="POST";request.Timeout=1000;request.ContentType="application/json";request.Headers["Origin"]=origin;
+            byte[] body=Encoding.UTF8.GetBytes("{\"instance\":\""+instance+"\"}");request.ContentLength=body.Length;
+            using(var output=request.GetRequestStream())output.Write(body,0,body.Length);
+            using(var response=request.GetResponse()){}
+        } catch { /* The service also has a bounded idle timeout. */ }
     }
     void StopAutoCapture() {
         try {

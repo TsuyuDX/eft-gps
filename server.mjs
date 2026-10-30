@@ -388,8 +388,10 @@ if (
     console.error(e.message);
     process.exit(1);
   });
-  if (process.argv.includes("--desktop"))
+  if (process.argv.includes("--desktop") || process.env.EFTGPS_PREVIEW === "1")
     setInterval(() => {
-      if (Date.now() - lastPing > 120000) server.close(() => process.exit(0));
+      const downloading = ["checking", "downloading", "verifying"].includes(appUpdater.state.phase);
+      if (Date.now() - lastPing > 120000 && !downloading)
+        server.close(() => process.exit(0));
     }, 30000).unref();
 }

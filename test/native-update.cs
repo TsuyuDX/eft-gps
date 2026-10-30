@@ -31,6 +31,10 @@ class NativeUpdateTest {
         using(var process=System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(System.Reflection.Assembly.GetExecutingAssembly().Location,command.ToString()){UseShellExecute=false,RedirectStandardOutput=true,StandardOutputEncoding=Encoding.UTF8,CreateNoWindow=true})) {
             var output=new JavaScriptSerializer().Deserialize<string[]>(process.StandardOutput.ReadToEnd());process.WaitForExit();Check(output.Length==arguments.Length,"Argument count changed across elevation forwarding");for(int i=0;i<output.Length;i++)Check(output[i]==arguments[i],"Elevation argument escaping changed a path");
         }
+        Check(!InstallerElevation.RequiresElevation(new string[0]),"Recommended per-user installation requires elevation");
+        Check(!InstallerElevation.RequiresElevation(new[]{"--update",PackageInstaller.RecommendedFolder}),"Per-user update requires elevation");
+        Check(!InstallerElevation.RequiresElevation(new[]{"--data",fixture}),"Data refresh requests elevation");
+        Check(InstallerElevation.RequiresElevation(new[]{"--setup",fixture}),"Custom destination did not retain explicit elevation policy");
         string target=Path.Combine(fixture,"chosen install folder");
         string first=Package(fixture,"first","1.7.0","old",false),next=Package(fixture,"next","1.8.0","new",false);
         string stage=Path.Combine(fixture,"stage-first");var release=PackageInstaller.Stage(first,stage,delegate{});PackageInstaller.Install(target,stage,release,delegate{});
