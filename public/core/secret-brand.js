@@ -7,7 +7,7 @@ const textRecords = new Map(),
   iconRecords = new Map();
 export function secretBrandText(value) {
   return String(value)
-    .replace(/T_S_U_Y_U\s+EFT\s+GPS/g, name)
+    .replace(/T_S_U_Y_U\s*(?:\/\s*)?EFT\s+GPS/g, name)
     .replace(/EFT\s+GPS/g, name)
     .replace(/EFTGPS/g, name);
 }
@@ -53,7 +53,7 @@ function refresh() {
     const node = walker.currentNode;
     if (
       node.parentElement?.closest(
-        "script,style,textarea,input,[contenteditable],[data-no-translate]",
+        "script,style,textarea,input,[contenteditable]",
       )
     )
       continue;

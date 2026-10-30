@@ -1,3 +1,4 @@
+import { isSecretThemeActive } from "../core/secret-theme.js";
 import { getMarkerStyle } from "../core/marker-style.js";
 import { gpsPointerSvg } from "./map-presentation.js";
 import { gpsState } from "../core/gps-client.js";
@@ -12,7 +13,7 @@ export function bindMapGps(root, map, { setFloor, center }) {
   function applyPointer() {
     dot.dataset.markerStyle = getMarkerStyle();
     dot.innerHTML =
-      gpsPointerSvg(getMarkerStyle()) +
+      gpsPointerSvg(getMarkerStyle(), { secret: isSecretThemeActive() }) +
       '<span class="gps-player-label">Я</span>';
   }
   applyPointer();

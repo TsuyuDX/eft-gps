@@ -1,3 +1,5 @@
+import { isSecretThemeActive } from "../core/secret-theme.js";
+import { secretBrandText } from "../core/secret-brand.js";
 import { localeCode } from "../core/localization.js";
 import { language, installLocalization } from "../core/localization.js";
 import { installBackNavigation } from "../core/back-navigation.js";
@@ -83,7 +85,9 @@ export async function renderArticle(root, path) {
     `<div id="article-interactive"></div><div class="article-frame-wrap"><iframe id="article-frame" title="${esc(a.title)}" sandbox="allow-same-origin allow-top-navigation-by-user-activation allow-popups allow-popups-to-escape-sandbox"></iframe></div>`;
   const doc = new DOMParser().parseFromString(a.html, "text/html");
   doc
-    .querySelectorAll("script,iframe,object,embed,form,template,style,link,meta,base")
+    .querySelectorAll(
+      "script,iframe,object,embed,form,template,style,link,meta,base",
+    )
     .forEach((e) => e.remove());
   doc.querySelectorAll("*").forEach((e) => {
     for (const attr of [...e.attributes])
@@ -135,6 +139,47 @@ export async function renderArticle(root, path) {
   frame.srcdoc = `<!doctype html><html lang="${language()}" class="dark"><head><meta charset="UTF-8"><style>html{color-scheme:dark}*{scrollbar-width:thin;scrollbar-color:rgba(185,171,130,.34) transparent}::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-thumb{background:rgba(185,171,130,.34);border-radius:8px}::-webkit-scrollbar-track{background:transparent}html,body{background:#000000;color:#e5e5e5;font-family:"Segoe UI",Arial,sans-serif;margin:0;padding:12px}img{max-width:100%;max-height:540px;width:auto;height:auto;object-fit:contain}a{color:#b9ab82}table{width:100%;border-collapse:collapse}td,th{padding:12px;border-bottom:1px solid #292922;text-align:left}blockquote{border-left:2px solid #b9ab82;margin:20px 0;padding:4px 18px;color:#aaa99f}h1,h2,h3{color:#ded9c9}details{padding:12px;border:1px solid #292922}button,input,select{display:none}svg:empty{display:none}p{line-height:1.8}h1,h2,h3{margin:1em 0}.container{max-width:100%}li{margin:.3em 0}</style></head><body>${doc.body.innerHTML}</body></html>`;
   frame.onload = () => {
     try {
+      const frameDoc = frame.contentDocument;
+      const baseStyle = frameDoc.querySelector("style").textContent;
+      const originalText = new Map();
+      function syncFrameTheme() {
+        const secret = isSecretThemeActive();
+        frameDoc.querySelector("style").textContent =
+          baseStyle +
+          (secret
+            ? `
+          html,body{background:#232e40;color:#edf3fb;font-family:Arial,"Segoe UI",sans-serif}
+          a{color:#83b9ff}h1,h2,h3{color:#f3f6fc}table{background:#29364b;border-radius:16px;overflow:hidden}
+          td,th{border-color:#91b3e324}th{background:#33445e}tr:nth-child(even){background:#ffffff04}
+          blockquote{border-left:3px solid #6ba8ff;color:#b7c9e1;background:#2d3d56;border-radius:0 14px 14px 0;padding:14px 20px}
+          details{border:1px solid #91b3e324;border-radius:16px;background:#2b3950;padding:16px}summary{cursor:pointer}
+          img{border-radius:14px}*{scrollbar-color:#94b9ee55 transparent}::-webkit-scrollbar-thumb{background:#94b9ee55}
+        `
+            : "");
+        const walker = frameDoc.createTreeWalker(
+          frameDoc.body,
+          NodeFilter.SHOW_TEXT,
+        );
+        while (walker.nextNode()) {
+          const node = walker.currentNode;
+          if (!originalText.has(node)) originalText.set(node, node.textContent);
+          node.textContent = secret
+            ? secretBrandText(originalText.get(node))
+            : originalText.get(node);
+        }
+      }
+      syncFrameTheme();
+      window.addEventListener("map-marker-style-changed", syncFrameTheme);
+      window.addEventListener(
+        "view-changing",
+        () =>
+          window.removeEventListener(
+            "map-marker-style-changed",
+            syncFrameTheme,
+          ),
+        { once: true },
+      );
+
       installAppNavigation(frame.contentDocument);
       frame.contentDocument.body.dataset.selectable = "";
       installDesktopUi(frame.contentDocument);

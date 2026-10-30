@@ -37,11 +37,13 @@ test("Index Maps replaces only visible branding, handles later pages and restore
     assert.equal(document.querySelector("textarea").textContent, "EFT GPS");
     assert.match(document.querySelector("footer").textContent, /Индекс Карты/);
     const page = document.createElement("p");
+    page.setAttribute("data-no-translate", "");
     page.textContent = "T_S_U_Y_U EFT GPS: помощь";
     document.querySelector("#app").append(page);
     await new Promise((resolve) => setImmediate(resolve));
     await new Promise((resolve) => setImmediate(resolve));
     assert.match(page.textContent, /Индекс Карты: помощь/);
+    assert.equal(secretBrandText("T_S_U_Y_U / EFT GPS"), "Индекс Карты");
     stopSecretBrand();
     assert.equal(document.title, "T_S_U_Y_U EFT GPS 1.8.1");
     assert.equal(
