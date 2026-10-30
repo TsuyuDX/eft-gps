@@ -153,6 +153,17 @@
   padding: 8px 2px 0;
   color: #bdbdbd;
 }
+/* Seasonal walkthrough screenshots stay large; item icons retain their inline size. */
+.quest-guide-seasonal .quest-gallery {
+  grid-template-columns: minmax(0, 1fr);
+}
+.quest-guide-seasonal .quest-guide-image:not(.inline-image) img {
+  height: auto;
+  max-height: min(76dvh, 900px);
+}
+.quest-guide-seasonal .quest-guide-image:not(.inline-image) span {
+  font-size: 13px;
+}
 .quest-guide-image.inline-image {
   display: inline-flex;
   width: auto;

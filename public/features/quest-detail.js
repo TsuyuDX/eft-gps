@@ -122,7 +122,7 @@ export function renderQuestCard(
     )
     .join(
       "",
-    )}</div><div class="quest-tab-body"><section role="tabpanel" id="quest-panel-guide" aria-labelledby="quest-tab-guide" class="quest-guide">${guide}</section><section role="tabpanel" id="quest-panel-objectives" aria-labelledby="quest-tab-objectives" hidden>${objectives(q, mode)}</section><section role="tabpanel" id="quest-panel-requirements" aria-labelledby="quest-tab-requirements" hidden><div class="quest-columns"><div><h3>Условия получения</h3><p>Уровень персонажа: ${q.minPlayerLevel || 0}</p>${arr(
+    )}</div><div class="quest-tab-body"><section role="tabpanel" id="quest-panel-guide" aria-labelledby="quest-tab-guide" class="quest-guide${q.isEventQuest || q.eventSlug ? " quest-guide-seasonal" : ""}">${guide}</section><section role="tabpanel" id="quest-panel-objectives" aria-labelledby="quest-tab-objectives" hidden>${objectives(q, mode)}</section><section role="tabpanel" id="quest-panel-requirements" aria-labelledby="quest-tab-requirements" hidden><div class="quest-columns"><div><h3>Условия получения</h3><p>Уровень персонажа: ${q.minPlayerLevel || 0}</p>${arr(
     q.taskRequirements,
   )
     .map(
