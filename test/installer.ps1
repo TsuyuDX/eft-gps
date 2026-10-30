@@ -1,6 +1,7 @@
 ﻿$ErrorActionPreference = 'Stop'
 Set-Location -LiteralPath (Split-Path $PSScriptRoot)
 Add-Type -AssemblyName System.IO.Compression.FileSystem
+Add-Type -AssemblyName System.IO.Compression
 $taskFixture = Join-Path (Get-Location) ('work\installer-check-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $taskFixture -Force | Out-Null
 function New-TestPackage([string]$tag, [string]$text, [bool]$tamper = $false, [bool]$traversal = $false) {
@@ -16,7 +17,17 @@ function New-TestPackage([string]$tag, [string]$text, [bool]$tamper = $false, [b
   @{format=1;app='TarkovOffline';version='1.4.0';files=$taskFiles} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $taskSource 'release.json') -Encoding utf8
   if ($tamper) { [IO.File]::WriteAllText((Join-Path $taskSource 'public/index.html'), 'tampered') }
   $taskZip = Join-Path $taskFixture ($tag + '.zip')
-  [IO.Compression.ZipFile]::CreateFromDirectory($taskSource,$taskZip)
+  # Create the same forward-slash entry names as the production packer.
+  # .NET Framework CreateFromDirectory writes legacy backslashes.
+  $taskArchive=[IO.Compression.ZipFile]::Open($taskZip,[IO.Compression.ZipArchiveMode]::Create)
+  try {
+    foreach ($taskRelative in @($taskFiles | ForEach-Object {$_.path}) + @('release.json')) {
+      $taskEntry=$taskArchive.CreateEntry($taskRelative)
+      $taskInput=[IO.File]::OpenRead(('\\?\' + (Join-Path $taskSource $taskRelative)))
+      $taskOutput=$taskEntry.Open()
+      try {$taskInput.CopyTo($taskOutput)} finally {$taskOutput.Dispose();$taskInput.Dispose()}
+    }
+  } finally {$taskArchive.Dispose()}
   if ($traversal) {
     $taskArchive=[IO.Compression.ZipFile]::Open($taskZip,[IO.Compression.ZipArchiveMode]::Update)
     $taskEntry=$taskArchive.CreateEntry('../userdata/profile.json')

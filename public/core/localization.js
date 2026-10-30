@@ -2,6 +2,14 @@ import { englishUi } from "./english-ui.js";
 import { translatePattern } from "./english-patterns.js";
 import { readWindowSetting, writeWindowSetting } from "./window-settings.js";
 const words = {
+  "Иллюстрация Battlestate Games": "Illustration by Battlestate Games",
+  "Интерфейс EFT GPS · иллюстрация возможностей приложения":
+    "EFT GPS interface · illustrative application view",
+  "Прохождения события обновлены": "Event walkthroughs updated",
+  "Вид указателя": "Navigation cursor preview",
+  "Хэллоуин 2026 · временные": "Halloween 2026 · limited-time",
+  "Хэллоуин 2026": "Halloween 2026",
+  "Хэллоуин 2026 · временное задание": "Halloween 2026 · limited-time quest",
   ...englishUi,
   Карты: "Maps",
   GPS: "GPS",
@@ -45,7 +53,7 @@ const words = {
   "Тема приложения": "Application theme",
   "Другие темы скоро будут доступны.": "More themes are coming soon.",
   "Скоро будут": "Coming soon",
-  "Скоро": "Coming soon",
+  Скоро: "Coming soon",
   "Выбор темы · скоро будет": "Themes · coming soon",
   "Данные, резервные копии и заметки →": "Data, backups and notes →",
   "Вернуть стандартный вид": "Restore default appearance",
@@ -257,8 +265,17 @@ export function t(text) {
         break;
       }
   }
-  result = result.replace(/(\d+)\s+(мин|точка|точки|точек)(?![а-яё])/gi,
-    (_, count, unit) => count + " " + (unit.toLowerCase() === "мин" ? "min" : Number(count) === 1 ? "point" : "points"));
+  result = result.replace(
+    /(\d+)\s+(мин|точка|точки|точек)(?![а-яё])/gi,
+    (_, count, unit) =>
+      count +
+      " " +
+      (unit.toLowerCase() === "мин"
+        ? "min"
+        : Number(count) === 1
+          ? "point"
+          : "points"),
+  );
   return value.replace(trim, result);
 }
 function translate(root) {

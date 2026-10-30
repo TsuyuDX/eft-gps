@@ -57,16 +57,26 @@ test("English game data loads from local files and switching languages keeps bot
   dom();
   setLanguage("en", { persist: false });
   await init();
-  assert.equal(t("Скоро"),"Coming soon");
-  assert.equal(t("35 мин"),"35 min");
-  assert.equal(t("Ragman · 1 точка"),"Ragman · 1 point");
-  assert.equal(t("Ragman · 21 точка"),"Ragman · 21 points");
-  assert.equal(t("карт"),"maps");
-  assert.equal(t("предметов"),"items");
-  assert.equal(t("заданий"),"quests");
-  assert.equal(t("Язык применяется к интерфейсу, предметам, заданиям и справочнику."),"Language applies to the interface, items, quests and reference content.");
+  assert.equal(t("Скоро"), "Coming soon");
+  assert.equal(t("35 мин"), "35 min");
+  assert.equal(t("Ragman · 1 точка"), "Ragman · 1 point");
+  assert.equal(t("Ragman · 21 точка"), "Ragman · 21 points");
+  assert.equal(t("карт"), "maps");
+  assert.equal(t("предметов"), "items");
+  assert.equal(t("заданий"), "quests");
+  assert.equal(
+    t("Язык применяется к интерфейсу, предметам, заданиям и справочнику."),
+    "Language applies to the interface, items, quests and reference content.",
+  );
   assert.equal(db.items.length, 5480);
-  assert.equal(db.quests.length, 570);
+  const localQuests = JSON.parse(
+    await fs.readFile(
+      new URL("../public/data/en/regular/quests.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  assert.equal(db.quests.length, localQuests.length);
+  assert.ok(db.quests.some((q) => q.normalizedName === "halloween-rumors"));
   assert.equal(
     db.maps.find((m) => m.normalizedName === "customs").name,
     "Customs",
@@ -115,7 +125,7 @@ test("first-run tour completes all steps, persists dismissal and replays from He
     document
       .querySelector('[data-help-action="discord"]')
       .hasAttribute("disabled"),
-    true,
+    false,
   );
   assert.equal(
     document
@@ -123,6 +133,10 @@ test("first-run tour completes all steps, persists dismissal and replays from He
       .hasAttribute("disabled"),
     false,
   );
+  assert.equal(
+    document.querySelector('[data-help-action="discord"]').getAttribute("href"),
+    "https://discord.gg/ESMU7RDUEq",
+  );
   document.querySelector('[data-help-action="support"]').onclick();
-  assert.match(document.querySelector('#support-title').textContent,/Support/);
+  assert.match(document.querySelector("#support-title").textContent, /Support/);
 });

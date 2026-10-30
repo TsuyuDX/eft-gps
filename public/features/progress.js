@@ -1,3 +1,4 @@
+import { APP_VERSION } from "../core/brand.js";
 import { localeCode } from "../core/localization.js";
 import { bindDesktopActions } from "../core/desktop-bridge.js";
 import { confirmAction } from "../core/ui.js";
@@ -179,7 +180,7 @@ export async function renderSettings(root) {
       "Настройки",
       "Внешний вид, локальная база и сохранение прогресса.",
     ) +
-    `<section class="panel"><h2>Интерфейс и карта</h2><div id="page-preferences"></div></section><section class="panel"><h2>Приложение и обновления</h2><p>EFT GPS · версия 1.7.0.</p><div class="row wrap"><button data-desktop-command="update-data">Обновить базу</button><button data-desktop-command="install-update">Установить обновление приложения</button><button data-desktop-command="open-folder">Открыть папку приложения</button><button data-desktop-command="reload-interface">Перезагрузить интерфейс</button></div><p class="muted small">База обновляется из интернета. Приложение обновляется из выбранного ZIP-пакета. Кнопки доступны в отдельном окне приложения.</p></section><h2>Данные и прогресс</h2><div class="stats">${Object.entries(
+    `<section class="panel"><h2>Интерфейс и карта</h2><div id="page-preferences"></div></section><section class="panel"><h2>Приложение и обновления</h2><p>EFT GPS · версия ${APP_VERSION}.</p><div class="row wrap"><button data-desktop-command="update-data">Обновить базу</button><button data-desktop-command="install-update">Установить обновление приложения</button><button data-desktop-command="open-folder">Открыть папку приложения</button><button data-desktop-command="reload-interface">Перезагрузить интерфейс</button></div><p class="muted small">База обновляется из интернета. Приложение обновляется из выбранного ZIP-пакета. Кнопки доступны в отдельном окне приложения.</p></section><h2>Данные и прогресс</h2><div class="stats">${Object.entries(
       db.manifest.counts || {},
     )
       .map(

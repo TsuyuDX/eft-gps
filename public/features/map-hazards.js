@@ -17,17 +17,17 @@ export function hazardOutline(marker, map) {
 export function createHazardOverlay(svg, map) {
   let nodes = new Map(),
     showAll = true,
-    highlighted = null;
+    highlighted = new Set();
   function refresh() {
     for (const [index, node] of nodes) {
-      node.toggleAttribute("hidden", !showAll && index !== highlighted);
-      node.classList.toggle("highlighted", index === highlighted);
+      node.toggleAttribute("hidden", !showAll && !highlighted.has(index));
+      node.classList.toggle("highlighted", highlighted.has(index));
     }
   }
   return {
     render(markers, { all = true, muted = () => false } = {}) {
       showAll = all;
-      highlighted = null;
+      highlighted = new Set();
       nodes = new Map();
       const fragment = document.createDocumentFragment();
       markers.forEach((marker, index) => {
@@ -60,7 +60,9 @@ export function createHazardOverlay(svg, map) {
       refresh();
     },
     highlight(index) {
-      highlighted = index;
+      highlighted = new Set(
+        Array.isArray(index) ? index : index == null ? [] : [index],
+      );
       refresh();
     },
   };

@@ -1,3 +1,9 @@
+import { supportUrl } from "./core/support-config.js";
+import {
+  refreshEventContent,
+  startEventContent,
+} from "./core/event-content-client.js";
+import { clearEventContentCache } from "./core/data.js";
 import { startAppUpdates } from "./core/app-update.js";
 import { localeCode } from "./core/localization.js";
 import { APP_TITLE, APP_VERSION } from "./core/brand.js";
@@ -30,7 +36,17 @@ import { startGpsClient } from "./core/gps-client.js";
 import { installAppNavigation } from "./core/navigation.js";
 import { installDesktopUi } from "./core/desktop-ui.js";
 document.title = APP_TITLE;
-document.querySelectorAll(".brand-version, .boot-version").forEach(element => { element.textContent = APP_VERSION; });
+document
+  .querySelectorAll(".brand-version, .boot-version")
+  .forEach((element) => {
+    element.textContent = APP_VERSION;
+  });
+const communityLink = document.querySelector("#discord-link");
+const communityUrl = supportUrl("discord");
+if (communityLink && communityUrl) {
+  communityLink.href = communityUrl;
+  communityLink.hidden = false;
+}
 installAppNavigation();
 installDesktopUi();
 installBackNavigation();
@@ -210,6 +226,7 @@ try {
   document.querySelector("#boot-stage").textContent =
     "Открываем интерфейс и личный профиль…";
   await loadState();
+  await refreshEventContent();
   await init(profile().mode);
   document.querySelector("#mode").value = db.mode;
   document.querySelector("#logo").src = "/icons/app-192.png";
@@ -233,6 +250,19 @@ try {
   startGpsClient(() => db.mode);
   maybeShowTour();
   startAppUpdates();
+  startEventContent(async () => {
+    clearEventContentCache();
+    await loadMode(db.mode);
+    if (
+      /^#\/(quest|event)(\/|$)/.test(location.hash) &&
+      !document.querySelector("dialog[open]") &&
+      !document.activeElement?.matches(
+        "input,select,textarea,[contenteditable]",
+      )
+    )
+      await route();
+    toast(t("Прохождения события обновлены"));
+  });
 } catch (e) {
   startupError(e);
   app.innerHTML = errorView(e);
@@ -250,7 +280,9 @@ window.addEventListener("language-changed", async () => {
   try {
     const ready = await init(profile().mode);
     if (!ready || change !== languageChangeVersion) return;
-    document.querySelector("#snapshot-date").textContent = "Снимок " + new Date(db.manifest.savedAt).toLocaleDateString(localeCode());
+    document.querySelector("#snapshot-date").textContent =
+      "Снимок " +
+      new Date(db.manifest.savedAt).toLocaleDateString(localeCode());
     nav();
     await route();
     if (preferencesOpen) openPreferences(selectedTab);

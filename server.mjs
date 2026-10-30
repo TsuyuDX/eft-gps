@@ -1,3 +1,6 @@
+import { EventContentService } from "./server/event-content.mjs";
+import { validProfile } from "./public/core/profile-schema.js";
+export { validProfile };
 import { AppUpdater } from "./server/app-update.mjs";
 import { startupDiagnostics } from "./server/startup.mjs";
 import http from "node:http";
@@ -36,19 +39,17 @@ export function safePath(base, name) {
   const p = path.resolve(base, "." + name);
   return p.startsWith(base + path.sep) ? p : null;
 }
-export function validProfile(p) {
-  return (
-    p &&
-    p.version === 1 &&
-    p.modes &&
-    ["regular", "pve"].every(
-      (k) => p.modes[k] && typeof p.modes[k] === "object",
-    )
-  );
-}
 let lastPing = Date.now();
 const gps = new GpsService(root);
-const appUpdater = new AppUpdater(root, appVersion);
+const eventContent = new EventContentService(root);
+// Preview windows must never replace a working source checkout with a release.
+const appUpdater =
+  process.env.EFTGPS_PREVIEW === "1"
+    ? {
+        state: { phase: "current", preview: true },
+        start: () => Promise.resolve(),
+      }
+    : new AppUpdater(root, appVersion);
 const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, "http://127.0.0.1:" + port);
@@ -63,8 +64,54 @@ const server = http.createServer(async (req, res) => {
     res.setHeader("Referrer-Policy", "no-referrer");
     res.setHeader(
       "Content-Security-Policy",
-      "default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; font-src 'self'; frame-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'",
+      "default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; font-src 'self'; frame-src 'self' blob:; frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self'",
     );
+    if (
+      url.pathname.startsWith("/api/") &&
+      (req.headers["sec-fetch-site"] === "cross-site" ||
+        (req.headers.origin &&
+          req.headers.origin !== `http://${req.headers.host}`))
+    ) {
+      res.writeHead(403);
+      return res.end("Forbidden origin");
+    }
+    if (url.pathname === "/api/event-content" && req.method === "GET") {
+      await eventContent.ready;
+      res.setHeader("Content-Type", "application/json");
+      res.setHeader("Cache-Control", "no-store");
+      return res.end(
+        JSON.stringify(eventContent.payload(url.searchParams.get("revision"))),
+      );
+    }
+    if (url.pathname === "/api/event-content/check" && req.method === "POST") {
+      if (req.headers.origin !== `http://${req.headers.host}`) {
+        res.writeHead(403);
+        return res.end();
+      }
+      void eventContent.check({ force: true });
+      res.writeHead(202);
+      return res.end();
+    }
+    if (
+      url.pathname.startsWith("/assets/live-event/") &&
+      req.method === "GET"
+    ) {
+      const image = await eventContent.asset(
+        url.pathname.slice("/assets/live-event/".length),
+      );
+      if (!image) {
+        res.writeHead(404);
+        return res.end();
+      }
+      res.setHeader("Content-Type", types[path.extname(image)]);
+      res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+      const stream = fs.createReadStream(image);
+      stream.on("error", () => {
+        if (!res.headersSent) res.writeHead(404);
+        res.end();
+      });
+      return stream.pipe(res);
+    }
     if (url.pathname === "/api/health") {
       lastPing = Date.now();
       res.setHeader("Content-Type", "application/json");
@@ -85,10 +132,12 @@ const server = http.createServer(async (req, res) => {
     }
     if (url.pathname === "/api/app-update/start" && req.method === "POST") {
       if (req.headers.origin !== `http://${req.headers.host}`) {
-        res.writeHead(403); return res.end();
+        res.writeHead(403);
+        return res.end();
       }
       void appUpdater.start();
-      res.writeHead(202); return res.end();
+      res.writeHead(202);
+      return res.end();
     }
     if (url.pathname === "/api/startup" && req.method === "GET") {
       res.setHeader("Content-Type", "application/json");
@@ -135,8 +184,8 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(403);
         return res.end("{}");
       }
-      let body = "",
-        bytes = 0;
+      const chunks = [];
+      let bytes = 0;
       for await (const chunk of req) {
         bytes += chunk.length;
         if (bytes > 16384) {
@@ -145,10 +194,12 @@ const server = http.createServer(async (req, res) => {
           req.destroy();
           return;
         }
-        body += chunk.toString("utf8");
+        chunks.push(chunk);
       }
       try {
-        const value = body ? JSON.parse(body) : {};
+        const value = bytes
+          ? JSON.parse(Buffer.concat(chunks).toString("utf8"))
+          : {};
         if (url.pathname === "/api/gps/settings")
           return res.end(JSON.stringify(gps.settings(value)));
         if (url.pathname === "/api/gps/auto") {
@@ -268,11 +319,17 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(405);
       return res.end();
     }
-    const p = safePath(
+    let p = safePath(
       publicRoot,
       decodeURIComponent(url.pathname === "/" ? "/index.html" : url.pathname),
     );
     if (!p || !fs.existsSync(p) || !fs.statSync(p).isFile()) {
+      res.writeHead(404);
+      return res.end("Not found");
+    }
+    const canonicalRoot = fs.realpathSync(publicRoot);
+    p = fs.realpathSync(p);
+    if (!p.startsWith(canonicalRoot + path.sep)) {
       res.writeHead(404);
       return res.end("Not found");
     }
@@ -283,12 +340,28 @@ const server = http.createServer(async (req, res) => {
     res.setHeader("Cache-Control", "no-cache");
     res.setHeader("Content-Length", fs.statSync(p).size);
     if (req.method === "HEAD") return res.end();
-    fs.createReadStream(p).pipe(res);
+    const stream = fs.createReadStream(p);
+    stream.on("error", () => {
+      if (res.headersSent) {
+        res.destroy();
+        return;
+      }
+      res.removeHeader("Content-Length");
+      res.writeHead(500);
+      res.end("Local file unavailable");
+    });
+    stream.pipe(res);
   } catch (e) {
-    res.writeHead(500);
+    if (!res.headersSent)
+      res.writeHead(
+        e instanceof SyntaxError || e instanceof URIError ? 400 : 500,
+      );
     res.end("Local request failed");
   }
 });
+server.requestTimeout = 30000;
+server.headersTimeout = 10000;
+server.maxRequestsPerSocket = 1000;
 if (
   process.argv[1] &&
   path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
@@ -297,7 +370,12 @@ if (
     console.log(`Tarkov Offline: http://127.0.0.1:${port}`),
   );
   gps.start();
-  process.on("exit", () => gps.stop());
+  if (process.env.EFTGPS_NO_EVENT_NETWORK !== "1")
+    eventContent.start({ isActive: () => Date.now() - lastPing < 120000 });
+  process.on("exit", () => {
+    gps.stop();
+    eventContent.stop();
+  });
   process.on("SIGINT", () => {
     gps.stop();
     server.close(() => process.exit(0));

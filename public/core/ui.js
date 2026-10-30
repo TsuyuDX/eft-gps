@@ -1,3 +1,4 @@
+import { uiIcon } from "./icons.js";
 import { localeCode } from "./localization.js";
 import { asset, localHref } from "./data.js";
 export const esc = (x) =>
@@ -25,7 +26,34 @@ export function toast(message) {
 }
 export function modal(content) {
   document.querySelector("#modal-content").innerHTML = content;
-  document.querySelector("#modal").showModal();
+  const dialog = document.querySelector("#modal");
+  const close = dialog.querySelector(".close");
+  if (close) close.innerHTML = uiIcon("close", 22);
+  if (!dialog.open) dialog.showModal();
+  dialog.scrollTop = 0;
+  const contentRoot = document.querySelector("#modal-content");
+  contentRoot.scrollTop = 0;
+  const chromeTitle = dialog.querySelector(".modal-chrome > span");
+  if (chromeTitle) {
+    chromeTitle.id = "modal-title";
+    dialog.setAttribute("aria-labelledby", "modal-title");
+    const updateTitle = () => {
+      const title =
+        contentRoot.querySelector("h1,h2")?.textContent || "EFT GPS";
+      if (chromeTitle.textContent !== title) chromeTitle.textContent = title;
+    };
+    updateTitle();
+    modal.titleObserver?.disconnect();
+    modal.titleObserver = new MutationObserver(updateTitle);
+    modal.titleObserver.observe(contentRoot, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
+    dialog.addEventListener("close", () => modal.titleObserver?.disconnect(), {
+      once: true,
+    });
+  }
 }
 export function confirmAction(title, message, actionLabel) {
   modal(

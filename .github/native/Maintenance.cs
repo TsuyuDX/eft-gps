@@ -56,7 +56,10 @@ public static class InstallerElevation {
         return true;
     }
     public static void PrepareUserData(string target) {
-        string data=Path.Combine(target,"userdata");Directory.CreateDirectory(data);
+        string data=Path.GetFullPath(Path.Combine(target,"userdata"));
+        for(string current=data;current!=null;current=Path.GetDirectoryName(current))
+            if((Directory.Exists(current)||File.Exists(current)) && (File.GetAttributes(current)&FileAttributes.ReparsePoint)!=0)throw new IOException("Папка пользовательских данных содержит перенаправление");
+        Directory.CreateDirectory(data);
         var acl=Directory.GetAccessControl(data);acl.AddAccessRule(new FileSystemAccessRule(new SecurityIdentifier(UserSid),FileSystemRights.Modify,InheritanceFlags.ContainerInherit|InheritanceFlags.ObjectInherit,PropagationFlags.None,AccessControlType.Allow));Directory.SetAccessControl(data,acl);
     }
     public static void OpenApplication(string target) {
@@ -141,9 +144,9 @@ public static class PackageInstaller {
     public static string Hash(string file,CancellationToken cancellation=default(CancellationToken)) { using(var sha=SHA256.Create())using(var stream=File.OpenRead(file)){var buffer=new byte[128*1024];int count;while((count=stream.Read(buffer,0,buffer.Length))>0){cancellation.ThrowIfCancellationRequested();sha.TransformBlock(buffer,0,count,buffer,0);}sha.TransformFinalBlock(new byte[0],0,0);return BitConverter.ToString(sha.Hash).Replace("-", "").ToLowerInvariant();} }
     static string SafePath(string root, string relative) {
         if (String.IsNullOrWhiteSpace(relative) || relative.IndexOf('\\') >= 0 || relative.IndexOf(':') >= 0 || relative.StartsWith("/")) throw new IOException("Некорректный путь в пакете");
-        foreach (string segment in relative.Split('/')) if (segment == "." || segment == ".." || segment.Length == 0 || segment.EndsWith(".") || segment.EndsWith(" ")) throw new IOException("Некорректный путь в пакете");
+        foreach (string segment in relative.Split('/')) if (segment == "." || segment == ".." || segment.Length == 0 || segment.EndsWith(".") || segment.EndsWith(" ") || segment.IndexOfAny(Path.GetInvalidFileNameChars())>=0 || System.Text.RegularExpressions.Regex.IsMatch(segment,@"^(CON|PRN|AUX|NUL|COM[1-9¹²³]|LPT[1-9¹²³])(\.|$)",System.Text.RegularExpressions.RegexOptions.IgnoreCase)) throw new IOException("Некорректный путь в пакете");
         string first = relative.Split('/')[0].ToLowerInvariant();
-        if (first == "userdata" || first == "work" || first.StartsWith("snapshot-backup") || first.StartsWith(".eftgps-") || first == "update-staging") throw new IOException("Пакет пытается изменить пользовательские файлы");
+        if (first == "userdata" || first == "work" || first.StartsWith("snapshot-backup") || first.StartsWith(".eftgps-") || first == "update-staging" || first == "release.json" || first == "release.json.install-new") throw new IOException("Пакет пытается изменить пользовательские файлы");
         string full = Path.GetFullPath(Path.Combine(root, relative.Replace('/', Path.DirectorySeparatorChar)));
         string prefix = Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
         if (!full.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)) throw new IOException("Путь выходит за папку приложения");
@@ -164,6 +167,7 @@ public static class PackageInstaller {
         cancellation.ThrowIfCancellationRequested();
         ResetPaths();
         Directory.CreateDirectory(staged);
+        SafePath(staged,"EFTGPS-stage-probe");
         using (var archive = new ZipArchive(input,ZipArchiveMode.Read,true)) {
             var entry = archive.GetEntry("release.json");
             if (entry == null || entry.Length > 16 * 1024 * 1024) throw new IOException("Это не пакет EFT GPS");
@@ -180,7 +184,7 @@ public static class PackageInstaller {
             foreach (var item in archive.Entries) {
                 cancellation.ThrowIfCancellationRequested();
                 if (!indexed.TryAddCompat(item.FullName, item)) throw new IOException("Повторяющийся путь в пакете");
-                if (item.FullName != "release.json") SafePath(staged, item.FullName);
+                if (item.FullName != "release.json") {if(item.FullName.EndsWith(".install-new",StringComparison.OrdinalIgnoreCase))throw new IOException("Пакет содержит служебный временный файл");SafePath(staged, item.FullName);}
                 if (((item.ExternalAttributes >> 16) & 0xF000) == 0xA000) throw new IOException("Ссылки в пакете запрещены");
             }
             if (indexed.Count != release.files.Length + 1) throw new IOException("Состав пакета не совпадает с описанием");
@@ -209,7 +213,7 @@ public static class PackageInstaller {
             if(release.format==1 && (!names.Contains("Tarkov Offline.exe") || !names.Contains("server.mjs") || !names.Contains("public/index.html"))) throw new IOException("В пакете нет основных файлов приложения");
             if(release.format==2 && !names.Contains("package.json")) throw new IOException("В пакете изменений нет версии приложения");
             if(names.Contains("package.json")) {var metadata=new JavaScriptSerializer().Deserialize<Dictionary<string,object>>(File.ReadAllText(SafePath(staged,"package.json")));if((string)metadata["version"]!=release.version)throw new IOException("Версия файлов не совпадает с описанием пакета");}
-            foreach(var removed in release.removed??new string[0]) {SafePath(staged,removed);if(!names.Add(removed) || removed=="package.json" || removed=="EFT GPS.exe" || removed=="server.mjs" || removed=="public/index.html") throw new IOException("Некорректное удаление в пакете изменений");}
+            foreach(var removed in release.removed??new string[0]) {SafePath(staged,removed);if(removed.EndsWith(".install-new",StringComparison.OrdinalIgnoreCase) || !names.Add(removed) || removed=="package.json" || removed=="EFT GPS.exe" || removed=="server.mjs" || removed=="public/index.html") throw new IOException("Некорректное удаление в пакете изменений");}
             Notify(detail,"Распаковка и проверка","",expectedBytes,expectedBytes,10,65);
             File.WriteAllText(Path.Combine(staged, "release.json"), new JavaScriptSerializer { MaxJsonLength = 16 * 1024 * 1024 }.Serialize(release), Encoding.UTF8);
             return release;
@@ -227,7 +231,9 @@ public static class PackageInstaller {
         if (Directory.Exists(work) && (File.GetAttributes(work) & FileAttributes.ReparsePoint) != 0) throw new IOException("Служебная папка является перенаправлением");
         var changed = new List<string>();
         var existed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        var previous=Path.Combine(target,"release.json");string previousManifest=File.Exists(previous)?File.ReadAllText(previous):null;
+        var previous=Path.Combine(target,"release.json");
+        if(File.Exists(previous) && (File.GetAttributes(previous)&FileAttributes.ReparsePoint)!=0)throw new IOException("Описание установленной версии является ссылкой");
+        string previousManifest=File.Exists(previous)?File.ReadAllText(previous):null;
         var merged=new Dictionary<string,ReleaseFile>(StringComparer.OrdinalIgnoreCase);
         if(release.format==2) {
             if(previousManifest==null) throw new IOException("Нет описания установленной версии. Используйте полный установщик.");
@@ -259,7 +265,7 @@ public static class PackageInstaller {
                 changed.Add(file.path);
                 string next = SafePath(target, file.path + ".install-new");
                 string source=SafePath(staged,file.path);
-                if(String.Equals(Path.GetPathRoot(target),Path.GetPathRoot(staged),StringComparison.OrdinalIgnoreCase)) File.Move(source,next);else File.Copy(source,next,true);
+                if(String.Equals(Path.GetPathRoot(target),Path.GetPathRoot(staged),StringComparison.OrdinalIgnoreCase)) File.Move(source,next);else File.Copy(source,next,false);
                 if (File.Exists(destination)) File.Replace(next, destination, null); else File.Move(next, destination);
                 if (changed.Count % 100 == 0) progress("Установка: " + changed.Count + " файлов");
             }
@@ -267,7 +273,7 @@ public static class PackageInstaller {
             if(beforeCommit!=null)beforeCommit();
             var installed=new ReleaseInfo {format=1,app=release.app,version=release.version,files=new List<ReleaseFile>(merged.Values).ToArray()};
             string nextManifest=Path.Combine(target,"release.json.install-new");
-            File.WriteAllText(nextManifest,new JavaScriptSerializer { MaxJsonLength = 16 * 1024 * 1024 }.Serialize(installed),Encoding.UTF8);
+            using(var output=new FileStream(nextManifest,FileMode.CreateNew,FileAccess.Write,FileShare.None))using(var writer=new StreamWriter(output,Encoding.UTF8))writer.Write(new JavaScriptSerializer { MaxJsonLength = 16 * 1024 * 1024 }.Serialize(installed));
             if(File.Exists(previous)) File.Replace(nextManifest,previous,null);else File.Move(nextManifest,previous);
             Notify(detail,"Завершение","",totalFiles,totalFiles,75,24);
             return backup;

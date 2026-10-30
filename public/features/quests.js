@@ -25,7 +25,7 @@ export async function renderQuests(root) {
       .map(([k, v]) => `<option value="${k}">${esc(v.name)}</option>`)
       .join(
         "",
-      )}</select><select id="quest-kind" aria-label="Тип заданий"><option value="">Все задания</option><option value="kappa">Каппа</option><option value="lightkeeper">Смотритель маяка</option><option value="story">Сюжетные</option><option value="season">Сезонные</option></select><label class="check"><input id="quest-hide" type="checkbox"> Скрыть завершённые</label></div><div id="quest-results"></div>`;
+      )}</select><select id="quest-kind" aria-label="Тип заданий"><option value="">Все задания</option><option value="halloween">Хэллоуин 2026 · временные</option><option value="kappa">Каппа</option><option value="lightkeeper">Смотритель маяка</option><option value="story">Сюжетные</option><option value="season">Сезонные</option></select><label class="check"><input id="quest-hide" type="checkbox"> Скрыть завершённые</label></div><div id="quest-results"></div>`;
   let page = 0;
   const draw = () => {
     const q = root.querySelector("#quest-search").value.toLowerCase(),
@@ -42,20 +42,22 @@ export async function renderQuests(root) {
               : x.trader?.normalizedName)) === t) &&
         (!hide || !current().quests[x.normalizedName]) &&
         (!k ||
-          (k === "kappa"
-            ? x.kappaRequired
-            : k === "lightkeeper"
-              ? x.lightkeeperRequired
-              : k === "season"
-                ? x.isSeasonalQuest
-                : x.type === "main" || x.type === "story")),
+          (k === "halloween"
+            ? x.eventSlug === "halloween-2026"
+            : k === "kappa"
+              ? x.kappaRequired
+              : k === "lightkeeper"
+                ? x.lightkeeperRequired
+                : k === "season"
+                  ? x.isSeasonalQuest
+                  : x.type === "main" || x.type === "story")),
     );
     const box = root.querySelector("#quest-results");
     box.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Готово</th><th>Название</th><th>Торговец</th><th>Уровень</th><th>Требования</th></tr></thead><tbody>${rows
       .slice(page * 50, page * 50 + 50)
       .map(
         (x) =>
-          `<tr class="${current().quests[x.normalizedName] ? "done" : ""}"><td><input type="checkbox" aria-label="Завершено: ${esc(x.name)}" data-quest="${x.normalizedName}" ${current().quests[x.normalizedName] ? "checked" : ""}></td><td><a class="item-name" href="#/quest/${db.mode}/${x.normalizedName}">${img(x.iconLink || metadata[x.normalizedName]?.icon || db.lookup.traders?.[x.trader]?.imageLink || x.trader?.imageLink, x.name)}${esc(x.name)}</a></td><td>${esc(db.lookup.traders?.[x.trader]?.name || x.trader?.name || "Сюжетное")}</td><td>${x.minPlayerLevel}</td><td>${x.kappaRequired ? '<span class="badge">Каппа</span>' : ""} ${x.lightkeeperRequired ? '<span class="badge">Смотритель</span>' : ""}</td></tr>`,
+          `<tr class="${current().quests[x.normalizedName] ? "done" : ""}"><td><input type="checkbox" aria-label="Завершено: ${esc(x.name)}" data-quest="${x.normalizedName}" ${current().quests[x.normalizedName] ? "checked" : ""}></td><td><a class="item-name" href="#/quest/${db.mode}/${x.normalizedName}">${img(x.iconLink || metadata[x.normalizedName]?.icon || db.lookup.traders?.[x.trader]?.imageLink || x.trader?.imageLink, x.name)}${esc(x.name)}</a></td><td>${esc(db.lookup.traders?.[x.trader]?.name || x.trader?.name || "Сюжетное")}</td><td>${x.minPlayerLevel}</td><td>${x.isEventQuest ? '<span class="badge event-badge">Хэллоуин 2026</span>' : ""}${x.kappaRequired ? '<span class="badge">Каппа</span>' : ""} ${x.lightkeeperRequired ? '<span class="badge">Смотритель</span>' : ""}</td></tr>`,
       )
       .join(
         "",

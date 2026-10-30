@@ -1,3 +1,4 @@
+import { supportUrl } from "../core/support-config.js";
 import { language } from "../core/localization.js";
 import { openSupport } from "./support.js";
 import { modal, esc, toast } from "../core/ui.js";
@@ -83,8 +84,8 @@ const steps = [
       "Ctrl+K opens global search. Esc closes a detail view or collapses the map. Find this tour, FAQs and release notes under Help.",
     ],
     tip: [
-      "В разделе поддержки можно узнать, как помочь развитию проекта. Discord-сервер скоро будет доступен.",
-      "Visit Support to learn how to help fund development. The Discord server is coming soon.",
+      "В разделе поддержки можно узнать, как помочь развитию проекта. Общение, помощь и обсуждение обновлений доступны на нашем Discord-сервере.",
+      "Visit Support to learn how to help fund development. Join our Discord server for community chat, help and update discussions.",
     ],
   },
 ];
@@ -134,6 +135,16 @@ export function maybeShowTour() {
   if (!hasSeenTour()) openTour();
 }
 const faq = [
+  [
+    [
+      "Как обновляются прохождения события?",
+      "How do event walkthroughs update?",
+    ],
+    [
+      "При запуске и раз в 15 минут приложение проверяет новые материалы Хэллоуина. Новые задания, прохождения и изображения сохраняются на компьютере. В разделе «События → Хэллоуин 2026» есть кнопка «Проверить сейчас». Если источник недоступен, используются сохранённые данные; личный прогресс не меняется.",
+      "At startup and every 15 minutes, the app checks for new Halloween content. New quests, walkthroughs and images are saved locally. Open Events → Halloween 2026 and select Check now for a manual check. If the source is unavailable, saved content remains usable; personal progress is unchanged.",
+    ],
+  ],
   [
     ["Нужен ли интернет?", "Do I need internet?"],
     [
@@ -261,13 +272,19 @@ export function openHelp() {
     [
       "discord",
       "Discord",
-      L("Сервер сообщества · скоро будет", "Community server · coming soon"),
-      L("Скоро", "Coming soon"),
+      L(
+        "Общение, помощь и новости приложения",
+        "Community chat, help and app news",
+      ),
+      L("Открыть", "Open"),
     ],
     [
       "support",
       L("Поддержать проект", "Support the project"),
-      L("Добровольная поддержка разработки · Boosty и Ko-fi", "Optional development support · Boosty and Ko-fi"),
+      L(
+        "Добровольная поддержка разработки · Boosty и Ko-fi",
+        "Optional development support · Boosty and Ko-fi",
+      ),
       L("Открыть", "Open"),
     ],
     [
@@ -287,7 +304,7 @@ export function openHelp() {
     ],
   ];
   modal(
-      `<div id="help-panel"><h2>${L("Помощь", "Help")}</h2>${rows.map(([id, title, description, button]) => `<div class="help-row"><div><strong>${esc(title)}</strong><small>${esc(description)}</small></div>${id === "idea" ? `<a class="button" href="${PROJECT_URL}/issues/new" target="_blank" rel="noopener">${button} ↗</a>` : `<button data-help-action="${id}" ${id === "discord" ? 'disabled aria-disabled="true"' : ""}>${button}</button>`}</div>`).join("")}</div>`,
+    `<div id="help-panel"><h2>${L("Помощь", "Help")}</h2>${rows.map(([id, title, description, button]) => `<div class="help-row"><div><strong>${esc(title)}</strong><small>${esc(description)}</small></div>${id === "discord" && supportUrl("discord") ? `<a class="button" data-help-action="discord" href="${esc(supportUrl("discord"))}" target="_blank" rel="noopener noreferrer">${button} ↗</a>` : id === "idea" ? `<a class="button" href="${PROJECT_URL}/issues/new" target="_blank" rel="noopener">${button} ↗</a>` : `<button data-help-action="${id}" ${id === "discord" ? 'disabled aria-disabled="true"' : ""}>${button}</button>`}</div>`).join("")}</div>`,
   );
   const actions = {
     tour: openTour,
