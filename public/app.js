@@ -201,7 +201,8 @@ async function route() {
     }
     if (version !== routeVersion) return;
     addBackButton(app);
-    window.scrollTo(0, 0);
+    app.scrollTop = 0;
+    app.scrollLeft = 0;
   } catch (e) {
     if (version === routeVersion) app.innerHTML = errorView(e);
   }

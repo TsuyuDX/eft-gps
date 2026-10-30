@@ -1,6 +1,6 @@
 # История версий / Version history
 
-- **1.9.1** — увеличены иллюстрации сезонных прохождений: до 76% высоты окна, галереи в одну колонку, более читаемые подписи. Иконки предметов сохраняют компактный размер. / Larger seasonal walkthrough illustrations, up to 76% of the window height, single-column galleries and readable captions. Inline item icons remain compact.
+- **1.9.1** — увеличены иллюстрации сезонных прохождений: до 76% высоты окна, галереи в одну колонку, более читаемые подписи. Иконки предметов сохраняют компактный размер. Убрана внешняя прокрутка окна: карта вписывается в рабочую область, длинные страницы и панели прокручиваются внутри. / Larger seasonal walkthrough illustrations, up to 76% of the window height, single-column galleries and readable captions. Inline item icons remain compact. The outer window no longer scrolls: maps fit the workspace, and long pages and panels scroll internally.
 
 - **1.9.0** — новый интерфейс карт, общий поиск и скрываемые панели; классические и новые цветные метки, подписи выходов и подсветка опасных зон; прохождения Хэллоуина 2026 с автоматическим обновлением и офлайн-кэшем; превью новостей, Discord, исправленные окна и временная картографическая пасхалка. Обновлён встроенный Node.js. / Redesigned map workspace, unified search and collapsible panels; classic and modern coloured markers, destination labels and hazard highlighting; Halloween 2026 guides with automatic refresh and offline caching; news previews, Discord, fixed dialogs and a temporary cartographic Easter egg. Bundled Node.js updated.
 

@@ -976,3 +976,41 @@ input[type="search"]::-webkit-search-results-decoration {
 .quest-guide-table th p {
   margin: 0.3em 0;
 }
+
+/* Keep the desktop shell fixed; only content that exceeds its pane scrolls. */
+html {
+  height: 100%;
+  overflow: hidden;
+  scrollbar-gutter: auto;
+}
+body {
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+body > header,
+body > footer {
+  flex: 0 0 auto;
+  width: 100%;
+}
+#app {
+  flex: 1 1 0;
+  width: 100%;
+  min-height: 0;
+  min-width: 0;
+  margin: 0 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+#app:has(> .map-workspace) {
+  overflow: hidden;
+  padding-bottom: 14px;
+}
+#app > .map-workspace:not(.map-expanded) {
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+}
