@@ -1,3 +1,4 @@
+import { overlayMode } from "./core/overlay-mode.js";
 import { supportUrl } from "./core/support-config.js";
 import {
   refreshEventContent,
@@ -249,8 +250,7 @@ try {
   await route();
   await finishStartup(startupResult);
   startGpsClient(() => db.mode);
-  maybeShowTour();
-  startAppUpdates();
+  if (!overlayMode) { maybeShowTour(); startAppUpdates(); }
   startEventContent(async () => {
     clearEventContentCache();
     await loadMode(db.mode);

@@ -1,3 +1,4 @@
+import { overlayMode } from "../core/overlay-mode.js";
 import { isSecretThemeActive } from "../core/secret-theme.js";
 import { markerPresentation } from "./map-presentation.js";
 import { getMarkerStyle } from "../core/marker-style.js";
@@ -134,6 +135,11 @@ export async function renderMap(root, slug) {
       saved.disabled.forEach((k) => disabledTypes.add(k));
     }
   } catch {}
+  if (overlayMode) {
+    active.clear();
+    ["extracts", "transits", "hazards", "artillery"].forEach(group => active.add(group));
+    disabledTypes.clear();
+  }
   const details = await json("map-detail.json").catch(() => ({}));
   const questMetadata = await json(db.mode + "/quest-search.json").catch(
     () => ({}),
