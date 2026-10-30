@@ -135,6 +135,16 @@ export function maybeShowTour() {
 }
 const faq = [
   [
+    [
+      "Как обновляются прохождения события?",
+      "How do event walkthroughs update?",
+    ],
+    [
+      "При запуске и раз в 15 минут приложение проверяет новые материалы Хэллоуина. Новые задания, прохождения и изображения сохраняются на компьютере. В разделе «События → Хэллоуин 2026» есть кнопка «Проверить сейчас». Если источник недоступен, используются сохранённые данные; личный прогресс не меняется.",
+      "At startup and every 15 minutes, the app checks for new Halloween content. New quests, walkthroughs and images are saved locally. Open Events → Halloween 2026 and select Check now for a manual check. If the source is unavailable, saved content remains usable; personal progress is unchanged.",
+    ],
+  ],
+  [
     ["Нужен ли интернет?", "Do I need internet?"],
     [
       "Карты, справочник и сохранённые иллюстрации работают без сети. Интернет нужен для обновлений и открытия внешних ссылок.",
@@ -267,7 +277,10 @@ export function openHelp() {
     [
       "support",
       L("Поддержать проект", "Support the project"),
-      L("Добровольная поддержка разработки · Boosty и Ko-fi", "Optional development support · Boosty and Ko-fi"),
+      L(
+        "Добровольная поддержка разработки · Boosty и Ko-fi",
+        "Optional development support · Boosty and Ko-fi",
+      ),
       L("Открыть", "Open"),
     ],
     [
@@ -287,7 +300,7 @@ export function openHelp() {
     ],
   ];
   modal(
-      `<div id="help-panel"><h2>${L("Помощь", "Help")}</h2>${rows.map(([id, title, description, button]) => `<div class="help-row"><div><strong>${esc(title)}</strong><small>${esc(description)}</small></div>${id === "idea" ? `<a class="button" href="${PROJECT_URL}/issues/new" target="_blank" rel="noopener">${button} ↗</a>` : `<button data-help-action="${id}" ${id === "discord" ? 'disabled aria-disabled="true"' : ""}>${button}</button>`}</div>`).join("")}</div>`,
+    `<div id="help-panel"><h2>${L("Помощь", "Help")}</h2>${rows.map(([id, title, description, button]) => `<div class="help-row"><div><strong>${esc(title)}</strong><small>${esc(description)}</small></div>${id === "idea" ? `<a class="button" href="${PROJECT_URL}/issues/new" target="_blank" rel="noopener">${button} ↗</a>` : `<button data-help-action="${id}" ${id === "discord" ? 'disabled aria-disabled="true"' : ""}>${button}</button>`}</div>`).join("")}</div>`,
   );
   const actions = {
     tour: openTour,

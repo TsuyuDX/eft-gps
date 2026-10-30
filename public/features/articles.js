@@ -1,3 +1,7 @@
+import {
+  eventSyncMarkup,
+  bindEventSync,
+} from "../core/event-content-client.js";
 import { isSecretThemeActive } from "../core/secret-theme.js";
 import { secretBrandText } from "../core/secret-brand.js";
 import { localeCode } from "../core/localization.js";
@@ -74,15 +78,18 @@ export async function renderArticle(root, path) {
     type = path.split("/")[0],
     slug = path.split("/").at(-1);
   let prefix =
-    type === "hideout"
-      ? `<div class="row"><label>Построенный уровень <input id="station-level" type="number" min="0" max="10" value="${current().hideout[slug] || 0}"></label><a class="button" href="#/items-tracker/${db.mode}">Трекер предметов →</a></div>${hideoutRequirements(slug)}`
-      : type === "season"
-        ? '<a class="button primary" href="#/modifiers">Открыть калькулятор модификаторов →</a>'
-        : "";
+    type === "event" && slug === "halloween-2026-6"
+      ? eventSyncMarkup()
+      : type === "hideout"
+        ? `<div class="row"><label>Построенный уровень <input id="station-level" type="number" min="0" max="10" value="${current().hideout[slug] || 0}"></label><a class="button" href="#/items-tracker/${db.mode}">Трекер предметов →</a></div>${hideoutRequirements(slug)}`
+        : type === "season"
+          ? '<a class="button primary" href="#/modifiers">Открыть калькулятор модификаторов →</a>'
+          : "";
   root.innerHTML =
     heading(a.title) +
     prefix +
     `<div id="article-interactive"></div><div class="article-frame-wrap"><iframe id="article-frame" title="${esc(a.title)}" sandbox="allow-same-origin allow-top-navigation-by-user-activation allow-popups allow-popups-to-escape-sandbox"></iframe></div>`;
+  bindEventSync(root);
   const doc = new DOMParser().parseFromString(a.html, "text/html");
   doc
     .querySelectorAll(

@@ -29,7 +29,7 @@ test('reference links and assets reject executable protocols and attribute injec
 test('live server blocks foreign origins, rebinding, static junction escapes and invalid profile writes',async t=>{
  const directory=await fs.mkdtemp(path.join(process.cwd(),'work/security-server-'));
  let child; t.after(async()=>{if(child && child.exitCode===null){const exited=once(child,'exit');child.kill('SIGKILL');await exited;}await fs.rm(directory,{recursive:true,force:true});});
- for(const file of ['server.mjs','server/app-update.mjs','server/startup.mjs','server/gps.mjs','server/screenshot-cleanup.mjs','server/window-settings.mjs','public/core/gps-format.js','public/core/profile-schema.js']){
+ for(const file of ['server.mjs','server/app-update.mjs','server/event-content.mjs','server/startup.mjs','server/gps.mjs','server/screenshot-cleanup.mjs','server/window-settings.mjs','public/core/gps-format.js','public/core/profile-schema.js']){
    await fs.mkdir(path.dirname(path.join(directory,file)),{recursive:true});await fs.copyFile(file,path.join(directory,file));
  }
  await fs.writeFile(path.join(directory,'package.json'),JSON.stringify({type:'module',version:'1.8.1'}));
@@ -37,7 +37,7 @@ test('live server blocks foreign origins, rebinding, static junction escapes and
  const outside=path.join(directory,'private');await fs.mkdir(outside);await fs.writeFile(path.join(outside,'secret.txt'),'private test secret');
  await fs.symlink(outside,path.join(directory,'public/escape'),process.platform==='win32'?'junction':'dir');
  const listener=net.createServer();listener.listen(0,'127.0.0.1');await once(listener,'listening');const port=listener.address().port;await new Promise(resolve=>listener.close(resolve));
- child=spawn(process.execPath,[path.join(directory,'server.mjs')],{cwd:directory,env:{...process.env,PORT:String(port),EFTGPS_PREVIEW:"1"},stdio:['ignore','pipe','pipe'],windowsHide:true});
+ child=spawn(process.execPath,[path.join(directory,'server.mjs')],{cwd:directory,env:{...process.env,PORT:String(port),EFTGPS_PREVIEW:"1",EFTGPS_NO_EVENT_NETWORK:"1"},stdio:['ignore','pipe','pipe'],windowsHide:true});
 
  let errors='';child.stderr.on('data',b=>errors+=b);const origin='http://127.0.0.1:'+port;
  let ready=false;for(let i=0;i<120;i++){try{const r=await fetch(origin+'/api/health');if(r.ok){ready=true;break;}}catch{}await new Promise(resolve=>setTimeout(resolve,50));}assert.equal(ready,true,errors);

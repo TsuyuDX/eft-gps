@@ -1,3 +1,4 @@
+import { eventQuestDetail, mergeEventContent } from "./event-content.js";
 import { language } from "./localization.js";
 import { contentPath, translateContent } from "./content-language.js";
 export const db = {
@@ -14,7 +15,14 @@ export const db = {
   manifest: {},
 };
 const cache = new Map();
+export function clearEventContentCache() {
+  for (const key of cache.keys())
+    if (/quests?\/|quests\.json|quest-search\.json|event__halloween/.test(key))
+      cache.delete(key);
+}
 export async function json(url, locale = language()) {
+  const live = eventQuestDetail(url, locale);
+  if (live) return live;
   const resolved = await contentPath(url, locale);
   const requested = resolved.url;
   const key = locale + ":" + url;
@@ -31,6 +39,7 @@ export async function json(url, locale = language()) {
             ? translateContent(value, resolved.pack)
             : value,
         )
+        .then((value) => mergeEventContent(url, locale, value))
         .catch((e) => {
           cache.delete(key);
           throw e;
@@ -75,14 +84,17 @@ export async function loadMode(mode, locale = language()) {
 }
 export function asset(u) {
   const value = Object.hasOwn(db.assets, u) ? db.assets[u] : u;
-  return typeof value === "string" && /^\/assets\/[A-Za-z0-9_./%()+@-]+$/.test(value) &&
-    !value.split("/").some(segment => segment === "." || segment === "..")
-    ? value : "/assets/fallback.svg";
+  return typeof value === "string" &&
+    /^\/assets\/[A-Za-z0-9_./%()+@-]+$/.test(value) &&
+    !value.split("/").some((segment) => segment === "." || segment === "..")
+    ? value
+    : "/assets/fallback.svg";
 }
 export const itemBySlug = (slug) =>
   db.items.find((x) => x.normalizedName === slug);
 export function localHref(href) {
-  if (typeof href !== "string" || /[\u0000-\u0020\u007f]/.test(href)) return "#/";
+  if (typeof href !== "string" || /[\u0000-\u0020\u007f]/.test(href))
+    return "#/";
   if (href.startsWith("#")) return href;
   let h = href
     .replace(/^https:\/\/www\.tarkovhead\.com/, "")

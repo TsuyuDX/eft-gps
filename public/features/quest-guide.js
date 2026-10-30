@@ -129,7 +129,7 @@ export function questImages(q) {
     images.set(q.taskImageLink, { src: q.taskImageLink, alt: q.name });
   function walk(v) {
     if (!v || typeof v !== "object") return;
-    if (v.type === "image" || (v.src && v.previewSrc)) {
+    if (!v.isIcon && (v.type === "image" || (v.src && v.previewSrc))) {
       const key = v.previewSrc || v.src;
       images.set(key, { ...v });
     }
