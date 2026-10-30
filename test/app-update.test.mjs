@@ -105,3 +105,22 @@ test('bottom progress UI shows filename, percentage and translated status, and s
     document.querySelector('button').onclick();assert.equal(document.querySelector('aside').hidden,true);
   } finally {globalThis.fetch=originalFetch;globalThis.setTimeout=originalTimeout;}
 });
+
+
+test('a missing setup helper preserves the verified download at 100 percent and reports the installation failure',async t=>{
+  const f=await fixture(t);await fs.unlink(path.join(f.root,'runtime/TarkovMaintenance.exe'));
+  const updater=new AppUpdater(f.root,'1.7.0',{...f,temporary:f.directory});await updater.start();
+  assert.equal(updater.state.phase,'error');assert.equal(updater.state.error,'installer-missing');
+  assert.equal(updater.state.percent,100);assert.equal(updater.state.packageVerified,true);assert.equal(updater.state.packageSaved,true);
+  assert.equal(updater.state.downloaded,updater.state.total);assert.equal(f.launches.length,0);
+  const names=(await fs.readdir(f.directory)).filter(n=>n.startsWith('EFTGPS-update-'));
+  assert.equal(names.length,1);assert.deepEqual(await fs.readFile(path.join(f.directory,names[0],'update.zip')),f.bytes);
+});
+
+test('a denied setup launch preserves the verified package without retrying or restoring the helper',async t=>{
+  const f=await fixture(t);let attempts=0;
+  const updater=new AppUpdater(f.root,'1.7.0',{...f,temporary:f.directory,launch:async()=>{attempts++;throw Object.assign(Error('Denied'),{code:'EACCES'});}});
+  await updater.start();await updater.start();
+  assert.equal(attempts,1);assert.equal(updater.state.error,'installer-access');assert.equal(updater.state.packageSaved,true);
+  assert.equal(await fs.readFile(path.join(f.root,'runtime/TarkovMaintenance.exe'),'utf8'),'test helper');
+});

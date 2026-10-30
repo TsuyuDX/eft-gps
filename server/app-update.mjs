@@ -76,7 +76,7 @@ export class AppUpdater {
   }
   start() {return this.job ||= this.run();}
   async run() {
-    let directory;
+    let directory, verified = false, installing = false;
     try {
       this.state.phase='checking';
       // Exactly one release lookup per server lifetime, including concurrent UI reloads.
@@ -118,6 +118,9 @@ export class AppUpdater {
       }
       if(manifest.parts.length>1) for await(const chunk of createReadStream(zip))whole.update(chunk);
       if(whole.digest('hex')!==manifest.sha256) throw Error('checksum');
+      verified = true;
+      Object.assign(this.state,{percent:100,file:'',packageVerified:true});
+      installing = true;
       // Run a copy outside the installation directory so the updater can replace itself.
       const helper=path.join(directory,'EFTGPS-Update.exe');
       await fs.copyFile(path.join(this.root,'runtime/TarkovMaintenance.exe'),helper);
@@ -125,8 +128,16 @@ export class AppUpdater {
       Object.assign(this.state,{phase:'installer',percent:100,file:''});
     } catch(error) {
       this.state.phase='error';
-      this.state.error=['checksum','disk-space','download-size'].includes(error.message)?error.message:'unavailable';
-      if(directory) await fs.rm(directory,{recursive:true,force:true}).catch(()=>{});
+      this.state.error=installing
+        ? error.code==='ENOENT' ? 'installer-missing'
+        : ['EACCES','EPERM'].includes(error.code) ? 'installer-access'
+        : 'installer-start'
+        : ['checksum','disk-space','download-size'].includes(error.message)?error.message:'unavailable';
+      if(verified) {
+        this.state.packageSaved=true;
+        // Keep the verified download for analysis/recovery; never restore or bypass a blocked helper.
+        await fs.writeFile(path.join(directory,'verified-update.json'),JSON.stringify({version:this.state.version,baseVersion:this.version,package:'update.zip',verified:true})).catch(()=>{});
+      } else if(directory) await fs.rm(directory,{recursive:true,force:true}).catch(()=>{});
     }
   }
 }

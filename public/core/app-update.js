@@ -25,6 +25,7 @@ export function startAppUpdates() {
           : state.phase==='verifying' ? L('Проверка обновления…','Verifying update…')
           : state.phase==='installer' ? L('Обновление загружено · 100%. Подтвердите запрос Windows и установку.','Update downloaded · 100%. Confirm the Windows prompt and installation.')
           : state.phase==='cancelled' ? L('Обновление отменено. Текущая версия продолжает работать.','Update cancelled. Your current version remains available.')
+          : ['installer-missing','installer-access','installer-start'].includes(state.error) ? L('Обновление загружено и проверено · 100%. Не удалось запустить установщик: компонент отсутствует, недоступен или заблокирован Windows. Пакет сохранён. Проверьте журнал защиты Windows; не игнорируйте обнаружение угрозы.','Update downloaded and verified · 100%. Setup could not start: its component is missing, inaccessible or blocked by Windows. The package is saved. Check Windows protection history; do not ignore a threat detection.')
           : state.error==='disk-space' ? L('Для обновления не хватает места. Текущая версия продолжает работать.','Not enough disk space. Your current version remains available.')
           : state.error==='checksum' ? L('Проверка обновления не пройдена. Файлы приложения не изменены.','Update verification failed. Application files were not changed.')
           : L('Обновления сейчас недоступны. Проверим при следующем запуске.','Updates are unavailable. We will check on the next launch.');
