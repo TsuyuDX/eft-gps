@@ -2,6 +2,16 @@ import { englishUi } from "./english-ui.js";
 import { translatePattern } from "./english-patterns.js";
 import { readWindowSetting, writeWindowSetting } from "./window-settings.js";
 const words = {
+  "EFT GPS 1.9.0: карты, прохождения и сообщество":
+    "EFT GPS 1.9.0: maps, walkthroughs and community",
+  "Общий поиск, удобные панели карты, два стиля меток, обновляемые прохождения события и наш Discord.":
+    "Unified search, convenient map panels, two marker styles, refreshed event walkthroughs and our Discord.",
+  "Панели фильтров и заданий можно скрывать отдельно. Общий поиск помогает находить задания, предметы и точки карты. Доступны классические и новые цветные значки, подписи выходов и подсветка зон опасностей.":
+    "Hide the filter and quest panels independently. Unified search finds quests, items and map locations. Choose classic or modern coloured markers, with destination labels and highlighted hazard zones.",
+  "Прохождения Хэллоуина 2026 проверяются при запуске и каждые 15 минут при открытом приложении. Новые инструкции и изображения сохраняются для работы без интернета. В карточке события есть ручная проверка.":
+    "Halloween 2026 walkthroughs are checked at startup and every 15 minutes while the application is open. New instructions and images are saved for offline use. The event page also offers a manual check.",
+  "Новости получили превью, окна и кнопки стали удобнее, а Discord теперь доступен из верхней панели, помощи и поддержки. Личный прогресс и настройки сохраняются при обновлении.":
+    "News now has previews, dialogs and controls are easier to use, and Discord is available from the top bar, Help and Support. Updates preserve your personal progress and settings.",
   "Иллюстрация Battlestate Games": "Illustration by Battlestate Games",
   "Интерфейс EFT GPS · иллюстрация возможностей приложения":
     "EFT GPS interface · illustrative application view",
