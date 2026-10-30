@@ -2,6 +2,10 @@ import { englishUi } from "./english-ui.js";
 import { translatePattern } from "./english-patterns.js";
 import { readWindowSetting, writeWindowSetting } from "./window-settings.js";
 const words = {
+  "Иллюстрация Battlestate Games": "Illustration by Battlestate Games",
+  "Интерфейс EFT GPS · иллюстрация возможностей приложения":
+    "EFT GPS interface · illustrative application view",
+  "Прохождения события обновлены": "Event walkthroughs updated",
   "Вид указателя": "Navigation cursor preview",
   "Хэллоуин 2026 · временные": "Halloween 2026 · limited-time",
   "Хэллоуин 2026": "Halloween 2026",

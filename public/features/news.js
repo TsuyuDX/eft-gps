@@ -3,6 +3,7 @@ import { esc, heading } from "../core/ui.js";
 export const newsEntries = [
   {
     slug: "eft-1-3-0-0",
+    image: "/assets/news/eft-1-3.jpg",
     kind: "Игра",
     date: "2026-10-29",
     label: "1.3",
@@ -19,6 +20,7 @@ export const newsEntries = [
   },
   {
     slug: "eft-gps-1-7",
+    image: "/assets/news/app-tour.png",
     kind: "Приложение",
     date: "2026-10-26",
     label: "1.7",
@@ -32,6 +34,7 @@ export const newsEntries = [
   },
   {
     slug: "startup-1-6",
+    image: "/assets/news/app-startup.png",
     kind: "Приложение",
     date: "2026-10-26",
     label: "1.6",
@@ -45,6 +48,7 @@ export const newsEntries = [
   },
   {
     slug: "tarkov-gps-1-5",
+    image: "/assets/news/app-overview.png",
     kind: "Приложение",
     date: "2026-10-26",
     label: "1.5",
@@ -58,6 +62,7 @@ export const newsEntries = [
   },
   {
     slug: "gps-and-maps",
+    image: "/assets/news/app-maps.png",
     kind: "Приложение",
     date: "2026-10-26",
     label: "GPS",
@@ -72,6 +77,7 @@ export const newsEntries = [
   },
   {
     slug: "quests-and-settings",
+    image: "/assets/news/app-quests.png",
     kind: "Приложение",
     date: "2026-10-26",
     label: "01",
@@ -85,6 +91,7 @@ export const newsEntries = [
   },
   {
     slug: "eft-leagues-survey",
+    image: "/assets/news/eft-survey.png",
     kind: "Игра",
     date: "2026-10-16",
     label: "EFT",
@@ -98,6 +105,7 @@ export const newsEntries = [
   },
   {
     slug: "eft-1-2-0-0",
+    image: "/assets/news/eft-1-2.jpg",
     kind: "Игра",
     date: "2026-10-06",
     label: "1.2",
@@ -111,11 +119,17 @@ export const newsEntries = [
     source: "https://steamcommunity.com/app/3932890/announcements/?l=russian",
   },
 ];
+export function newsPreview(entry) {
+  const source = /^\/assets\/news\/[a-zA-Z0-9.-]+$/.test(entry.image || "")
+    ? entry.image
+    : "/assets/news/app-overview.png";
+  return `<div class="news-preview"><img src="${esc(source)}" alt="" loading="lazy" width="960" height="540"><span class="news-kind">${esc(entry.kind)}</span><span class="news-version">${esc(entry.label)}</span></div>`;
+}
 export const newsCards = (entries = newsEntries) =>
   entries
     .map(
       (x) =>
-        `<a class="card news-card" href="#/news/${x.slug}"><div class="news-visual"><span>${esc(x.kind)}</span><strong>${esc(x.label)}</strong><img src="/icons/app-192.png" alt="" aria-hidden="true"></div><div class="card-body"><small class="news-date">${new Date(x.date + "T12:00:00").toLocaleDateString(localeCode())}</small><h3>${esc(x.title)}</h3><p class="muted">${esc(x.summary)}</p><span class="read-more">Подробнее ↗</span></div></a>`,
+        `<a class="card news-card" href="#/news/${x.slug}">${newsPreview(x)}<div class="card-body"><small class="news-date">${new Date(x.date + "T12:00:00").toLocaleDateString(localeCode())}</small><h3>${esc(x.title)}</h3><p class="muted">${esc(x.summary)}</p><span class="read-more">Подробнее ↗</span></div></a>`,
     )
     .join("");
 export function renderNews(root, slug) {
@@ -152,5 +166,5 @@ export function renderNews(root, slug) {
       entry.title,
       `${entry.kind} · ${new Date(entry.date + "T12:00:00").toLocaleDateString(localeCode())}`,
     ) +
-    `<article class="news-detail" data-selectable><p class="news-lead">${esc(entry.summary)}</p>${entry.paragraphs.map((p) => `<p>${esc(p)}</p>`).join("")}${entry.source ? `<div class="official-source"><strong>Battlestate Games</strong><p>Официальное объявление разработчиков. Для открытия публикации нужен интернет.</p><a class="button" href="${esc(entry.source)}" target="_blank" rel="noopener">Читать оригинал ↗</a></div>` : ""}</article>`;
+    `<article class="news-detail" data-selectable><figure class="news-hero">${newsPreview(entry)}<figcaption class="small muted">${entry.kind === "Игра" ? "Иллюстрация Battlestate Games" : "Интерфейс EFT GPS · иллюстрация возможностей приложения"}</figcaption></figure><p class="news-lead">${esc(entry.summary)}</p>${entry.paragraphs.map((p) => `<p>${esc(p)}</p>`).join("")}${entry.source ? `<div class="official-source"><strong>Battlestate Games</strong><p>Официальное объявление разработчиков. Для открытия публикации нужен интернет.</p><a class="button" href="${esc(entry.source)}" target="_blank" rel="noopener">Читать оригинал ↗</a></div>` : ""}</article>`;
 }
