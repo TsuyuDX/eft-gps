@@ -1,3 +1,4 @@
+import { renderOverlayControl } from "./overlay-client.js";
 import { pressSecretTheme, resetSecretTheme } from "./secret-theme.js";
 import { bindMarkerStyleControls, markerStyleOptions } from "./marker-style.js";
 import { languageControl } from "./localization.js";
@@ -18,7 +19,7 @@ export const preferenceGroups = [
       [
         "footer",
         "Нижняя панель",
-        "Источники данных и ссылка на состояние базы.",
+        "Сведения об игре и состояние соединения.",
       ],
       ["news", "Новости на главной", "Карточки новостей под поиском."],
     ],
@@ -93,7 +94,8 @@ function storePreferences(value) {
 }
 export function renderPreferences(root, selected = "Интерфейс") {
   const prefs = getPreferences();
-  root.innerHTML = `<div class="preference-tabs" role="group" aria-label="Разделы настроек">${["Интерфейс", "Карта", "Оформление"].map((title) => `<button type="button" data-preference-tab="${title}" aria-pressed="false">${title}</button>`).join("")}</div><p class="muted">Изменения применяются сразу и сохраняются в этом окне. Прогресс заданий и настройки GPS не меняются.</p>${preferenceGroups.map(([title, rows]) => `<section class="preference-group" data-preference-panel="${title}"><h3>${title}</h3>${rows.map(([key, label, description]) => `<label class="preference-row"><span><strong>${label}</strong><small class="muted">${description}</small></span><input type="checkbox" data-preference="${key}" ${prefs[key] ? "checked" : ""}></label>`).join("")}</section>`).join("")}<section class="preference-group" data-preference-panel="Оформление"><h3>Оформление</h3><div class="preference-row"><span><strong>Тема приложения</strong><small class="muted">Сейчас используется чёрная тема. Другие темы скоро будут доступны.</small></span><button type="button" class="theme-coming-soon" data-secret-theme aria-disabled="true" title="Новые темы скоро будут доступны">Выбор темы · скоро будет</button></div></section><button type="button" data-reset-preferences>Вернуть стандартный вид</button><p class="muted small">Слои и разновидности меток выбираются на самой карте и запоминаются отдельно для каждой локации и режима. Зоны опасностей включаются там же.</p>`;
+  root.innerHTML = `<div class="preference-tabs" role="group" aria-label="Разделы настроек">${["Интерфейс", "Карта", "Оформление", "Экспериментальное"].map((title) => `<button type="button" data-preference-tab="${title}" aria-pressed="false">${title}</button>`).join("")}</div><p class="muted">Настройки сохраняются автоматически. Прогресс заданий и настройки GPS не меняются.</p>${preferenceGroups.map(([title, rows]) => `<section class="preference-group" data-preference-panel="${title}"><h3>${title}</h3>${rows.map(([key, label, description]) => `<label class="preference-row"><span><strong>${label}</strong><small class="muted">${description}</small></span><input type="checkbox" data-preference="${key}" ${prefs[key] ? "checked" : ""}></label>`).join("")}</section>`).join("")}<section class="preference-group" data-preference-panel="Оформление"><h3>Оформление</h3><div class="preference-row"><span><strong>Тема приложения</strong><small class="muted">Сейчас используется чёрная тема. Другие темы скоро будут доступны.</small></span><button type="button" class="theme-coming-soon" data-secret-theme aria-disabled="true" title="Новые темы скоро будут доступны">Выбор темы · скоро будет</button></div></section><button type="button" data-reset-preferences>Вернуть стандартный вид</button><p class="muted small">Слои и разновидности меток выбираются на самой карте и запоминаются отдельно для каждой локации и режима. Зоны опасностей включаются там же.</p>`;
+  const beta=document.createElement("section");beta.className="preference-group";beta.dataset.preferencePanel="Экспериментальное";root.querySelector("[data-reset-preferences]").before(beta);renderOverlayControl(beta);
   const mapPanel = root.querySelector('[data-preference-panel="Карта"]');
   mapPanel?.insertAdjacentHTML(
     "afterbegin",
@@ -127,7 +129,7 @@ export function renderPreferences(root, selected = "Интерфейс") {
       (button) => (button.onclick = () => choose(button.dataset.preferenceTab)),
     );
   choose(
-    ["Интерфейс", "Карта", "Оформление"].includes(selected)
+    ["Интерфейс", "Карта", "Оформление", "Экспериментальное"].includes(selected)
       ? selected
       : "Интерфейс",
   );

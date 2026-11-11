@@ -1014,3 +1014,11 @@ body > footer {
   min-height: 0;
   max-height: 100%;
 }
+
+/* Reference outlines are approximate until verified in the current game build. */
+.hazard-zone.unverified{stroke-dasharray:5 3}
+
+.connection-status{display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.connection-dot{width:6px;height:6px;display:inline-block;border-radius:50%;background:#8c8c87;flex:none}
+.connection-status.is-online .connection-dot{background:#44cc78;box-shadow:0 0 5px #44cc7833}
+.connection-status.is-offline .connection-dot{background:#ef6262;box-shadow:0 0 5px #ef626233}

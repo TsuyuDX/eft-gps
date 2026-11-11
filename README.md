@@ -1,3 +1,7 @@
+> [!NOTE]
+> Интерфейс приложения частично создан с использованием искусственного интеллекта.
+> Application interface partially created with the assistance of AI.
+
 # T_S_U_Y_U EFT GPS
 
 **Карты, задания и GPS для Escape from Tarkov — в одном бесплатном приложении.**  
@@ -74,7 +78,7 @@
 
 ### Как обновлять
 
-При запуске приложение один раз проверяет новую версию. Если обновление есть, внизу появится полоса загрузки. После скачивания откроется окно **«Обновление приложения»**: нажмите **«Обновить приложение»** и подтвердите действие.
+В версии 1.10.0 при запуске приложение один раз проверяет новую версию. Уведомление показывает номер версии и список изменений. Нажмите **«Обновить»**, чтобы начать загрузку, или **«Позже»**, чтобы продолжить работу. Без вашего выбора пакет не скачивается. После загрузки подтвердите установку в окне **«Обновление приложения»**. В более ранних версиях загрузка могла начинаться автоматически.
 
 Текущая папка определяется автоматически. **Прогресс, метки и настройки сохраняются.** Начиная с 1.8.0 скачиваются только изменения, если для вашей версии подготовлен небольшой пакет. Иначе используется полный комплект. Для автоматического перехода с 1.7.1–1.7.2 полный комплект потребуется один раз.
 
@@ -146,7 +150,7 @@ For GPS, open **GPS** and check the in-game screenshots folder. If it is missing
 
 ### Updating
 
-The application checks for a new version once at startup. An available update downloads with a progress bar at the bottom. After downloading, the **Application update** window opens. Click **Update application** and confirm.
+From version 1.10.0, startup checks for an update once and offers its version and release notes. Click **Update** to download or **Later** to keep working. No package is downloaded before your choice. Confirm installation after downloading. Earlier versions may download automatically.
 
 The current installation folder is detected automatically. **Your progress, markers and settings are preserved.** From 1.8.0, only changed files are downloaded when a matching incremental package is available; otherwise a full package is used. Versions 1.7.1–1.7.2 need one full automatic upgrade to receive the new mechanism.
 
@@ -187,3 +191,15 @@ Support is optional; the application is free. Discord — coming soon.
 
 Игровые материалы принадлежат Battlestate Games. Независимый фанатский проект.  
 Game materials belong to Battlestate Games. An independent fan project.
+
+## Возможности версии 1.10.0 / Version 1.10.0
+
+- **Поиск / Search:** кнопка «Поиск» или Ctrl+K доступны из любого раздела. Ищите предметы, задания, карты, торговцев, боссов, убежище, события, сезоны и новости по частям русских или английских названий. / Use Search or Ctrl+K from any page, with partial Russian or English names across all reference categories.
+- **Списки / Lists:** при возврате из карточки сохраняются фильтры, сортировка, страница и прокрутка предметов и заданий в текущем сеансе. / Returning from item or quest details preserves list filters, sorting, page and scroll during the session.
+- **GPS:** «Включить GPS» / «Отключить GPS» сразу запускают или останавливают чтение скриншотов. Автосъёмка управляется отдельно. / Enable GPS and Disable GPS immediately control screenshot tracking; automatic capture is a separate control.
+- **Overlay Beta:** Настройки → Экспериментальное. По умолчанию выключен; выбор сохраняется. Alt+M показывает карту, панель позволяет выбрать другое сочетание. Нужен оконный режим без рамки. / Settings → Experimental. Off by default; your choice is saved. Alt+M shows the map; choose another hotkey in its panel. Requires borderless windowed mode.
+- **Достоверность карт / Map accuracy:** координаты сверены со справочником, но не подтверждены в текущем игровом патче. Опасные зоны и несовпадающие категории имеют предупреждения. / Reference comparisons do not establish current in-game accuracy. Hazards and mismatched categories carry explicit notices. See [map audit](MAP-AUDIT.md).
+
+Статус разработки и ограничения проверки: [отчёт](USABILITY-REPORT.md). / Development status and verification limits: [report](USABILITY-REPORT.md).
+
+Внизу окна отображается состояние соединения: зелёная точка **«Онлайн»**, красная **«Оффлайн»**. Карты и сохранённые данные доступны и без интернета. / The footer shows a green **Online** or red **Offline** indicator; saved maps and data remain available without internet.

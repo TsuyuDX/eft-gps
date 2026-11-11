@@ -52,6 +52,7 @@ export async function renderQuests(root) {
                   ? x.isSeasonalQuest
                   : x.type === "main" || x.type === "story")),
     );
+    page=Math.min(page,Math.max(0,Math.ceil(rows.length/50)-1));
     const box = root.querySelector("#quest-results");
     box.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Готово</th><th>Название</th><th>Торговец</th><th>Уровень</th><th>Требования</th></tr></thead><tbody>${rows
       .slice(page * 50, page * 50 + 50)
@@ -80,8 +81,10 @@ export async function renderQuests(root) {
       draw();
     }),
   );
+  root.querySelector("#quest-results").refreshQuestList=draw;
   draw();
 }
+export function refreshQuestList(root){root.querySelector("#quest-results")?.refreshQuestList?.();}
 export async function renderQuest(root, slug) {
   const q = await detail("quests", slug);
   renderQuestCard(root, q);

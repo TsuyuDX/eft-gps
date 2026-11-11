@@ -1,3 +1,7 @@
+> [!NOTE]
+> Интерфейс приложения частично создан с использованием искусственного интеллекта.
+> Application interface partially created with the assistance of AI.
+
 # T_S_U_Y_U EFT GPS — installation guide
 
 **[Download the Windows installer](https://github.com/TsuyuDX/eft-gps/releases/latest/download/EFT-GPS-Setup.exe)**
@@ -10,7 +14,7 @@
 4. Click **Next → Install**, wait for **100%**, then click **Open application**.
 5. Choose **English** in the application and follow the first-run introduction.
 
-For a manual update, close the app and select its existing folder containing **EFT GPS.exe**. Your settings and progress are preserved. Automatic updates use a separate update window and detect the existing folder.
+For a manual update, close the app and select its existing folder containing **EFT GPS.exe**. Your settings and progress are preserved. From 1.10.0, update checks offer release notes and **Update / Later**. Downloading begins only after Update; setup detects the existing folder. Earlier versions may download automatically.
 
 See the complete guide for screenshots, GPS setup, requirements and troubleshooting.
 

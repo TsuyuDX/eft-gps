@@ -29,7 +29,7 @@ test('reference links and assets reject executable protocols and attribute injec
 test('live server blocks foreign origins, rebinding, static junction escapes and invalid profile writes',async t=>{
  const directory=await fs.mkdtemp(path.join(process.cwd(),'work/security-server-'));
  let child; t.after(async()=>{if(child && child.exitCode===null){const exited=once(child,'exit');child.kill('SIGKILL');await exited;}await fs.rm(directory,{recursive:true,force:true});});
- for(const file of ['server.mjs','server/app-update.mjs','server/event-content.mjs','server/startup.mjs','server/gps.mjs','server/screenshot-cleanup.mjs','server/window-settings.mjs','public/core/gps-format.js','public/core/profile-schema.js']){
+ for(const file of ['server.mjs','server/connectivity.mjs','server/app-update.mjs','server/overlay.mjs','server/event-content.mjs','server/startup.mjs','server/gps.mjs','server/screenshot-cleanup.mjs','server/window-settings.mjs','public/core/gps-format.js','public/core/profile-schema.js']){
    await fs.mkdir(path.dirname(path.join(directory,file)),{recursive:true});await fs.copyFile(file,path.join(directory,file));
  }
  await fs.writeFile(path.join(directory,'package.json'),JSON.stringify({type:'module',version:'1.8.1'}));
@@ -48,6 +48,10 @@ test('live server blocks foreign origins, rebinding, static junction escapes and
  assert.equal((await fetch(origin+'/escape/secret.txt')).status,404);
  assert.equal((await fetch(origin+'/%')).status,400);
  const headers={Origin:origin,'Content-Type':'application/json'};
+ assert.equal((await fetch(origin+'/api/app-update/install',{method:'POST',headers:{Origin:'https://evil.test'},body:'{}'})).status,403);
+ assert.equal((await fetch(origin+'/api/overlay',{method:'POST',headers,body:JSON.stringify({enabled:false,extra:true})})).status,400);
+ assert.equal((await fetch(origin+'/api/overlay')).status,200);
+ assert.equal((await fetch(origin+'/api/connectivity',{headers:{Origin:'https://evil.test'}})).status,403);
  assert.equal((await fetch(origin+'/api/app-update/start',{method:'POST',headers})).status,202);
  assert.deepEqual(await fetch(origin+'/api/app-update/state').then(r=>r.json()),{phase:'current',preview:true});
  assert.equal((await fetch(origin+'/api/profile',{method:'PUT',headers,body:'{bad'})).status,400);

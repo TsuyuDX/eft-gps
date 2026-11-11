@@ -74,16 +74,26 @@ export class AppUpdater {
     });
     this.state={phase:'idle',percent:0,downloaded:0,total:0,file:'',version:''};
   }
-  start() {return this.job ||= this.run();}
+  start() {return this.job ||= this.check();}
+  async check() {
+    try {
+      this.state.phase='checking';
+      const release=await readJSON(`https://api.github.com/repos/${UPDATE_REPO}/releases/latest`,this.fetcher);
+      if(release.draft || release.prerelease || !newerVersion(release.tag_name,this.version)){this.state.phase='current';return;}
+      const metadata=releaseAsset(release,'EFTGPS-update.json');
+      const manifest=selectUpdate(await readJSON(metadata.browser_download_url,this.fetcher),release,this.version);
+      this.candidate={release,manifest};
+      Object.assign(this.state,{phase:'available',version:manifest.version,kind:manifest.kind||'full',total:manifest.size,changelog:String(release.body||'').slice(0,16000),releaseUrl:`https://github.com/${UPDATE_REPO}/releases/tag/${release.tag_name}`});
+    }catch(error){this.state.phase='error';this.state.error='unavailable';}
+  }
+  install(version) {
+    if(!this.candidate || version!==this.candidate.manifest.version)throw Error('update-not-offered');
+    return this.downloadJob ||= this.run();
+  }
   async run() {
     let directory, verified = false, installing = false;
     try {
-      this.state.phase='checking';
-      // Exactly one release lookup per server lifetime, including concurrent UI reloads.
-      const release=await readJSON(`https://api.github.com/repos/${UPDATE_REPO}/releases/latest`,this.fetcher);
-      if(release.draft || release.prerelease || !newerVersion(release.tag_name,this.version)) {this.state.phase='current';return;}
-      const metadata=releaseAsset(release,'EFTGPS-update.json');
-      const manifest=selectUpdate(await readJSON(metadata.browser_download_url,this.fetcher),release,this.version);
+      const {release,manifest}=this.candidate;
       directory=await fs.mkdtemp(path.join(this.temporary,'EFTGPS-update-'));
       const space=await fs.statfs(directory);
       if(space.bavail*space.bsize<manifest.size+256*1024**2) throw Error('disk-space');

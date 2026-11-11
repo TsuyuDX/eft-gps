@@ -1,0 +1,2598 @@
+{
+  "checkedAt": "2026-11-11T22:00:53.001Z",
+  "gameVersion": "1.3.x — exact current build not independently confirmed",
+  "method": "Structural validation plus comparison with the current TarkovHead map API. A reference match is not in-game verification.",
+  "maps": [
+    {
+      "mode": "regular",
+      "slug": "customs",
+      "categories": {
+        "lootLoose": 310,
+        "extracts": 28,
+        "spawns": 278,
+        "lootContainers": 551,
+        "locks": 37,
+        "hazards": 5,
+        "artillery": 2,
+        "switches": 1,
+        "stationaryWeapons": 4,
+        "transits": 4,
+        "quests": 167,
+        "seasonalDocuments": 30
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 2,
+      "hazards": 7,
+      "source": "https://www.tarkovhead.com/api/map/customs?gameMode=regular&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 7,
+      "markerReferenceMatch": false,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 310,
+          "current": 310,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 28,
+          "current": 28,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 278,
+          "current": 278,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 551,
+          "current": 551,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 37,
+          "current": 37,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 5,
+          "current": 5,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "artillery": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "switches": {
+          "local": 1,
+          "current": 1,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "stationaryWeapons": {
+          "local": 4,
+          "current": 4,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 4,
+          "current": 4,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 167,
+          "current": 174,
+          "coordinatesMatch": false,
+          "labelsMatch": false
+        },
+        "seasonalDocuments": {
+          "local": 30,
+          "current": 30,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "regular",
+      "slug": "factory",
+      "categories": {
+        "lootLoose": 81,
+        "extracts": 10,
+        "spawns": 119,
+        "lootContainers": 167,
+        "locks": 4,
+        "transits": 3,
+        "quests": 53,
+        "seasonalDocuments": 30
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 18,
+      "hazards": 0,
+      "source": "https://www.tarkovhead.com/api/map/factory?gameMode=regular&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 0,
+      "markerReferenceMatch": false,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 81,
+          "current": 81,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 10,
+          "current": 10,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 119,
+          "current": 119,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 167,
+          "current": 167,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 4,
+          "current": 4,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 3,
+          "current": 3,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 53,
+          "current": 55,
+          "coordinatesMatch": false,
+          "labelsMatch": false
+        },
+        "seasonalDocuments": {
+          "local": 30,
+          "current": 30,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "regular",
+      "slug": "ground-zero-21",
+      "categories": {
+        "lootLoose": 262,
+        "extracts": 6,
+        "spawns": 199,
+        "lootContainers": 523,
+        "locks": 6,
+        "hazards": 9,
+        "stationaryWeapons": 2,
+        "transits": 1,
+        "quests": 38,
+        "seasonalDocuments": 30
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 3,
+      "hazards": 9,
+      "source": "https://www.tarkovhead.com/api/map/ground-zero-21?gameMode=regular&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 9,
+      "markerReferenceMatch": false,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 262,
+          "current": 262,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 6,
+          "current": 6,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 199,
+          "current": 199,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 523,
+          "current": 523,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 6,
+          "current": 6,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 9,
+          "current": 9,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "stationaryWeapons": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 1,
+          "current": 1,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 38,
+          "current": 38,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "seasonalDocuments": {
+          "local": 30,
+          "current": 30,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "regular",
+      "slug": "ground-zero",
+      "categories": {
+        "lootLoose": 184,
+        "extracts": 9,
+        "spawns": 193,
+        "lootContainers": 523,
+        "locks": 6,
+        "hazards": 9,
+        "stationaryWeapons": 2,
+        "transits": 1,
+        "quests": 35,
+        "seasonalDocuments": 30
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 7,
+      "hazards": 9,
+      "source": "https://www.tarkovhead.com/api/map/ground-zero?gameMode=regular&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 9,
+      "markerReferenceMatch": false,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 184,
+          "current": 184,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 9,
+          "current": 9,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 193,
+          "current": 193,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 523,
+          "current": 523,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 6,
+          "current": 6,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 9,
+          "current": 9,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "stationaryWeapons": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 1,
+          "current": 1,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 35,
+          "current": 35,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "seasonalDocuments": {
+          "local": 30,
+          "current": 30,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "regular",
+      "slug": "icebreaker",
+      "categories": {
+        "lootLoose": 78,
+        "extracts": 1,
+        "spawns": 56,
+        "locks": 11,
+        "quests": 27,
+        "seasonalDocuments": 20
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 14,
+      "hazards": 0,
+      "source": "https://www.tarkovhead.com/api/map/icebreaker?gameMode=regular&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 0,
+      "markerReferenceMatch": true,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 78,
+          "current": 78,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 1,
+          "current": 1,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 56,
+          "current": 56,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 11,
+          "current": 11,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 27,
+          "current": 27,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "seasonalDocuments": {
+          "local": 20,
+          "current": 20,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "regular",
+      "slug": "interchange",
+      "categories": {
+        "lootLoose": 492,
+        "extracts": 9,
+        "spawns": 232,
+        "lootContainers": 823,
+        "locks": 15,
+        "hazards": 25,
+        "switches": 6,
+        "stationaryWeapons": 2,
+        "transits": 2,
+        "quests": 65,
+        "seasonalDocuments": 29
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 6,
+      "hazards": 25,
+      "source": "https://www.tarkovhead.com/api/map/interchange?gameMode=regular&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 25,
+      "markerReferenceMatch": true,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 492,
+          "current": 492,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 9,
+          "current": 9,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 232,
+          "current": 232,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 823,
+          "current": 823,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 15,
+          "current": 15,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 25,
+          "current": 25,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "switches": {
+          "local": 6,
+          "current": 6,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "stationaryWeapons": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 65,
+          "current": 65,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "seasonalDocuments": {
+          "local": 29,
+          "current": 29,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "regular",
+      "slug": "lighthouse",
+      "categories": {
+        "lootLoose": 844,
+        "extracts": 12,
+        "spawns": 213,
+        "lootContainers": 533,
+        "locks": 26,
+        "hazards": 116,
+        "switches": 2,
+        "stationaryWeapons": 8,
+        "transits": 4,
+        "quests": 65,
+        "seasonalDocuments": 31
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 10,
+      "hazards": 116,
+      "source": "https://www.tarkovhead.com/api/map/lighthouse?gameMode=regular&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 116,
+      "markerReferenceMatch": false,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 844,
+          "current": 844,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 12,
+          "current": 12,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 213,
+          "current": 213,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 533,
+          "current": 533,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 26,
+          "current": 26,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 116,
+          "current": 116,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "switches": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "stationaryWeapons": {
+          "local": 8,
+          "current": 8,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 4,
+          "current": 4,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 65,
+          "current": 70,
+          "coordinatesMatch": false,
+          "labelsMatch": false
+        },
+        "seasonalDocuments": {
+          "local": 31,
+          "current": 31,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "regular",
+      "slug": "night-factory",
+      "categories": {
+        "lootLoose": 98,
+        "extracts": 9,
+        "spawns": 119,
+        "lootContainers": 167,
+        "locks": 4,
+        "transits": 3,
+        "quests": 48,
+        "seasonalDocuments": 30
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 23,
+      "hazards": 0,
+      "source": "https://www.tarkovhead.com/api/map/night-factory?gameMode=regular&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 0,
+      "markerReferenceMatch": false,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 98,
+          "current": 98,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 9,
+          "current": 9,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 119,
+          "current": 119,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 167,
+          "current": 167,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 4,
+          "current": 4,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 3,
+          "current": 3,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 48,
+          "current": 50,
+          "coordinatesMatch": false,
+          "labelsMatch": false
+        },
+        "seasonalDocuments": {
+          "local": 30,
+          "current": 30,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "regular",
+      "slug": "reserve",
+      "categories": {
+        "lootLoose": 467,
+        "extracts": 11,
+        "spawns": 167,
+        "lootContainers": 991,
+        "locks": 34,
+        "hazards": 4,
+        "artillery": 2,
+        "switches": 3,
+        "stationaryWeapons": 8,
+        "transits": 3,
+        "quests": 73,
+        "seasonalDocuments": 31
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 4,
+      "hazards": 6,
+      "source": "https://www.tarkovhead.com/api/map/reserve?gameMode=regular&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 6,
+      "markerReferenceMatch": false,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 467,
+          "current": 467,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 11,
+          "current": 11,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 167,
+          "current": 167,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 991,
+          "current": 991,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 34,
+          "current": 34,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 4,
+          "current": 4,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "artillery": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "switches": {
+          "local": 3,
+          "current": 3,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "stationaryWeapons": {
+          "local": 8,
+          "current": 8,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 3,
+          "current": 3,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 73,
+          "current": 76,
+          "coordinatesMatch": false,
+          "labelsMatch": false
+        },
+        "seasonalDocuments": {
+          "local": 31,
+          "current": 31,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "regular",
+      "slug": "shoreline",
+      "categories": {
+        "lootLoose": 444,
+        "extracts": 19,
+        "spawns": 282,
+        "lootContainers": 756,
+        "locks": 34,
+        "hazards": 30,
+        "artillery": 2,
+        "stationaryWeapons": 4,
+        "transits": 4,
+        "quests": 132,
+        "seasonalDocuments": 31
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 3,
+      "hazards": 32,
+      "source": "https://www.tarkovhead.com/api/map/shoreline?gameMode=regular&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 32,
+      "markerReferenceMatch": false,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 444,
+          "current": 444,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 19,
+          "current": 19,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 282,
+          "current": 282,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 756,
+          "current": 756,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 34,
+          "current": 34,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 30,
+          "current": 30,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "artillery": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "stationaryWeapons": {
+          "local": 4,
+          "current": 4,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 4,
+          "current": 4,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 132,
+          "current": 135,
+          "coordinatesMatch": false,
+          "labelsMatch": false
+        },
+        "seasonalDocuments": {
+          "local": 31,
+          "current": 31,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "regular",
+      "slug": "streets-of-tarkov",
+      "categories": {
+        "lootLoose": 948,
+        "btr": 17,
+        "extracts": 19,
+        "spawns": 420,
+        "lootContainers": 1282,
+        "locks": 63,
+        "hazards": 56,
+        "stationaryWeapons": 9,
+        "transits": 3,
+        "quests": 163,
+        "seasonalDocuments": 29
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 0,
+      "hazards": 56,
+      "source": "https://www.tarkovhead.com/api/map/streets-of-tarkov?gameMode=regular&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 56,
+      "markerReferenceMatch": false,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 948,
+          "current": 948,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "btr": {
+          "local": 17,
+          "current": 17,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 19,
+          "current": 19,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 420,
+          "current": 420,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 1282,
+          "current": 1282,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 63,
+          "current": 63,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 56,
+          "current": 56,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "stationaryWeapons": {
+          "local": 9,
+          "current": 9,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 3,
+          "current": 3,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 163,
+          "current": 163,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "seasonalDocuments": {
+          "local": 29,
+          "current": 29,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "regular",
+      "slug": "terminal",
+      "categories": {
+        "lootLoose": 13,
+        "spawns": 109,
+        "locks": 2,
+        "hazards": 2,
+        "artillery": 10,
+        "quests": 26
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 0,
+      "hazards": 12,
+      "source": "https://www.tarkovhead.com/api/map/terminal?gameMode=regular&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 12,
+      "markerReferenceMatch": true,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 13,
+          "current": 13,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 109,
+          "current": 109,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "artillery": {
+          "local": 10,
+          "current": 10,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 26,
+          "current": 26,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "regular",
+      "slug": "the-lab",
+      "categories": {
+        "lootLoose": 362,
+        "extracts": 7,
+        "spawns": 134,
+        "lootContainers": 319,
+        "locks": 17,
+        "switches": 15,
+        "transits": 1,
+        "quests": 42,
+        "seasonalDocuments": 36
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 0,
+      "hazards": 0,
+      "source": "https://www.tarkovhead.com/api/map/the-lab?gameMode=regular&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 0,
+      "markerReferenceMatch": false,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 362,
+          "current": 362,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 7,
+          "current": 7,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 134,
+          "current": 134,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 319,
+          "current": 319,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 17,
+          "current": 17,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "switches": {
+          "local": 15,
+          "current": 15,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 1,
+          "current": 1,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 42,
+          "current": 45,
+          "coordinatesMatch": false,
+          "labelsMatch": false
+        },
+        "seasonalDocuments": {
+          "local": 36,
+          "current": 36,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "regular",
+      "slug": "the-labyrinth",
+      "categories": {
+        "lootLoose": 176,
+        "extracts": 2,
+        "spawns": 19,
+        "lootContainers": 35,
+        "locks": 8,
+        "hazards": 19,
+        "switches": 12,
+        "quests": 30,
+        "seasonalDocuments": 28
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 0,
+      "hazards": 19,
+      "source": "https://www.tarkovhead.com/api/map/the-labyrinth?gameMode=regular&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 19,
+      "markerReferenceMatch": true,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 176,
+          "current": 176,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 19,
+          "current": 19,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 35,
+          "current": 35,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 8,
+          "current": 8,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 19,
+          "current": 19,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "switches": {
+          "local": 12,
+          "current": 12,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 30,
+          "current": 30,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "seasonalDocuments": {
+          "local": 28,
+          "current": 28,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "regular",
+      "slug": "woods",
+      "categories": {
+        "lootLoose": 300,
+        "btr": 32,
+        "extracts": 20,
+        "spawns": 332,
+        "lootContainers": 428,
+        "locks": 4,
+        "hazards": 64,
+        "artillery": 2,
+        "stationaryWeapons": 2,
+        "transits": 4,
+        "quests": 103,
+        "seasonalDocuments": 30
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 1,
+      "hazards": 66,
+      "source": "https://www.tarkovhead.com/api/map/woods?gameMode=regular&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 66,
+      "markerReferenceMatch": false,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 300,
+          "current": 300,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "btr": {
+          "local": 32,
+          "current": 32,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 20,
+          "current": 20,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 332,
+          "current": 332,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 428,
+          "current": 428,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 4,
+          "current": 4,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 64,
+          "current": 64,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "artillery": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "stationaryWeapons": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 4,
+          "current": 4,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 103,
+          "current": 105,
+          "coordinatesMatch": false,
+          "labelsMatch": false
+        },
+        "seasonalDocuments": {
+          "local": 30,
+          "current": 30,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "pve",
+      "slug": "customs",
+      "categories": {
+        "lootLoose": 310,
+        "extracts": 28,
+        "spawns": 278,
+        "lootContainers": 551,
+        "locks": 37,
+        "hazards": 5,
+        "artillery": 2,
+        "switches": 1,
+        "stationaryWeapons": 4,
+        "transits": 4,
+        "quests": 167,
+        "seasonalDocuments": 30
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 2,
+      "hazards": 7,
+      "source": "https://www.tarkovhead.com/api/map/customs?gameMode=pve&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 7,
+      "markerReferenceMatch": false,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 310,
+          "current": 310,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 28,
+          "current": 28,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 278,
+          "current": 278,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 551,
+          "current": 551,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 37,
+          "current": 37,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 5,
+          "current": 5,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "artillery": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "switches": {
+          "local": 1,
+          "current": 1,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "stationaryWeapons": {
+          "local": 4,
+          "current": 4,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 4,
+          "current": 4,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 167,
+          "current": 174,
+          "coordinatesMatch": false,
+          "labelsMatch": false
+        },
+        "seasonalDocuments": {
+          "local": 30,
+          "current": 30,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "pve",
+      "slug": "factory",
+      "categories": {
+        "lootLoose": 81,
+        "extracts": 10,
+        "spawns": 119,
+        "lootContainers": 167,
+        "locks": 4,
+        "transits": 3,
+        "quests": 53,
+        "seasonalDocuments": 30
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 18,
+      "hazards": 0,
+      "source": "https://www.tarkovhead.com/api/map/factory?gameMode=pve&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 0,
+      "markerReferenceMatch": false,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 81,
+          "current": 81,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 10,
+          "current": 10,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 119,
+          "current": 119,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 167,
+          "current": 167,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 4,
+          "current": 4,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 3,
+          "current": 3,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 53,
+          "current": 55,
+          "coordinatesMatch": false,
+          "labelsMatch": false
+        },
+        "seasonalDocuments": {
+          "local": 30,
+          "current": 30,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "pve",
+      "slug": "ground-zero-21",
+      "categories": {
+        "lootLoose": 262,
+        "extracts": 6,
+        "spawns": 199,
+        "lootContainers": 523,
+        "locks": 6,
+        "hazards": 9,
+        "stationaryWeapons": 2,
+        "transits": 1,
+        "quests": 38,
+        "seasonalDocuments": 30
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 3,
+      "hazards": 9,
+      "source": "https://www.tarkovhead.com/api/map/ground-zero-21?gameMode=pve&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 9,
+      "markerReferenceMatch": true,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 262,
+          "current": 262,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 6,
+          "current": 6,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 199,
+          "current": 199,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 523,
+          "current": 523,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 6,
+          "current": 6,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 9,
+          "current": 9,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "stationaryWeapons": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 1,
+          "current": 1,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 38,
+          "current": 38,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "seasonalDocuments": {
+          "local": 30,
+          "current": 30,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "pve",
+      "slug": "ground-zero",
+      "categories": {
+        "lootLoose": 184,
+        "extracts": 9,
+        "spawns": 193,
+        "lootContainers": 523,
+        "locks": 6,
+        "hazards": 9,
+        "stationaryWeapons": 2,
+        "transits": 1,
+        "quests": 35,
+        "seasonalDocuments": 30
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 7,
+      "hazards": 9,
+      "source": "https://www.tarkovhead.com/api/map/ground-zero?gameMode=pve&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 9,
+      "markerReferenceMatch": false,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 184,
+          "current": 184,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 9,
+          "current": 9,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 193,
+          "current": 193,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 523,
+          "current": 523,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 6,
+          "current": 6,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 9,
+          "current": 9,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "stationaryWeapons": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 1,
+          "current": 1,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 35,
+          "current": 35,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "seasonalDocuments": {
+          "local": 30,
+          "current": 30,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "pve",
+      "slug": "icebreaker",
+      "categories": {
+        "lootLoose": 78,
+        "extracts": 1,
+        "spawns": 56,
+        "locks": 11,
+        "quests": 30,
+        "seasonalDocuments": 20
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 14,
+      "hazards": 0,
+      "source": "https://www.tarkovhead.com/api/map/icebreaker?gameMode=pve&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 0,
+      "markerReferenceMatch": true,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 78,
+          "current": 78,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 1,
+          "current": 1,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 56,
+          "current": 56,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 11,
+          "current": 11,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 30,
+          "current": 30,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "seasonalDocuments": {
+          "local": 20,
+          "current": 20,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "pve",
+      "slug": "interchange",
+      "categories": {
+        "lootLoose": 492,
+        "extracts": 9,
+        "spawns": 232,
+        "lootContainers": 823,
+        "locks": 15,
+        "hazards": 25,
+        "switches": 6,
+        "stationaryWeapons": 2,
+        "transits": 2,
+        "quests": 65,
+        "seasonalDocuments": 29
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 6,
+      "hazards": 25,
+      "source": "https://www.tarkovhead.com/api/map/interchange?gameMode=pve&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 25,
+      "markerReferenceMatch": true,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 492,
+          "current": 492,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 9,
+          "current": 9,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 232,
+          "current": 232,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 823,
+          "current": 823,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 15,
+          "current": 15,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 25,
+          "current": 25,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "switches": {
+          "local": 6,
+          "current": 6,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "stationaryWeapons": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 65,
+          "current": 65,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "seasonalDocuments": {
+          "local": 29,
+          "current": 29,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "pve",
+      "slug": "lighthouse",
+      "categories": {
+        "lootLoose": 844,
+        "extracts": 12,
+        "spawns": 213,
+        "lootContainers": 533,
+        "locks": 26,
+        "hazards": 116,
+        "switches": 2,
+        "stationaryWeapons": 8,
+        "transits": 4,
+        "quests": 67,
+        "seasonalDocuments": 31
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 10,
+      "hazards": 116,
+      "source": "https://www.tarkovhead.com/api/map/lighthouse?gameMode=pve&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 116,
+      "markerReferenceMatch": false,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 844,
+          "current": 844,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 12,
+          "current": 12,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 213,
+          "current": 213,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 533,
+          "current": 533,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 26,
+          "current": 26,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 116,
+          "current": 116,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "switches": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "stationaryWeapons": {
+          "local": 8,
+          "current": 8,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 4,
+          "current": 4,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 67,
+          "current": 72,
+          "coordinatesMatch": false,
+          "labelsMatch": false
+        },
+        "seasonalDocuments": {
+          "local": 31,
+          "current": 31,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "pve",
+      "slug": "night-factory",
+      "categories": {
+        "lootLoose": 98,
+        "extracts": 9,
+        "spawns": 119,
+        "lootContainers": 167,
+        "locks": 4,
+        "transits": 3,
+        "quests": 50,
+        "seasonalDocuments": 30
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 23,
+      "hazards": 0,
+      "source": "https://www.tarkovhead.com/api/map/night-factory?gameMode=pve&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 0,
+      "markerReferenceMatch": true,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 98,
+          "current": 98,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 9,
+          "current": 9,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 119,
+          "current": 119,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 167,
+          "current": 167,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 4,
+          "current": 4,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 3,
+          "current": 3,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 50,
+          "current": 50,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "seasonalDocuments": {
+          "local": 30,
+          "current": 30,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "pve",
+      "slug": "reserve",
+      "categories": {
+        "lootLoose": 467,
+        "extracts": 11,
+        "spawns": 167,
+        "lootContainers": 991,
+        "locks": 34,
+        "hazards": 4,
+        "artillery": 2,
+        "switches": 3,
+        "stationaryWeapons": 8,
+        "transits": 3,
+        "quests": 73,
+        "seasonalDocuments": 31
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 4,
+      "hazards": 6,
+      "source": "https://www.tarkovhead.com/api/map/reserve?gameMode=pve&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 6,
+      "markerReferenceMatch": false,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 467,
+          "current": 467,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 11,
+          "current": 11,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 167,
+          "current": 167,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 991,
+          "current": 991,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 34,
+          "current": 34,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 4,
+          "current": 4,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "artillery": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "switches": {
+          "local": 3,
+          "current": 3,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "stationaryWeapons": {
+          "local": 8,
+          "current": 8,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 3,
+          "current": 3,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 73,
+          "current": 76,
+          "coordinatesMatch": false,
+          "labelsMatch": false
+        },
+        "seasonalDocuments": {
+          "local": 31,
+          "current": 31,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "pve",
+      "slug": "shoreline",
+      "categories": {
+        "lootLoose": 444,
+        "extracts": 19,
+        "spawns": 282,
+        "lootContainers": 756,
+        "locks": 34,
+        "hazards": 30,
+        "artillery": 2,
+        "stationaryWeapons": 4,
+        "transits": 4,
+        "quests": 132,
+        "seasonalDocuments": 31
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 3,
+      "hazards": 32,
+      "source": "https://www.tarkovhead.com/api/map/shoreline?gameMode=pve&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 32,
+      "markerReferenceMatch": false,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 444,
+          "current": 444,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 19,
+          "current": 19,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 282,
+          "current": 282,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 756,
+          "current": 756,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 34,
+          "current": 34,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 30,
+          "current": 30,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "artillery": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "stationaryWeapons": {
+          "local": 4,
+          "current": 4,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 4,
+          "current": 4,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 132,
+          "current": 135,
+          "coordinatesMatch": false,
+          "labelsMatch": false
+        },
+        "seasonalDocuments": {
+          "local": 31,
+          "current": 31,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "pve",
+      "slug": "streets-of-tarkov",
+      "categories": {
+        "lootLoose": 948,
+        "btr": 17,
+        "extracts": 19,
+        "spawns": 420,
+        "lootContainers": 1282,
+        "locks": 63,
+        "hazards": 56,
+        "stationaryWeapons": 9,
+        "transits": 3,
+        "quests": 163,
+        "seasonalDocuments": 29
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 0,
+      "hazards": 56,
+      "source": "https://www.tarkovhead.com/api/map/streets-of-tarkov?gameMode=pve&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 56,
+      "markerReferenceMatch": false,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 948,
+          "current": 948,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "btr": {
+          "local": 17,
+          "current": 17,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 19,
+          "current": 19,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 420,
+          "current": 420,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 1282,
+          "current": 1282,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 63,
+          "current": 63,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 56,
+          "current": 56,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "stationaryWeapons": {
+          "local": 9,
+          "current": 9,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 3,
+          "current": 3,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 163,
+          "current": 163,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "seasonalDocuments": {
+          "local": 29,
+          "current": 29,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "pve",
+      "slug": "terminal",
+      "categories": {
+        "lootLoose": 13,
+        "spawns": 109,
+        "locks": 2,
+        "hazards": 2,
+        "artillery": 10,
+        "quests": 26
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 0,
+      "hazards": 12,
+      "source": "https://www.tarkovhead.com/api/map/terminal?gameMode=pve&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 12,
+      "markerReferenceMatch": true,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 13,
+          "current": 13,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 109,
+          "current": 109,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "artillery": {
+          "local": 10,
+          "current": 10,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 26,
+          "current": 26,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "pve",
+      "slug": "the-lab",
+      "categories": {
+        "lootLoose": 362,
+        "extracts": 7,
+        "spawns": 134,
+        "lootContainers": 319,
+        "locks": 17,
+        "switches": 15,
+        "transits": 1,
+        "quests": 42,
+        "seasonalDocuments": 36
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 0,
+      "hazards": 0,
+      "source": "https://www.tarkovhead.com/api/map/the-lab?gameMode=pve&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 0,
+      "markerReferenceMatch": false,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 362,
+          "current": 362,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 7,
+          "current": 7,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 134,
+          "current": 134,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 319,
+          "current": 319,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 17,
+          "current": 17,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "switches": {
+          "local": 15,
+          "current": 15,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 1,
+          "current": 1,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 42,
+          "current": 45,
+          "coordinatesMatch": false,
+          "labelsMatch": false
+        },
+        "seasonalDocuments": {
+          "local": 36,
+          "current": 36,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "pve",
+      "slug": "the-labyrinth",
+      "categories": {
+        "lootLoose": 176,
+        "extracts": 2,
+        "spawns": 19,
+        "lootContainers": 35,
+        "locks": 8,
+        "hazards": 19,
+        "switches": 12,
+        "quests": 30,
+        "seasonalDocuments": 28
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 0,
+      "hazards": 19,
+      "source": "https://www.tarkovhead.com/api/map/the-labyrinth?gameMode=pve&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 19,
+      "markerReferenceMatch": true,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 176,
+          "current": 176,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 19,
+          "current": 19,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 35,
+          "current": 35,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 8,
+          "current": 8,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 19,
+          "current": 19,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "switches": {
+          "local": 12,
+          "current": 12,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 30,
+          "current": 30,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "seasonalDocuments": {
+          "local": 28,
+          "current": 28,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    },
+    {
+      "mode": "pve",
+      "slug": "woods",
+      "categories": {
+        "lootLoose": 300,
+        "btr": 32,
+        "extracts": 20,
+        "spawns": 332,
+        "lootContainers": 428,
+        "locks": 4,
+        "hazards": 64,
+        "artillery": 2,
+        "stationaryWeapons": 2,
+        "transits": 4,
+        "quests": 103,
+        "seasonalDocuments": 30
+      },
+      "invalid": [],
+      "missingIcons": [],
+      "missingNames": [],
+      "outside": 1,
+      "hazards": 66,
+      "source": "https://www.tarkovhead.com/api/map/woods?gameMode=pve&locale=ru",
+      "verification": "reference-match-not-game-verified",
+      "hazardReferenceMatch": true,
+      "referenceHazards": 66,
+      "markerReferenceMatch": false,
+      "categoryReference": {
+        "lootLoose": {
+          "local": 300,
+          "current": 300,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "btr": {
+          "local": 32,
+          "current": 32,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "extracts": {
+          "local": 20,
+          "current": 20,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "spawns": {
+          "local": 332,
+          "current": 332,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "lootContainers": {
+          "local": 428,
+          "current": 428,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "locks": {
+          "local": 4,
+          "current": 4,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "hazards": {
+          "local": 64,
+          "current": 64,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "artillery": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "stationaryWeapons": {
+          "local": 2,
+          "current": 2,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "transits": {
+          "local": 4,
+          "current": 4,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        },
+        "quests": {
+          "local": 103,
+          "current": 105,
+          "coordinatesMatch": false,
+          "labelsMatch": false
+        },
+        "seasonalDocuments": {
+          "local": 30,
+          "current": 30,
+          "coordinatesMatch": true,
+          "labelsMatch": true
+        }
+      }
+    }
+  ],
+  "totals": {
+    "markers": 34933,
+    "invalid": 0,
+    "missingIcons": 0,
+    "missingNames": 0,
+    "hazards": 714
+  }
+}

@@ -2297,3 +2297,7 @@ footer a,
 .app-update-dismiss {position:absolute; right:8px; top:5px; padding:4px 8px; border:0; background:none; color:#b9ab82;}
 
 .home-version { display:inline-flex; margin:0 0 12px; color:var(--accent,#b9ab82); font-size:12px; letter-spacing:.08em; }
+
+.app-update [data-update-install]{min-width:110px;margin-top:8px}.app-update [data-update-notes]{margin-top:8px}.app-update [data-update-notes] pre{font-family:inherit;font-size:13px;line-height:1.5;color:inherit}.global-results:empty{display:none}
+
+.app-update [hidden]{display:none!important}

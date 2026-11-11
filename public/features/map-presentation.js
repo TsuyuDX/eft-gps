@@ -20,10 +20,23 @@ const plain = (value) =>
     .replace(/<[^>]*>/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+export function markerFacts(marker) {
+  const facts=[];
+  if(marker.referenceUnconfirmed && !["hazards","artillery"].includes(marker.group))facts.push(t("Расположение этой категории не подтверждено текущим справочником."));
+  if(["hazards","artillery"].includes(marker.group))facts.push(t("Границы зоны указаны по справочнику; в текущем патче не подтверждены."));
+  if(marker.needsPower===true)facts.push(t("Требуется электропитание"));
+  if(marker.key?.name)facts.push(t("Ключ")+": "+plain(marker.key.name));
+  if(marker.switches?.length)facts.push(t("Связанные переключатели")+": "+marker.switches.map(x=>plain(x.name)).filter(Boolean).join(", "));
+  if(marker.transferItem?.name)facts.push(t("Связанный предмет")+": "+plain(marker.transferItem.name));
+  if(typeof marker.conditions==="string" && marker.conditions.trim())facts.push(plain(marker.conditions));
+  if(["extracts","transits"].includes(marker.group) && !marker.conditions && !marker.description && !marker.switches?.length && !marker.transferItem)facts.push(t("Дополнительные условия в снимке не указаны."));
+  return facts;
+}
 export function markerPresentation(marker, map = {}) {
   const kind =
     markerSubtype(marker, map)?.label || groups[marker.group] || "Метка";
-  const name = plain(marker.title || marker.name || kind);
+  const rawName = plain(marker.title || marker.name || kind);
+  const name = /^BotZone/i.test(rawName) ? t("Зона появления") : rawName;
   const detail = plain(
     marker.description || marker.objDescription || marker.details,
   );
@@ -31,6 +44,7 @@ export function markerPresentation(marker, map = {}) {
     marker.faction
   ];
   const description = [
+    ...markerFacts(marker),
     groups[marker.group] || kind,
     kind !== groups[marker.group] ? kind : "",
     detail,

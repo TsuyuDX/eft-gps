@@ -1,3 +1,5 @@
+import { Connectivity } from "./server/connectivity.mjs";
+import { OverlayManager } from "./server/overlay.mjs";
 import { EventContentService } from "./server/event-content.mjs";
 import { validProfile } from "./public/core/profile-schema.js";
 export { validProfile };
@@ -41,6 +43,8 @@ export function safePath(base, name) {
 }
 let lastPing = Date.now();
 const gps = new GpsService(root);
+const overlayManager=new OverlayManager(root,port);
+const connectivity = new Connectivity();
 const eventContent = new EventContentService(root);
 // Preview windows must never replace a working source checkout with a release.
 const appUpdater =
@@ -74,6 +78,10 @@ const server = http.createServer(async (req, res) => {
     ) {
       res.writeHead(403);
       return res.end("Forbidden origin");
+    }
+    if (url.pathname === "/api/connectivity" && req.method === "GET") {
+      res.setHeader("Content-Type", "application/json");res.setHeader("Cache-Control", "no-store");
+      return res.end(JSON.stringify(await connectivity.check()));
     }
     if (url.pathname === "/api/event-content" && req.method === "GET") {
       await eventContent.ready;
@@ -139,6 +147,22 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(202);
       return res.end();
     }
+    if (url.pathname === "/api/app-update/install" && req.method === "POST") {
+      if(req.headers.origin!==`http://${req.headers.host}`){res.writeHead(403);return res.end();}
+      let body="";for await(const chunk of req){body+=chunk.toString();if(body.length>1024){res.writeHead(413);res.end();req.destroy();return;}}
+      const {version}=JSON.parse(body);
+      try{void appUpdater.install(version);}catch{res.writeHead(409);return res.end();}
+      res.writeHead(202);return res.end();
+    }
+    if(url.pathname === "/api/overlay") {
+      res.setHeader("Content-Type","application/json");res.setHeader("Cache-Control","no-store");
+      if(req.method === "GET")return res.end(JSON.stringify(overlayManager.state()));
+      if(req.method !== "POST"){res.writeHead(405);return res.end("{}");}
+      if(req.headers.origin !== `http://${req.headers.host}`){res.writeHead(403);return res.end("{}");}
+      let body="";for await(const chunk of req){body+=chunk.toString();if(body.length>1024){res.writeHead(413);res.end();req.destroy();return;}}
+      const data=JSON.parse(body);if(typeof data?.enabled!=="boolean" || Object.keys(data).length!==1){res.writeHead(400);return res.end("{}");}
+      try{return res.end(JSON.stringify(await overlayManager.setEnabled(data.enabled)));}catch(error){res.writeHead(503);return res.end(JSON.stringify({error:error.message}));}
+    }
     if (url.pathname === "/api/startup" && req.method === "GET") {
       res.setHeader("Content-Type", "application/json");
       res.setHeader("Cache-Control", "no-store");
@@ -165,6 +189,7 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(409);
         return res.end();
       }
+      await overlayManager.setEnabled(false);
       gps.stop();
       res.writeHead(204);
       res.end();
@@ -373,6 +398,7 @@ if (
   if (process.env.EFTGPS_NO_EVENT_NETWORK !== "1")
     eventContent.start({ isActive: () => Date.now() - lastPing < 120000 });
   process.on("exit", () => {
+    overlayManager.dispose();
     gps.stop();
     eventContent.stop();
   });

@@ -1,6 +1,6 @@
 import { overlayMode } from "../core/overlay-mode.js";
 import { isSecretThemeActive } from "../core/secret-theme.js";
-import { markerPresentation } from "./map-presentation.js";
+import { markerFacts, markerPresentation } from "./map-presentation.js";
 import { getMarkerStyle } from "../core/marker-style.js";
 import { uiIcon } from "../core/icons.js";
 import { clusterMarkers } from "./map-clusters.js";
@@ -45,9 +45,9 @@ export function renderMaps(root) {
       "Карты",
       "Выходы, спавны, ключи, лут и задания · доступно без интернета",
     ) +
-    `<div class="card-grid maps-grid">${db.maps.map((m) => `<a class="card map-card" href="#/map/${db.mode}/${m.normalizedName}">${img(m.preview || m.svgPath || m.imageThumb || m.image, m.name)}<div class="card-body"><h2>${esc(m.name)}</h2><p class="muted small">${esc(m.description || "")}</p><span class="badge">${esc(String(m.duration || "—").replace("min", "мин"))}</span> <span class="badge">${esc(m.players || "—")} игроков</span></div></a>`).join("")}</div>`;
+    `<div class="card-grid maps-grid">${db.maps.map((m) => `<a class="card map-card" href="#/map/${db.mode}/${m.routeSlug || m.normalizedName}">${img(m.preview || m.svgPath || m.imageThumb || m.image, m.name)}<div class="card-body"><h2>${esc(m.name)}</h2><p class="muted small">${esc(m.description || "")}</p><span class="badge">${esc(String(m.duration || "—").replace("min", "мин"))}</span> <span class="badge">${esc(m.players || "—")} игроков</span></div></a>`).join("")}</div>`;
 }
-export function mapMarkers(m) {
+export function mapMarkers(m, {includeInvalid=false}={}) {
   const a = [];
   for (const [group, [label, color, symbol]] of Object.entries(groups)) {
     if (group === "lootLoose") {
@@ -104,7 +104,7 @@ export function mapMarkers(m) {
         a.push({ ...v, group, color, symbol, title });
       }
   }
-  return a.filter((x) => x.position);
+  return includeInvalid ? a : a.filter((x) => x.position && Number.isFinite(x.position.x) && Number.isFinite(x.position.z));
 }
 export async function renderMap(root, slug) {
   const { map: m } = await json(
@@ -123,6 +123,12 @@ export async function renderMap(root, slug) {
     pendingFocus = null;
   const active = new Set(["extracts"]),
     markers = mapMarkers(m);
+  const audit = await json("map-audit.json", "ru").catch(() => null);
+  const verified = audit?.maps?.find(entry => entry.mode === db.mode && entry.slug === slug);
+  for (const marker of markers) {
+    const category = verified?.categoryReference?.[marker.group];
+    marker.referenceUnconfirmed = !category || category.coordinatesMatch !== true;
+  }
   const disabledTypes = new Set();
   const subgroups = markerGroups(markers, m);
   const filtersKey = `map-filters-v2-${db.mode}-${slug}`;
@@ -377,7 +383,7 @@ export async function renderMap(root, slug) {
     }
     if (!pin) hazardOverlay.highlight(index >= 0 ? index : null);
     modal(
-      `<span class="eyebrow">${esc(pin ? "Своя метка" : groups[x.group]?.[0])}</span><h2>${esc(x.title || x.name)}</h2>${x.quest ? `<p><a href="#/quest/${db.mode}/${x.quest.normalizedName}">${esc(x.quest.name)} →</a></p>` : ""}${x.key ? `<a href="#/item/${db.mode}/${x.key.normalizedName}">${esc(x.key.name)}</a>` : ""}<div class="guide">${rich(x.description || x.objDescription || x.details)}</div>${x.image ? img(x.image, x.title, "guide-image") : ""}${x.items ? "<h3>Возможный лут</h3>" + x.items.map((i) => '<p><a href="#/item/' + db.mode + "/" + i.normalizedName + '">' + esc(i.name) + "</a></p>").join("") : ""}${x.faction ? `<p>Сторона: ${esc(x.faction)}</p>` : ""}${x.position ? `<p class="muted small">X: ${Number(x.position.x).toFixed(1)} · Y: ${Number(x.position.y).toFixed(1)} · Z: ${Number(x.position.z).toFixed(1)}</p>` : ""}${pin ? `<button id="delete-pin">Удалить свою метку</button>` : ""}`,
+      `<span class="eyebrow">${esc(pin ? "Своя метка" : groups[x.group]?.[0])}</span><h2>${esc(markerPresentation(x,m).name)}</h2>${markerFacts(x).map(text=>`<p class="small muted">${esc(text)}</p>`).join("")}${x.quest ? `<p><a href="#/quest/${db.mode}/${x.quest.normalizedName}">${esc(x.quest.name)} →</a></p>` : ""}${x.key ? `<a href="#/item/${db.mode}/${x.key.normalizedName}">${esc(x.key.name)}</a>` : ""}<div class="guide">${rich(x.description || x.objDescription || x.details)}</div>${x.image ? img(x.image, x.title, "guide-image") : ""}${x.items ? "<h3>Возможный лут</h3>" + x.items.map((i) => '<p><a href="#/item/' + db.mode + "/" + i.normalizedName + '">' + esc(i.name) + "</a></p>").join("") : ""}${x.faction ? `<p>Сторона: ${esc(({pmc:"ЧВК",scav:"Дикие",shared:"Совместный выход"})[x.faction] || x.faction)}</p>` : ""}${x.position ? `<p class="muted small">X: ${Number(x.position.x).toFixed(1)} · Y: ${Number(x.position.y).toFixed(1)} · Z: ${Number(x.position.z).toFixed(1)}</p>` : ""}${pin ? `<button id="delete-pin">Удалить свою метку</button>` : ""}`,
     );
     if (pin)
       document.querySelector("#delete-pin").onclick = () => {
@@ -693,7 +699,7 @@ export async function renderMap(root, slug) {
     );
   }
   draw();
-  bindMapGps(root, m, {
+  bindMapGps(root, {...m,normalizedName:slug}, {
     setFloor(value) {
       if (layer === String(value)) return;
       layer = String(value);

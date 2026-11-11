@@ -50,7 +50,9 @@ test("every marker in both game modes resolves to its actual themed SVG and a fi
     assert.ok(svg.includes('stroke="#030507"'), "Missing map contrast outline");
   }
   assert.ok(total > 30000);
-  assert.equal(maps, 28);
+  const index=JSON.parse(await fs.readFile("public/data/maps.json","utf8"));
+  assert.equal(maps, index.length*2);
+  for(const entry of index)for(const prefix of ["","pve/"])await fs.access("public/data/"+prefix+"maps/"+(entry.routeSlug||entry.normalizedName)+".json");
   assert.ok(used.size > 40);
 });
 test("close marker clusters preserve every source point and separate when zoomed", () => {

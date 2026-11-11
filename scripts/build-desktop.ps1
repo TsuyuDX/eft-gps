@@ -22,3 +22,6 @@ if ($LASTEXITCODE -ne 0) { throw 'Не удалось собрать устан�
 Copy-Item -LiteralPath "Tarkov Offline.exe" -Destination "Tarkov GPS.exe" -Force
 
 Copy-Item -LiteralPath "Tarkov Offline.exe" -Destination "EFT GPS.exe" -Force
+
+& $taskCompiler /nologo /target:winexe /platform:x64 /reference:System.Windows.Forms.dll /reference:System.Web.Extensions.dll /reference:System.Drawing.dll /reference:runtime\Microsoft.Web.WebView2.Core.dll /reference:runtime\Microsoft.Web.WebView2.WinForms.dll /win32icon:public\icons\app.ico /out:runtime\EFTGPSOverlay.exe /resource:scripts\native.en.json,native.en.json scripts\NativeText.cs scripts\OverlayHost.cs
+if ($LASTEXITCODE -ne 0) { throw 'Не удалось собрать Overlay Beta.' }

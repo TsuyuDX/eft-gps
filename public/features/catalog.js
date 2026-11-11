@@ -61,6 +61,7 @@ export function renderCatalog(root, initial = "") {
               (b.trades?.flea?.priceRUB || 0)) *
             (sort === "price-desc" ? -1 : 1),
     );
+    page=Math.min(page,Math.max(0,Math.ceil(list.length/50)-1));
     const box = root.querySelector("#catalog-results");
     box.innerHTML = list.length
       ? `<div class="table-wrap"><table><thead><tr><th>★</th><th>Название</th><th>Барахолка</th><th>Купить у торговца, ₽</th><th>Продать торговцу, ₽</th><th>Размер</th></tr></thead><tbody>${itemRows(list.slice(page * 50, page * 50 + 50))}</tbody></table></div>${pagination(list.length, page, 50)}`
@@ -81,8 +82,10 @@ export function renderCatalog(root, initial = "") {
       },
     ),
   );
+  root.querySelector("#catalog-results").refreshCatalog = draw;
   draw();
 }
+export function refreshCatalog(root) { root.querySelector("#catalog-results")?.refreshCatalog?.(); }
 const propLabels = {
   weight: "Вес, кг",
   armorClass: "Класс брони",

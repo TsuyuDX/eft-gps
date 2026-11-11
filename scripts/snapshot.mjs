@@ -122,7 +122,7 @@ await pool(mapLinks, async (p) => {
     `${origin}/api/map/${slug}?gameMode=regular&locale=ru`,
     path.join(data, "maps", slug + ".json"),
   );
-  if (d?.map) maps.push(d.map);
+  if (d?.map) maps.push({...d.map, routeSlug:slug});
 });
 write(
   path.join(data, "maps.json"),
@@ -130,6 +130,7 @@ write(
     ({
       name,
       normalizedName,
+      routeSlug,
       imageThumb,
       description,
       duration,
@@ -138,6 +139,7 @@ write(
     }) => ({
       name,
       normalizedName,
+      routeSlug,
       imageThumb,
       description,
       duration,

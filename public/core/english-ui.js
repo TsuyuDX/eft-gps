@@ -1,4 +1,23 @@
 export const englishUi = {
+  "⌕ Поиск": "⌕ Search",
+  "Экспериментальное": "Experimental",
+  "Экспериментальный оверлей": "Experimental overlay",
+  "GPS по внутриигровым скриншотам": "GPS from in-game screenshots",
+  "Включить GPS": "Enable GPS",
+  "Отключить GPS": "Disable GPS",
+  "Включён": "Enabled",
+  "Выключен": "Disabled",
+  "Автосъёмка и состояние GPS": "Automatic screenshots and GPS status",
+  "Связанные переключатели": "Linked switches",
+  "Связанный предмет": "Related item",
+  "Зона появления": "Spawn area",
+  "Границы зоны указаны по справочнику; в текущем патче не подтверждены.": "Reference boundary; not verified in the current game patch.",
+  "Требуется электропитание": "Requires power",
+  "Дополнительные условия в снимке не указаны.": "Additional conditions are not specified in the snapshot.",
+  "Позже": "Later",
+  "Обновить": "Update",
+  "Что нового": "What’s new",
+
   Предмет: "Item",
   Контейнер: "Container",
   Выход: "Extraction",
@@ -375,8 +394,8 @@ export const englishUi = {
     "Properties, prices, barters and crafting",
   "Обновление: закройте приложение и запустите":
     "To update, close the application and run",
-  "Источники данных и ссылка на состояние базы.":
-    "Game credits and database status link.",
+  "Сведения об игре и состояние соединения.":
+    "Game credits and internet connection status.",
   "Дата сохранения справочника в верхней панели.":
     "Database snapshot date in the header.",
   "Название, цель, предмет или текст прохождения":
@@ -548,4 +567,5 @@ export const englishUi = {
   "Язык интерфейса / Interface language": "Interface language",
   "Не удалось записать файл. Прогресс остаётся в окне; сохраните резервную копию.":
     "Could not save the file. Your progress remains in this window; export a backup.",
+  "Расположение этой категории не подтверждено текущим справочником.": "Positions in this category are not confirmed by the current reference.",
 };

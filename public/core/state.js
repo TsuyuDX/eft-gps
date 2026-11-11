@@ -55,9 +55,9 @@ export function save() {
     .catch(() => window.dispatchEvent(new Event("save-failed")));
   window.dispatchEvent(new Event("profile-updated"));
 }
-export function setMode(mode) {
+export function setMode(mode, { persist = true } = {}) {
   state.mode = mode;
-  save();
+  if (persist) save();
 }
 export function replaceState(p) {
   state = structuredClone(validate(p));

@@ -42,6 +42,7 @@ export class GpsService {
     this.helper = null;
     this.lastClient = 0;
     this.busy = false;
+    this.generation = 0;
     this.startedAt = Date.now();
     this.scanCount = 0;
     this.cleanup = new ScreenshotCleanup();
@@ -114,6 +115,7 @@ export class GpsService {
       this.detectedMap = null;
     }
     if (c.map !== this.config.map) this.fix = null;
+    this.generation++;
     this.config = c;
     fs.mkdirSync(path.dirname(this.configFile), { recursive: true });
     fs.writeFileSync(this.configFile + ".tmp", JSON.stringify(c, null, 2));
@@ -220,6 +222,7 @@ export class GpsService {
   async tick() {
     if (this.busy) return;
     this.busy = true;
+    const generation=this.generation;
     try {
       if (this.auto && Date.now() - this.lastClient > 45000) {
         this.stopAuto();
@@ -243,6 +246,7 @@ export class GpsService {
           ? this.cleanup.session
           : null;
       const files = await fs.promises.readdir(this.config.screenshotsPath);
+      if(!this.config.enabled || generation!==this.generation)return;
       const candidates = [];
       for (const name of files) {
         if (this.seen.has(name)) continue;
@@ -251,6 +255,7 @@ export class GpsService {
         const stat = await fs.promises
           .lstat(path.join(this.config.screenshotsPath, name))
           .catch(() => null);
+        if(!this.config.enabled || generation!==this.generation)return;
         if (!stat?.isFile() || stat.isSymbolicLink()) continue;
         const signature = stat.mtimeMs;
         this.seen.set(name, signature);
@@ -278,6 +283,7 @@ export class GpsService {
     }
   }
   async readLogs() {
+    const generation = this.generation;
     const folder = this.config.logsPath;
     if (!fs.existsSync(folder)) return;
     const files = [];
@@ -322,6 +328,7 @@ export class GpsService {
       } finally {
         await handle.close();
       }
+      if (generation !== this.generation) return;
       const text = carry + buffer.toString("utf8"),
         lines = text.split(/\r?\n/);
       carry = lines.pop();

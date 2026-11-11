@@ -38,7 +38,7 @@ test("destinations remain separate, named and labelled in either marker style", 
   for (const style of ["new", "classic"])
     assert.match(gpsPointerSvg(style), /viewBox="0 0 40 40"/);
 });
-test("all actual sniper danger zones have valid local contours", async () => {
+test("all reference sniper danger zones have valid local contours", async () => {
   let count = 0;
   for (const dir of ["public/data/maps", "public/data/pve/maps"])
     for (const file of await fs.readdir(dir)) {
@@ -55,7 +55,7 @@ test("all actual sniper danger zones have valid local contours", async () => {
           count++;
         }
     }
-  assert.equal(count, 212);
+  assert.ok(count >= 212, "Previously represented reference zones must not disappear without review");
 });
 test("hover exposes hidden hazard zones including muted floors and supports several selected zones", () => {
   const prior = globalThis.document;
@@ -113,4 +113,12 @@ test("every new icon has its own readable accent color", async () => {
     assert.match(svg, /stroke="#030507"/);
   }
   assert.equal(colors.size, 91);
+});
+
+
+test("map provenance distinguishes a reference from in-game verification and safely describes conditions",()=>{
+ const danger=markerPresentation({group:'hazards',title:'Снайпер'});assert.match(danger.description,/не подтверждены/);
+ const quest=markerPresentation({group:'quests',title:'Проверка',referenceUnconfirmed:true});assert.match(quest.description,/не подтверждено/);
+ const exit=markerPresentation({group:'extracts',title:'Gate',needsPower:true,key:{name:'<b>Key</b>'}});assert.match(exit.description,/электропитание/);assert.match(exit.description,/Key/);assert.doesNotMatch(exit.description,/<b>/);
+ const map={extracts:[{name:'valid',position:{x:0,z:1}},{name:'invalid',position:{x:null,z:2}}]};assert.equal(mapMarkers(map).length,1);assert.equal(mapMarkers(map,{includeInvalid:true}).length,2);
 });

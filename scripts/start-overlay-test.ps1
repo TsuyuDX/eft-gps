@@ -11,6 +11,6 @@ if(!$taskHealth){
  for($taskWait=0;$taskWait -lt 30;$taskWait++){try{$taskHealth=Invoke-RestMethod ($taskOrigin+'/api/health') -TimeoutSec 1;break}catch{Start-Sleep -Milliseconds 200}}
  if(!$taskHealth -or $taskHealth.instance -ne $taskInstance){throw 'Preview service did not start.'}
 }
-& 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe' /nologo /target:winexe /platform:x64 /reference:System.Windows.Forms.dll /reference:System.Drawing.dll /reference:System.Web.Extensions.dll /reference:runtime\Microsoft.Web.WebView2.Core.dll /reference:runtime\Microsoft.Web.WebView2.WinForms.dll /win32icon:public\icons/app.ico /out:runtime\EFTGPSOverlay.exe scripts\OverlayHost.cs
+& 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe' /nologo /target:winexe /platform:x64 /reference:System.Windows.Forms.dll /reference:System.Drawing.dll /reference:System.Web.Extensions.dll /reference:runtime\Microsoft.Web.WebView2.Core.dll /reference:runtime\Microsoft.Web.WebView2.WinForms.dll /win32icon:public\icons/app.ico /out:runtime\EFTGPSOverlay.exe /resource:scripts\native.en.json,native.en.json scripts\NativeText.cs scripts\OverlayHost.cs
 if($LASTEXITCODE -ne 0){throw 'Overlay compilation failed.'}
 Start-Process -FilePath (Join-Path (Get-Location) 'runtime\EFTGPSOverlay.exe') -ArgumentList '--preview-port 38479' -WorkingDirectory (Get-Location).Path

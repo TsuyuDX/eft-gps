@@ -43,7 +43,7 @@ export function createHazardOverlay(svg, map) {
         );
         node.setAttribute(
           "class",
-          "hazard-zone" + (muted(marker) ? " other-floor" : ""),
+          "hazard-zone unverified" + (muted(marker) ? " other-floor" : ""),
         );
         node.setAttribute("data-hazard-zone", index);
         node.setAttribute("vector-effect", "non-scaling-stroke");
@@ -51,7 +51,7 @@ export function createHazardOverlay(svg, map) {
           "http://www.w3.org/2000/svg",
           "title",
         );
-        title.textContent = marker.title || marker.name || "Опасная зона";
+        title.textContent = (marker.title || marker.name || "Опасная зона") + " — границы по справочнику, в текущем патче не подтверждены";
         node.append(title);
         fragment.append(node);
         nodes.set(index, node);

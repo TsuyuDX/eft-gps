@@ -39,7 +39,9 @@ class NativeUpdateTest {
         string first=Package(fixture,"first","1.7.0","old",false),next=Package(fixture,"next","1.8.0","new",false);
         string stage=Path.Combine(fixture,"stage-first");var release=PackageInstaller.Stage(first,stage,delegate{});PackageInstaller.Install(target,stage,release,delegate{});
         Directory.CreateDirectory(Path.Combine(target,"userdata"));File.WriteAllText(Path.Combine(target,"userdata","profile.json"),"keep progress");
-        File.WriteAllText(Path.Combine(target,"userdata","window-settings.json"),"keep settings");
+        string settings="{\"version\":1,\"values\":{\"tarkov-overlay-v1\":\"{\\\"enabled\\\":true}\"}}";
+        File.WriteAllText(Path.Combine(target,"userdata","window-settings.json"),settings);
+        File.WriteAllText(Path.Combine(target,"userdata","gps-settings.json"),"keep GPS configuration");
         PackageInstaller.CheckUpdateHash(next,PackageInstaller.Hash(next));
         Reject(()=>PackageInstaller.CheckUpdateHash(next,new String('0',64)),"Bad hash accepted");
         stage=Path.Combine(fixture,"stage-next");release=PackageInstaller.Stage(next,stage,delegate{});
@@ -52,7 +54,8 @@ class NativeUpdateTest {
         PackageInstaller.Install(target,stage,release,delegate{});
         Check(File.ReadAllText(Path.Combine(target,"public","index.html"))=="new","Update not applied to selected folder");
         Check(File.ReadAllText(Path.Combine(target,"userdata","profile.json"))=="keep progress","Progress changed");
-        Check(File.ReadAllText(Path.Combine(target,"userdata","window-settings.json"))=="keep settings","Settings changed");
+        Check(File.ReadAllText(Path.Combine(target,"userdata","window-settings.json"))==settings,"Settings changed");
+        Check(File.ReadAllText(Path.Combine(target,"userdata","gps-settings.json"))=="keep GPS configuration","GPS configuration changed");
         Reject(()=>PackageInstaller.CheckUpdateVersion(target,release,"1.8.0"),"Same version accepted");
         Reject(()=>PackageInstaller.Stage(Package(fixture,"traversal","1.9.0","bad",true),Path.Combine(fixture,"bad-stage"),delegate{}),"Traversal accepted");
         foreach(string unsafePath in new[]{"public/CON.txt","public/NUL","public/file:stream","public/file.install-new","release.json.install-new","userdata/profile.json","../outside.txt"}) {
@@ -78,6 +81,7 @@ class NativeUpdateTest {
         var combined=new JavaScriptSerializer().Deserialize<ReleaseInfo>(File.ReadAllText(Path.Combine(target,"release.json")));
         Check(combined.format==1&&combined.version=="1.8.1"&&combined.files.Length==5,"Installed inventory was not merged");
         Check(File.ReadAllText(Path.Combine(target,"userdata","profile.json"))=="keep progress","Delta changed progress");
+        Check(File.ReadAllText(Path.Combine(target,"userdata","window-settings.json"))==settings,"Delta changed overlay preference");
         stage=Path.Combine(fixture,"cancel-stage");var cancelRelease=PackageInstaller.Stage(Package(fixture,"cancel","1.8.2","cancelled",false),stage,delegate{});
         var cancellation=new System.Threading.CancellationTokenSource();bool cancelled=false;
         try{PackageInstaller.Install(target,stage,cancelRelease,delegate{},delegate(InstallStatus value){if(value.done>=2)cancellation.Cancel();},cancellation.Token);}catch(OperationCanceledException){cancelled=true;}
