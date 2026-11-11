@@ -77,5 +77,16 @@
       "1.8.1"
     ],
     "notesFile": "v1.9.1.md"
+  },
+  {
+    "version": "1.10.0",
+    "commit": "010ff3935ba6d9670cf1e1dc3ec61be15aa7b5fc",
+    "tag": "v1.10.0",
+    "deltaBases": [
+      "1.9.1",
+      "1.9.0",
+      "1.8.1"
+    ],
+    "notesFile": "v1.10.0.md"
   }
 ]
