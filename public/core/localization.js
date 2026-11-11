@@ -46,7 +46,7 @@ const words = {
   "Найти предметы, задания, модули убежища":
     "Search items, quests and hideout modules",
   "Ничего не найдено": "Nothing found",
-  "На связи с Тарковом": "Stay connected to Tarkov",
+  "Новости приложения и игры": "App and game news",
   "Все новости →": "All news →",
   Все: "All",
   Приложение: "Application",

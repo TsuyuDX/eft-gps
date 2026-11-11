@@ -1,5 +1,7 @@
 # История версий / Version history
 
+- **1.10.1** — уточнён заголовок новостей на главной: «Новости приложения и игры». / Clearer home news heading: “App and game news”.
+
 - **1.10.0** — глобальный поиск RU/EN; сохранение состояния списков; управление GPS одной кнопкой; существующий Overlay в настройках как Beta, выключенный по умолчанию; обновления только по выбору пользователя; исправленные варианты карт и точки появления Маяка, явные предупреждения о непроверенных координатах. / Global bilingual search, persistent list navigation, GPS toggle, opt-in integrated Overlay Beta, user-approved updates, corrected map variants and Lighthouse reference spawns, explicit coordinate-verification notices.
 
 - **1.9.1** — увеличены иллюстрации сезонных прохождений: до 76% высоты окна, галереи в одну колонку, более читаемые подписи. Иконки предметов сохраняют компактный размер. Убрана внешняя прокрутка окна: карта вписывается в рабочую область, длинные страницы и панели прокручиваются внутри. / Larger seasonal walkthrough illustrations, up to 76% of the window height, single-column galleries and readable captions. Inline item icons remain compact. The outer window no longer scrolls: maps fit the workspace, and long pages and panels scroll internally.
