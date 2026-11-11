@@ -1,5 +1,6 @@
+import {gameInfo} from "./game-info-client.js";
 import { db, json } from "./data.js";
-import { language } from "./localization.js";
+import { language, t } from "./localization.js";
 import { normalizeQuestSearch } from "./quest-search.js";
 import { esc, img, modal } from "./ui.js";
 const plain = (value) => String(value || "").replace(/<[^>]*>/g, " ");
@@ -29,6 +30,7 @@ export function buildSearchIndex(data, aliases = {}) {
         plain(
           [
             name,
+            typeof name==="string"?t(name):"",
             value.shortName,
             slug,
             value.description,
@@ -104,6 +106,7 @@ export function buildSearchIndex(data, aliases = {}) {
       (x) => "#/" + x.path.replaceAll(":mode", mode),
     );
   }
+  add("Событие", data.information, [], x=>"#/intel/"+x.id);
   add(
     "Новость",
     data.news,
@@ -137,7 +140,7 @@ export function searchEntries(index, query, perCategory = 8) {
 }
 let cached, signature;
 export async function globalIndex(news = []) {
-  const key = [db.mode, language(), db.items, db.quests, db.articles];
+  const key = [db.mode, language(), db.items, db.quests, db.articles, gameInfo()];
   if (!signature || key.some((v, i) => v !== signature[i])) {
     signature = key;
     const snapshot = { ...db };
@@ -158,7 +161,7 @@ export async function globalIndex(news = []) {
         snapshot.mode + "/quest-search.json",
       ).catch(() => ({}));
       return buildSearchIndex(
-        { ...snapshot, questSearch, news },
+        { ...snapshot, questSearch, news, information:gameInfo().records.filter(x=>x.type!=="news").map(x=>({...x,title:x.title[language()]||x.title.en,name:x.title[language()]||x.title.en,text:[x.title.ru,x.title.en,x.code,x.description.ru,x.description.en].filter(Boolean).join(" ")})) },
         Object.fromEntries(names.map((name, i) => [name, values[i]])),
       );
     })();

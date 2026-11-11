@@ -1,3 +1,4 @@
+import {validMapColour} from "../public/core/map-colour-model.js";
 import { validGraphics } from "../public/core/graphics-model.js";
 export function validWindowSettings(value) {
   if (
@@ -13,7 +14,8 @@ export function validWindowSettings(value) {
     entries.length <= 40 &&
     entries.every(
       ([key, text]) =>
-        (key === "eftgps-graphics-v1" ||
+        (key === "eftgps-map-colour-v1" ||
+  key === "eftgps-graphics-v1" ||
           key === "tarkov-overlay-v1" ||
           key === "tarkov-map-markers-v1" ||
           key === "tarkov-interface-v1" ||
@@ -29,6 +31,7 @@ export function validWindowSettings(value) {
               data &&
               typeof data === "object" &&
               !Array.isArray(data) &&
+              (key !== "eftgps-map-colour-v1" || validMapColour(data)) &&
               (key !== "eftgps-graphics-v1" || validGraphics(data)) &&
               (key !== "tarkov-overlay-v1" ||
                 (typeof data.enabled === "boolean" &&

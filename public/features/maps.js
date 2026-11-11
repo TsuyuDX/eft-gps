@@ -1,3 +1,4 @@
+import {bindMapColour} from "../core/map-colour.js";
 import { overlayMode } from "../core/overlay-mode.js";
 import { isSecretThemeActive } from "../core/secret-theme.js";
 import { markerFacts, markerPresentation } from "./map-presentation.js";
@@ -229,6 +230,7 @@ export async function renderMap(root, slug) {
     m,
   );
   const viewController = new AbortController();
+  bindMapColour(root,viewController.signal);
   window.addEventListener("view-changing", () => viewController.abort(), {
     once: true,
   });

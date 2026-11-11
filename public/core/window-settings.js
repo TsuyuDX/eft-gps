@@ -1,4 +1,5 @@
 const allowed = (key) =>
+  key === "eftgps-map-colour-v1" ||
   key === "eftgps-graphics-v1" ||
   key === "tarkov-overlay-v1" ||
   key === "tarkov-map-markers-v1" ||

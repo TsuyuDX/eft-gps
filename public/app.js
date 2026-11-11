@@ -1,3 +1,5 @@
+import { initializeGameInfo, startGameInfo } from "./core/game-info-client.js";
+import { renderHomeInformation, renderInformation, renderPromocodes } from "./features/game-info.js";
 import { renderGraphics } from "./features/graphics.js";
 import { uiIcon } from "./core/icons.js";
 import { startConnectivityStatus } from "./core/connectivity.js";
@@ -20,7 +22,7 @@ import { openHelp, maybeShowTour } from "./features/help.js";
 import { openSupport } from "./features/support.js";
 import { language, t } from "./core/localization.js";
 import { prepareStartup, finishStartup, startupError } from "./core/startup.js";
-import { newsCards, newsEntries, renderNews } from "./features/news.js";
+import { newsCards, newsEntries, renderNews, refreshGameNews } from "./features/news.js";
 import { loadWindowSettings } from "./core/window-settings.js";
 import { applyPreferences, openPreferences } from "./core/preferences.js";
 import {
@@ -59,12 +61,24 @@ if (communityLink && communityUrl) {
 installAppNavigation();
 installDesktopUi();
 installBackNavigation();
+const modeSelect=document.querySelector("#mode"),modeEmblem=document.createElement("span");
+modeEmblem.className="mode-emblem";modeEmblem.setAttribute("aria-hidden","true");modeSelect.before(modeEmblem);
+for(const option of modeSelect.options)option.textContent=option.value==="pve"?"PvE":"PvP";
+const drawModeEmblem=()=>modeEmblem.innerHTML=uiIcon(modeSelect.value==="pve"?"pve":"pvp",18);
+modeSelect.addEventListener("change",drawModeEmblem);window.addEventListener("language-changed",drawModeEmblem);
+
 await loadWindowSettings();
 applyPreferences();
 const app = document.querySelector("#app"),
   navigation = document.querySelector("#navigation");
 let routeVersion = 0;
 const viewCache = new ViewCache();
+window.addEventListener("game-info-updated",()=>{
+ refreshGameNews();
+ const homeNews=app.querySelector(".home-news .news-grid");if(homeNews)homeNews.innerHTML=newsCards(newsEntries.slice(0,4));
+ const list=app.querySelector("#news-list");if(list){const filter=app.querySelector("[data-news-filter].primary")?.dataset.newsFilter||"Все";list.innerHTML=newsCards(newsEntries.filter(x=>filter==="Все"||x.kind===filter));}
+});
+window.addEventListener("language-changed",refreshGameNews);
 let activeView = null;
 const viewKey = () => db.mode + ":" + language() + ":" + (location.hash || "#/");
 const sections = [
@@ -77,6 +91,7 @@ const sections = [
   ["trader", "Торговцы"],
   ["boss", "Боссы"],
   ["event", "События"],
+  ["promocodes", "Промокоды"],
   ["season", "Сезоны"],
   ["news", "Новости"],
   ["graphics", "Цветокоррекция"],
@@ -92,7 +107,8 @@ function nav() {
 }
 function home() {
   const completed = Object.values(current().quests).filter(Boolean).length;
-  app.innerHTML = `<section class="home-hero"><div class="eyebrow">НАВИГАЦИЯ / ПОДГОТОВКА / РЕЙД</div><h1>EFT <span>GPS</span></h1><div class="badge home-version" data-no-translate>${language() === "en" ? "Version" : "Версия"} ${APP_VERSION}</div><p>Всё для следующего рейда. Карты, GPS, задания и личный прогресс.</p><div class="row wrap home-actions"><a class="button primary" href="#/map/${db.mode}">Открыть карты ↗</a><a class="button" href="#/gps">Настроить GPS</a></div><div class="home-search"><span>⌕</span><input type="search" id="global-search" placeholder="Найти предметы, задания, модули убежища" autocomplete="off"><kbd>Ctrl K</kbd></div><div id="global-results" class="global-results" hidden></div></section><div class="dashboard-strip"><a href="#/map/${db.mode}"><b>${db.maps.length}</b> карт</a><a href="#/item/${db.mode}"><b>${db.items.length.toLocaleString(localeCode())}</b> предметов</a><a href="#/quest/${db.mode}"><b>${completed} / ${db.quests.length}</b> заданий</a><a href="#/items-tracker/${db.mode}"><b>Мой прогресс</b> →</a></div><section class="home-news"><h2 class="center">Новости приложения и игры</h2><div class="card-grid news-grid">${newsCards(newsEntries.slice(0, 4))}</div><p class="center" style="margin-top:24px"><a class="button" href="#/news">Все новости →</a></p></section>`;
+  app.innerHTML = `<section class="home-hero"><div class="eyebrow">НАВИГАЦИЯ / ПОДГОТОВКА / РЕЙД</div><h1>EFT <span>GPS</span></h1><div class="badge home-version" data-no-translate>${language() === "en" ? "Version" : "Версия"} ${APP_VERSION}</div><p>Всё для следующего рейда. Карты, GPS, задания и личный прогресс.</p><div class="row wrap home-actions"><a class="button primary" href="#/map/${db.mode}">Открыть карты ↗</a><a class="button" href="#/gps">Настроить GPS</a></div><div class="home-search"><span>⌕</span><input type="search" id="global-search" placeholder="Найти предметы, задания, модули убежища" autocomplete="off"><kbd>Ctrl K</kbd></div><div id="global-results" class="global-results" hidden></div></section><div class="dashboard-strip"><a href="#/map/${db.mode}"><b>${db.maps.length}</b> карт</a><a href="#/item/${db.mode}"><b>${db.items.length.toLocaleString(localeCode())}</b> предметов</a><a href="#/quest/${db.mode}"><b>${completed} / ${db.quests.length}</b> заданий</a><a href="#/items-tracker/${db.mode}"><b>Мой прогресс</b> →</a></div><div id="home-information"></div><section class="home-news"><h2 class="center">Новости приложения и игры</h2><div class="card-grid news-grid">${newsCards(newsEntries.slice(0, 4))}</div><p class="center" style="margin-top:24px"><a class="button" href="#/news">Все новости →</a></p></section>`;
+  renderHomeInformation(app.querySelector("#home-information"));
   bindGlobalSearch(app.querySelector("#global-search"), app.querySelector("#global-results"), newsEntries);
 }
 async function route() {
@@ -119,6 +135,7 @@ async function route() {
       await loadMode(modeOrSlug);
       setMode(modeOrSlug, {persist: !overlayMode});
       document.querySelector("#mode").value = db.mode;
+      drawModeEmblem();
       nav();
     }
     if (version !== routeVersion) return;
@@ -147,6 +164,12 @@ async function route() {
       case "settings":
         await renderSettings(app);
         break;
+      case "intel":
+        renderInformation(app, modeOrSlug);
+        break;
+      case "promocodes":
+        renderPromocodes(app);
+        break;
       case "graphics":
         await renderGraphics(app);
         break;
@@ -156,9 +179,14 @@ async function route() {
       case "news":
         renderNews(app, slug || modeOrSlug);
         break;
+      case "event-archive":
+        renderArticleList(app,"event");
+        break;
+      case "event":
+        if(modeOrSlug)await renderArticle(app,path);else renderInformation(app);
+        break;
       case "boss":
       case "trader":
-      case "event":
       case "season":
         slug || (modeOrSlug && !["regular", "pve"].includes(modeOrSlug))
           ? await renderArticle(app, path)
@@ -210,7 +238,10 @@ try {
   await loadState();
   await refreshEventContent();
   await init(profile().mode);
+  if(!overlayMode) await initializeGameInfo();
+  refreshGameNews();
   document.querySelector("#mode").value = db.mode;
+      drawModeEmblem();
   document.querySelector("#logo").src = "/icons/app-192.png";
   renderSnapshotDate();
   nav();
@@ -230,6 +261,7 @@ try {
   await finishStartup(startupResult);
   startGpsClient(() => db.mode);
   if (!overlayMode) { maybeShowTour(); startAppUpdates(); startConnectivityStatus(); void initializeOverlay(); }
+  if(!overlayMode) startGameInfo();
   startEventContent(async () => {
     clearEventContentCache();
     await loadMode(db.mode);
@@ -262,8 +294,9 @@ window.addEventListener("language-changed", async () => {
     if (!ready || change !== languageChangeVersion) return;
     renderSnapshotDate();
     nav();
+    const reopenPreferences=preferencesOpen?.isConnected && document.querySelector("#modal").open;
     await route();
-    if (preferencesOpen) openPreferences(selectedTab);
+    if (reopenPreferences) openPreferences(selectedTab);
   } catch (error) {
     app.innerHTML = errorView(error);
   }

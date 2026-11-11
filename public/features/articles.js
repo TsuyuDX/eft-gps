@@ -33,6 +33,7 @@ export function renderArticleList(root, type) {
   );
   root.innerHTML =
     heading(titles[type] || "Справочник", "Справочник доступен без интернета") +
+    (["event","season"].includes(type)?'<p><a class="button" href="#/intel">Актуальность, награды и источники →</a></p>':"") +
     `<div class="toolbar"><input type="search" id="article-search" aria-label="Поиск в разделе" placeholder="Поиск по названию…"><span class="muted" id="article-count" role="status"></span></div><div class="card-grid">${data
       .map((x) => {
         const slug = x.path.split("/").at(-1),

@@ -1064,3 +1064,13 @@ body.map-is-expanded #app{padding:0!important;max-width:none!important;overflow:
 .map-destination-label.label-above{top:auto;bottom:calc(100% + 2px)}
 .map-destination-label.label-edge-left{left:0;transform:none}
 .map-destination-label.label-edge-right{left:100%;transform:translateX(-100%)}
+
+.map-canvas>.map-image,.map-canvas>.map-floor-image,.map-canvas>.map-detail{filter:var(--map-colour-filter,none)}
+.preference-map-colour{margin-top:24px;border-top:1px solid var(--border,#353329);padding-top:14px}
+.map-colour-compare{position:relative;aspect-ratio:16/9;background:#050605;margin:14px 0;overflow:hidden}
+.map-colour-compare>img,.map-colour-compare>div,.map-colour-compare>div>img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none}
+.map-colour-compare>span{position:absolute;top:0;bottom:0;width:2px;background:#fff;left:50%;pointer-events:none}
+.map-colour-compare>input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize}
+.map-colour-compare:focus-within{outline:2px solid #c7b98e}
+.map-colour-sliders{display:grid;grid-template-columns:1fr 1fr;gap:0 22px}
+@media(max-width:600px){.map-colour-sliders{grid-template-columns:1fr}}

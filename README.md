@@ -206,3 +206,6 @@ Game materials belong to Battlestate Games. An independent fan project.
 
 
 Настройка изображения по своим скриншотам: [Графика и цветокоррекция](GRAPHICS.md).
+
+
+События, сезоны, промокоды и источники: [как обновляются сведения](GAME-INFORMATION.md).

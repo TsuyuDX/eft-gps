@@ -22,3 +22,6 @@ For Windows security messages, read [Windows warnings](README.md#windows-warning
 
 
 Screenshot-based image tuning: [Graphics and colour correction](GRAPHICS.md#english).
+
+
+Events, seasons, promo codes and sources: [how information updates work](GAME-INFORMATION.md#english).

@@ -1,3 +1,4 @@
+import { GameInfoService } from "./server/game-info.mjs";
 import { GraphicsGallery, graphicsGalleryRoute } from "./server/graphics-gallery.mjs";
 import { Connectivity } from "./server/connectivity.mjs";
 import { OverlayManager } from "./server/overlay.mjs";
@@ -43,6 +44,7 @@ export function safePath(base, name) {
   return p.startsWith(base + path.sep) ? p : null;
 }
 let lastPing = Date.now();
+const gameInfoService = new GameInfoService(root);
 const graphicsGallery = new GraphicsGallery(userRoot);
 const gps = new GpsService(root);
 const overlayManager=new OverlayManager(root,port);
@@ -80,6 +82,15 @@ const server = http.createServer(async (req, res) => {
     ) {
       res.writeHead(403);
       return res.end("Forbidden origin");
+    }
+    if (url.pathname === "/api/game-info" && req.method === "GET") {
+      await gameInfoService.ready;void gameInfoService.check();
+      res.setHeader("Content-Type","application/json");res.setHeader("Cache-Control","no-store");
+      return res.end(JSON.stringify(gameInfoService.payload()));
+    }
+    if (url.pathname === "/api/game-info/check" && req.method === "POST") {
+      if(req.headers.origin!==`http://${req.headers.host}`){res.writeHead(403);return res.end();}
+      void gameInfoService.check({force:true});res.writeHead(202);return res.end();
     }
     if (await graphicsGalleryRoute(graphicsGallery, req, res, url)) return;
     if (url.pathname === "/api/connectivity" && req.method === "GET") {

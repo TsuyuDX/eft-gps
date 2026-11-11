@@ -1,0 +1,29 @@
+name: Refresh game information
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: game-information-feed
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            package.json
+            scripts/collect-game-info.mjs
+            public/core/game-info-model.js
+            public/data/game-info.json
+            node_modules/
+      - name: Collect public official feeds and retain unverified candidates for review
+        run: node scripts/collect-game-info.mjs --publish
+        env:
+          GITHUB_TOKEN: ${{ github.token }}

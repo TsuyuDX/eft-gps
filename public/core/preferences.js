@@ -1,3 +1,4 @@
+import {renderMapColourControls} from "./map-colour.js";
 import { renderOverlayControl } from "./overlay-client.js";
 import { pressSecretTheme, resetSecretTheme } from "./secret-theme.js";
 import { bindMarkerStyleControls, markerStyleOptions } from "./marker-style.js";
@@ -103,6 +104,7 @@ export function renderPreferences(root, selected = "Интерфейс") {
       markerStyleOptions +
       "</select></label>",
   );
+  if(mapPanel){const colour=document.createElement("section");colour.className="preference-map-colour";mapPanel.append(colour);renderMapColourControls(colour);}
   root.querySelector("[data-secret-theme]").onclick = () => {
     if (pressSecretTheme())
       toast("Пасхалка открыта! Тема действует до перезапуска приложения.");

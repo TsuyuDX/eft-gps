@@ -1,4 +1,11 @@
 export const englishUi = {
+  "EFT GPS 1.11: события, промокоды и цветокоррекция": "EFT GPS 1.11: events, promo codes and colour correction",
+  "Официальные новости, проверка наград, сезон и инструменты подбора изображения в одном приложении.": "Official news, sourced rewards, seasons and image tuning in one application.",
+  "Сведения из Steam, Telegram и YouTube обновляются без переустановки. Для событий и промокодов показаны источники и статус проверки; неподтверждённые сроки не превращаются в таймеры.": "Steam, Telegram and YouTube information updates without reinstalling. Events and codes include sources and verification status; unconfirmed deadlines never become timers.",
+  "В разделе цветокоррекции можно импортировать свои скриншоты, сравнить «До / После», сохранить пресет и вручную подобрать похожие настройки NVIDIA/PostFX. В настройках карты отдельно меняется фон без перекрашивания меток.": "Import screenshots, compare Before / After, save a preset and manually tune NVIDIA/PostFX toward the same look. Map settings separately adjust the background without recolouring markers.",
+  "Актуальность, награды и источники →": "Status, rewards and sources →",
+  "Проверенные награды и сроки →": "Verified rewards and dates →",
+  "Промокоды": "Promo codes",
   "Графика и цветокоррекция →": "Graphics and colour correction →",
   "Цветокоррекция": "Colour correction",
   "Графика и цветокоррекция": "Graphics and colour correction",

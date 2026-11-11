@@ -1,0 +1,1893 @@
+{
+  "version": 1,
+  "generatedAt": "2026-11-11T23:49:54.621Z",
+  "lastSuccess": "2026-11-11T23:49:54.621Z",
+  "records": [
+    {
+      "id": "news-e9bd66102a94baeaf90f",
+      "type": "news",
+      "title": {
+        "ru": "The Kord Breach season will conclude on December 7.",
+        "en": "The Kord Breach season will conclude on December 7."
+      },
+      "description": {
+        "ru": "The Kord Breach season will conclude on December 7. Any",
+        "en": "The Kord Breach season will conclude on December 7. Any"
+      },
+      "source": "https://t.me/escapefromtarkovEN/6985",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-11-11T14:00:45+00:00",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-312b677c0de3361a5b9b",
+      "type": "news",
+      "title": {
+        "ru": "Kord Breach season will conclude on December 7",
+        "en": "Kord Breach season will conclude on December 7"
+      },
+      "description": {
+        "ru": "Kord Breach season will conclude on December 7 Kord Breach",
+        "en": "Kord Breach season will conclude on December 7 Kord Breach"
+      },
+      "source": "https://www.youtube.com/watch?v=ahr1yVNOyuw",
+      "publisher": "UC5QGploHhl9_XaxDiHZKamg",
+      "verified": "official",
+      "publishedAt": "2026-11-11T14:00:29+00:00",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-35d75a467f62e8008e2e",
+      "type": "news",
+      "title": {
+        "ru": "We have installed a technical update for #EscapefromTarkov.",
+        "en": "We have installed a technical update for #EscapefromTarkov."
+      },
+      "description": {
+        "ru": "We have installed a technical update for #EscapefromTarkov. On updated",
+        "en": "We have installed a technical update for #EscapefromTarkov. On updated"
+      },
+      "source": "https://t.me/escapefromtarkovEN/6984",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-11-11T07:34:07+00:00",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "update",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-ae52fd23559572ab269b",
+      "type": "news",
+      "title": {
+        "ru": "It has been some time since the release of the first developer diary on anticheat",
+        "en": "It has been some time since the release of the first developer diary on anticheat"
+      },
+      "description": {
+        "ru": "It has been some time since the release of the",
+        "en": "It has been some time since the release of the"
+      },
+      "source": "https://t.me/escapefromtarkovEN/6979",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-11-10T13:01:07+00:00",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-e1f52d9a6dde25fca936",
+      "type": "news",
+      "title": {
+        "ru": "It's the final day of Twitch Drops in #EscapefromTarkov!",
+        "en": "It's the final day of Twitch Drops in #EscapefromTarkov!"
+      },
+      "description": {
+        "ru": "It's the final day of Twitch Drops in #EscapefromTarkov! Tune",
+        "en": "It's the final day of Twitch Drops in #EscapefromTarkov! Tune"
+      },
+      "source": "https://t.me/escapefromtarkovEN/6975",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-11-08T15:00:01+00:00",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "event",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-c5e166668732b0ff34ac",
+      "type": "news",
+      "title": {
+        "ru": "Twitch Drops are live — tune in to streams and claim your rewards!",
+        "en": "Twitch Drops are live — tune in to streams and claim your rewards!"
+      },
+      "description": {
+        "ru": "Twitch Drops are live — tune in to streams and",
+        "en": "Twitch Drops are live — tune in to streams and"
+      },
+      "source": "https://t.me/escapefromtarkovEN/6972",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-11-07T15:00:40+00:00",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [
+        "pvp",
+        "pve",
+        "season"
+      ],
+      "category": "event",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-c40ba41e1d3c22f278f9",
+      "type": "news",
+      "title": {
+        "ru": "The Halloween celebrations continue — tune in to streams and claim your rewards!",
+        "en": "The Halloween celebrations continue — tune in to streams and claim your rewards!"
+      },
+      "description": {
+        "ru": "The Halloween celebrations continue — tune in to streams and",
+        "en": "The Halloween celebrations continue — tune in to streams and"
+      },
+      "source": "https://t.me/escapefromtarkovEN/6970",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-11-06T15:00:37+00:00",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [
+        "pvp",
+        "pve",
+        "season"
+      ],
+      "category": "event",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "event-candidate-c40ba41e1d3c22f278f9",
+      "type": "event",
+      "title": {
+        "ru": "The Halloween celebrations continue — tune in to streams and claim your rewards!",
+        "en": "The Halloween celebrations continue — tune in to streams and claim your rewards!"
+      },
+      "description": {
+        "ru": "Найдена публикация о событии. Этапы, награды и текущая активность требуют редакторской проверки.",
+        "en": "An event publication was found. Steps, rewards and current activity need editorial review."
+      },
+      "source": "https://t.me/escapefromtarkovEN/6970",
+      "publisher": null,
+      "verified": "unverified",
+      "publishedAt": "2026-11-06T15:00:37+00:00",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [
+        "pvp",
+        "pve",
+        "season"
+      ],
+      "category": "event",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "halloween-drops-2026",
+      "type": "event",
+      "title": {
+        "ru": "Хэллоуинские Twitch Drops",
+        "en": "Halloween Twitch Drops"
+      },
+      "description": {
+        "ru": "Период Drops завершился 9 ноября в 15:00 GMT. Это отдельная акция, её срок не является датой окончания игровых заданий.",
+        "en": "Drops ended on November 9 at 15:00 GMT. This was a separate promotion; its deadline is not the in-game quest deadline."
+      },
+      "source": "https://t.me/escapefromtarkovEN/6970",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-11-06T15:00:00Z",
+      "checkedAt": "2026-11-11T23:25:00Z",
+      "modes": [
+        "pvp",
+        "pve",
+        "season"
+      ],
+      "category": "",
+      "image": null,
+      "startsAt": "2026-11-06T15:00:00Z",
+      "endsAt": "2026-11-09T15:00:00Z",
+      "endsOn": null,
+      "endTimeConfirmed": true,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-191ada27cc1aea4ca67f",
+      "type": "news",
+      "title": {
+        "ru": "An unknown virus has destabilized the Norvinsk region.",
+        "en": "An unknown virus has destabilized the Norvinsk region."
+      },
+      "description": {
+        "ru": "An unknown virus has destabilized the Norvinsk region. Most of",
+        "en": "An unknown virus has destabilized the Norvinsk region. Most of"
+      },
+      "source": "https://t.me/escapefromtarkovEN/6969",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-11-06T13:00:29+00:00",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-b72ac00bbcefdd2d9b67",
+      "type": "news",
+      "title": {
+        "ru": "We have installed a technical update for #EscapefromTarkov.",
+        "en": "We have installed a technical update for #EscapefromTarkov."
+      },
+      "description": {
+        "ru": "We have installed a technical update for #EscapefromTarkov. On updated",
+        "en": "We have installed a technical update for #EscapefromTarkov. On updated"
+      },
+      "source": "https://t.me/escapefromtarkovEN/6968",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-11-06T07:05:23+00:00",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "update",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-ac5b13a257a0325d18dd",
+      "type": "news",
+      "title": {
+        "ru": "TarkovDevShort",
+        "en": "TarkovDevShort"
+      },
+      "description": {
+        "ru": "TarkovDevShort #tarkov #escapefromtarkov #tarkovgame #тарков",
+        "en": "TarkovDevShort #tarkov #escapefromtarkov #tarkovgame #тарков"
+      },
+      "source": "https://www.youtube.com/watch?v=7vsgWJ-c6Ck",
+      "publisher": "UC5QGploHhl9_XaxDiHZKamg",
+      "verified": "official",
+      "publishedAt": "2026-11-06T07:00:24+00:00",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-8f6732c6ece1dbcfa282",
+      "type": "news",
+      "title": {
+        "ru": "Autumn has arrived in Tarkov - time to layer up.",
+        "en": "Autumn has arrived in Tarkov - time to layer up."
+      },
+      "description": {
+        "ru": "Autumn has arrived in Tarkov - time to layer up.",
+        "en": "Autumn has arrived in Tarkov - time to layer up."
+      },
+      "source": "https://t.me/escapefromtarkovEN/6966",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-11-05T14:00:48+00:00",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "undeadtarkov",
+      "type": "promo",
+      "title": {
+        "ru": "UNDEADTARKOV",
+        "en": "UNDEADTARKOV"
+      },
+      "description": {
+        "ru": "Сообщество сообщает о наборе снаряжения. Состав, применимость к режимам и возможность активации не проверены.",
+        "en": "Community reports describe an equipment pack. Its contents, mode eligibility and redemption have not been verified."
+      },
+      "source": "https://t.me/s/mrsouer?before=6559",
+      "publisher": null,
+      "verified": "unverified",
+      "publishedAt": "2026-10-30",
+      "checkedAt": "2026-11-11T23:25:00Z",
+      "modes": [],
+      "category": "",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": [],
+      "code": "UNDEADTARKOV",
+      "activationVerified": false,
+      "permanentConfirmed": false,
+      "expiredConfirmed": false
+    },
+    {
+      "id": "news-39e81381825178823eb6",
+      "type": "news",
+      "title": {
+        "ru": "Patch 1.3.0.0",
+        "en": "Patch 1.3.0.0"
+      },
+      "description": {
+        "ru": "Changes New Halloween in-game event; Switched the in-game weather season",
+        "en": "Changes New Halloween in-game event; Switched the in-game weather season"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1847920302235601",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-10-29T16:56:30.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "update",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "halloween-2026",
+      "type": "event",
+      "title": {
+        "ru": "Хэллоуин 2026: заражение",
+        "en": "Halloween 2026: infection"
+      },
+      "description": {
+        "ru": "Временные задания с выбором стороны Лыжника или Терапевта. Текущая активность и дата окончания требуют свежего подтверждения.",
+        "en": "Limited-time tasks with Skier or Therapist branches. Current activity and the end date require fresh confirmation."
+      },
+      "source": "https://t.me/escapefromtarkovEN/6962",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-10-29T16:53:27Z",
+      "checkedAt": "2026-11-11T23:25:00Z",
+      "modes": [],
+      "category": "",
+      "image": "/assets/news/app-quests.png",
+      "startsAt": "2026-10-29",
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": "#/event/halloween-2026-6",
+      "rewards": [
+        {
+          "title": {
+            "ru": "Фон главного меню «Halloween»",
+            "en": "Halloween main-menu background"
+          },
+          "description": {
+            "ru": "Официально добавлен к наградам за достижения Triumph of Science и Shields Up! 3 ноября. Отдельная гарантия бессрочного сохранения в этом сообщении не указана.",
+            "en": "Officially added to Triumph of Science and Shields Up! achievement rewards on November 3. That announcement does not separately guarantee permanent retention."
+          },
+          "verified": "official",
+          "source": "https://t.me/escapefromtarkovEN/6963"
+        },
+        {
+          "title": {
+            "ru": "Тематический плакат",
+            "en": "Event poster"
+          },
+          "description": {
+            "ru": "Есть сообщения сообщества о плакате Tarkov of the Dead. Точное условие выдачи и сохранение после события не подтверждены первоисточником; награда не гарантируется.",
+            "en": "Community reports mention a Tarkov of the Dead poster. Exact award conditions and post-event retention have not been confirmed by a primary source; this is not a guaranteed reward."
+          },
+          "verified": "unverified",
+          "source": "https://www.tarkovhead.com/en/event/halloween-2026-6"
+        }
+      ],
+      "steps": [
+        {
+          "ru": "Выберите событийный вид экрана локаций в игре.",
+          "en": "Select the event view on the location selection screen."
+        },
+        {
+          "ru": "Следуйте заданиям выбранного торговца; сверяйте условия с текущим клиентом.",
+          "en": "Follow your selected trader’s tasks and check requirements against your current client."
+        },
+        {
+          "ru": "Локальное руководство может содержать не всю цепочку. Неизвестные этапы не достраиваются автоматически.",
+          "en": "The local guide may not include the complete chain. Unknown steps are never invented automatically."
+        }
+      ]
+    },
+    {
+      "id": "news-67d3be6c9e809681a91a",
+      "type": "news",
+      "title": {
+        "ru": "Escape from Undead Tarkov",
+        "en": "Escape from Undead Tarkov"
+      },
+      "description": {
+        "ru": "Escape from Undead Tarkov #escapefromtarkov #tarkov #побегизтаркова #тарков #battlestategames #battlestate",
+        "en": "Escape from Undead Tarkov #escapefromtarkov #tarkov #побегизтаркова #тарков #battlestategames #battlestate"
+      },
+      "source": "https://www.youtube.com/watch?v=vwxTdtLsf28",
+      "publisher": "UC5QGploHhl9_XaxDiHZKamg",
+      "verified": "official",
+      "publishedAt": "2026-10-29T15:32:49+00:00",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-93d35c61585a58c722ea",
+      "type": "news",
+      "title": {
+        "ru": "The Unheard Edition is your chance to join the Unheard",
+        "en": "The Unheard Edition is your chance to join the Unheard"
+      },
+      "description": {
+        "ru": "The Unheard Edition is your chance to join the Unheard",
+        "en": "The Unheard Edition is your chance to join the Unheard"
+      },
+      "source": "https://www.youtube.com/watch?v=g3bgoyj03H0",
+      "publisher": "UC5QGploHhl9_XaxDiHZKamg",
+      "verified": "official",
+      "publishedAt": "2026-10-26T13:59:51+00:00",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-573764644f139436c16f",
+      "type": "news",
+      "title": {
+        "ru": "BSG.ASMR.AK-12",
+        "en": "BSG.ASMR.AK-12"
+      },
+      "description": {
+        "ru": "BSG.ASMR.AK-12 In this video, we customize an AK-12, a modern",
+        "en": "BSG.ASMR.AK-12 In this video, we customize an AK-12, a modern"
+      },
+      "source": "https://www.youtube.com/watch?v=He_4TvAr0Xs",
+      "publisher": "UC5QGploHhl9_XaxDiHZKamg",
+      "verified": "official",
+      "publishedAt": "2026-10-23T13:05:42+00:00",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-03942665a668558f1fb4",
+      "type": "news",
+      "title": {
+        "ru": "ASMR AK-12",
+        "en": "ASMR AK-12"
+      },
+      "description": {
+        "ru": "ASMR AK-12 In this video, we customize an AK-12, a",
+        "en": "ASMR AK-12 In this video, we customize an AK-12, a"
+      },
+      "source": "https://www.youtube.com/watch?v=3Bqzzpq7vbk",
+      "publisher": "UC5QGploHhl9_XaxDiHZKamg",
+      "verified": "official",
+      "publishedAt": "2026-10-23T13:05:30+00:00",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-d6d933e63fd6a281de49",
+      "type": "news",
+      "title": {
+        "ru": "New in-game survey",
+        "en": "New in-game survey"
+      },
+      "description": {
+        "ru": "A new in-game survey is now available, focused on the",
+        "en": "A new in-game survey is now available, focused on the"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1846651706681057",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-10-16T11:21:08.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-9b66c156616ca232402f",
+      "type": "news",
+      "title": {
+        "ru": "The in-game event “Scourge Incursion” is live in #EscapefromTarkov.",
+        "en": "The in-game event “Scourge Incursion” is live in #EscapefromTarkov."
+      },
+      "description": {
+        "ru": "The in-game event “Scourge Incursion” is live in #EscapefromTarkov. A",
+        "en": "The in-game event “Scourge Incursion” is live in #EscapefromTarkov. A"
+      },
+      "source": "https://www.youtube.com/watch?v=ymJ35SGR-_E",
+      "publisher": "UC5QGploHhl9_XaxDiHZKamg",
+      "verified": "official",
+      "publishedAt": "2026-10-16T08:34:44+00:00",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "event",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "event-candidate-9b66c156616ca232402f",
+      "type": "event",
+      "title": {
+        "ru": "The in-game event “Scourge Incursion” is live in #EscapefromTarkov.",
+        "en": "The in-game event “Scourge Incursion” is live in #EscapefromTarkov."
+      },
+      "description": {
+        "ru": "Найдена публикация о событии. Этапы, награды и текущая активность требуют редакторской проверки.",
+        "en": "An event publication was found. Steps, rewards and current activity need editorial review."
+      },
+      "source": "https://www.youtube.com/watch?v=ymJ35SGR-_E",
+      "publisher": "UC5QGploHhl9_XaxDiHZKamg",
+      "verified": "unverified",
+      "publishedAt": "2026-10-16T08:34:44+00:00",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "event",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-c89aacdf5090e3faa668",
+      "type": "news",
+      "title": {
+        "ru": "Watch EXFIL Brothers and get Twitch Drops!",
+        "en": "Watch EXFIL Brothers and get Twitch Drops!"
+      },
+      "description": {
+        "ru": "What is it like to set foot in Tarkov for",
+        "en": "What is it like to set foot in Tarkov for"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1846018067930803",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-10-08T17:23:27.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "event",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-1ff7d8013ebe6ebcc1e4",
+      "type": "news",
+      "title": {
+        "ru": "Patch 1.2.0.0",
+        "en": "Patch 1.2.0.0"
+      },
+      "description": {
+        "ru": "EXFIL Brothers Program Added the EXFIL Brothers Program to the",
+        "en": "EXFIL Brothers Program Added the EXFIL Brothers Program to the"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1845383656396722",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-10-06T14:57:45.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "update",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-78220b1095e6d4222b1f",
+      "type": "news",
+      "title": {
+        "ru": "Steam Autumn Sale discounts!",
+        "en": "Steam Autumn Sale discounts!"
+      },
+      "description": {
+        "ru": "The Autumn Sale has begun! This is a great opportunity",
+        "en": "The Autumn Sale has begun! This is a great opportunity"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1845383656382993",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-10-01T17:10:01.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-b9826bc7fcc3413e6001",
+      "type": "news",
+      "title": {
+        "ru": "Leagues are live!",
+        "en": "Leagues are live!"
+      },
+      "description": {
+        "ru": "League System Added a new competitive system – Leagues, available",
+        "en": "League System Added a new competitive system – Leagues, available"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1843481262704542",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-09-15T13:08:44.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-2c6bd8b4adef95fa0f09",
+      "type": "news",
+      "title": {
+        "ru": "New in-game survey",
+        "en": "New in-game survey"
+      },
+      "description": {
+        "ru": "A new in-game survey is now available, focused on the",
+        "en": "A new in-game survey is now available, focused on the"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1843481262695602",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-09-11T15:11:15.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-3eddf19e283ad65cc155",
+      "type": "news",
+      "title": {
+        "ru": "Patch 1.1.5.0",
+        "en": "Patch 1.1.5.0"
+      },
+      "description": {
+        "ru": "Lighthouse rework To give players more control over the risks",
+        "en": "Lighthouse rework To give players more control over the risks"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1842846814455578",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-09-08T13:04:24.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "update",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-33c8850531a3b5b9c5b7",
+      "type": "news",
+      "title": {
+        "ru": "TarkovTV on August 10!",
+        "en": "TarkovTV on August 10!"
+      },
+      "description": {
+        "ru": "Watch the next episode of TarkovTV LIVE on August 10",
+        "en": "Watch the next episode of TarkovTV LIVE on August 10"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1840310314347740",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-08-08T15:33:52.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-7e61a51344e3bb5b3936",
+      "type": "news",
+      "title": {
+        "ru": "Twitch Drops for the launch of season one!",
+        "en": "Twitch Drops for the launch of season one!"
+      },
+      "description": {
+        "ru": "It's time to choose your modifiers and prepare to escape",
+        "en": "It's time to choose your modifiers and prepare to escape"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1839676055897126",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-08-04T11:01:00.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "event",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-d4872f5b768201bb2e2e",
+      "type": "news",
+      "title": {
+        "ru": "Patch 1.1.0.0",
+        "en": "Patch 1.1.0.0"
+      },
+      "description": {
+        "ru": "Seasons system and Season One With the release of Patch",
+        "en": "Seasons system and Season One With the release of Patch"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1839676055896016",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-08-03T22:33:08.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "update",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "kord-breach",
+      "type": "season",
+      "title": {
+        "ru": "Kord Breach · сезон 1",
+        "en": "Kord Breach · Season 1"
+      },
+      "description": {
+        "ru": "Отдельный сезонный персонаж PvP. Официально объявлена дата завершения 7 декабря 2026 года; точное время не указано. Полученные сезонные награды сохраняются во всех режимах.",
+        "en": "A separate seasonal PvP character. The officially announced end date is December 7, 2026; the exact time was not provided. Earned seasonal rewards remain available across modes."
+      },
+      "source": "https://t.me/escapefromtarkovEN/6985",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-08-03",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [
+        "season"
+      ],
+      "category": "",
+      "image": "/assets/news/app-maps.png",
+      "startsAt": "2026-08-03",
+      "endsAt": null,
+      "endsOn": "2026-12-07",
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": "https://t.me/escapefromtarkovEN/6985",
+      "confirmationExpiresAt": null,
+      "guide": "#/season/kord-breach-sezon-1-1",
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-80a655782bf7074e3b98",
+      "type": "news",
+      "title": {
+        "ru": "Weekend XP bonus!",
+        "en": "Weekend XP bonus!"
+      },
+      "description": {
+        "ru": "If you haven't yet challenged Wedge and his squad in",
+        "en": "If you haven't yet challenged Wedge and his squad in"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1839041357030119",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-07-24T16:28:14.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "event",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-48f175c47b05a7d31907",
+      "type": "news",
+      "title": {
+        "ru": "New in-game survey",
+        "en": "New in-game survey"
+      },
+      "description": {
+        "ru": "A new in-game survey is now available, focused on small-scale",
+        "en": "A new in-game survey is now available, focused on small-scale"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1839041357029317",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-07-24T11:49:34.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "event",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-4219eea9d02400a75d9d",
+      "type": "news",
+      "title": {
+        "ru": "Expansions Hub and TarCoin",
+        "en": "Expansions Hub and TarCoin"
+      },
+      "description": {
+        "ru": "The Expansions Hub has arrived - an in-game store offering",
+        "en": "The Expansions Hub has arrived - an in-game store offering"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1836506165581325",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-07-08T17:12:27.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-cf8b24961d0a18eea5de",
+      "type": "news",
+      "title": {
+        "ru": "Patch 1.0.6.0",
+        "en": "Patch 1.0.6.0"
+      },
+      "description": {
+        "ru": "This update includes a number of technical components and changes",
+        "en": "This update includes a number of technical components and changes"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1836506165571045",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-07-03T16:47:13.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "update",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-17b00fdc03322c05f017",
+      "type": "news",
+      "title": {
+        "ru": "Battlestate Games is heading to ChinaJoy",
+        "en": "Battlestate Games is heading to ChinaJoy"
+      },
+      "description": {
+        "ru": "Battlestate Games is heading to ChinaJoy for the first time",
+        "en": "Battlestate Games is heading to ChinaJoy for the first time"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1836506165564784",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-07-01T09:01:40.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-93a85a71b844ba9a9dab",
+      "type": "news",
+      "title": {
+        "ru": "An in-game survey is available",
+        "en": "An in-game survey is available"
+      },
+      "description": {
+        "ru": "A new in-game survey is available for players, focused on",
+        "en": "A new in-game survey is available for players, focused on"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1836506165553928",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-06-26T13:19:17.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-24885d17cc5495e83104",
+      "type": "news",
+      "title": {
+        "ru": "The Summer Sale has started!",
+        "en": "The Summer Sale has started!"
+      },
+      "description": {
+        "ru": "The Summer Sale is now live! Discounts are available for",
+        "en": "The Summer Sale is now live! Discounts are available for"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1836506165550832",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-06-25T17:09:02.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-60c9a1a6e6c6e81faf98",
+      "type": "news",
+      "title": {
+        "ru": "Preliminary update plan",
+        "en": "Preliminary update plan"
+      },
+      "description": {
+        "ru": "We present the preliminary plan for Escape from Tarkov updates",
+        "en": "We present the preliminary plan for Escape from Tarkov updates"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1835871199304341",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-06-18T14:01:29.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "update",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-b20d949a60baee843113",
+      "type": "news",
+      "title": {
+        "ru": "Weekend XP bonus is active!",
+        "en": "Weekend XP bonus is active!"
+      },
+      "description": {
+        "ru": "The global XP bonus is back - it's time to",
+        "en": "The global XP bonus is back - it's time to"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1835236783564408",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-06-12T18:31:38.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-fc76554480d8c7b9930f",
+      "type": "news",
+      "title": {
+        "ru": "What is TarCoin?",
+        "en": "What is TarCoin?"
+      },
+      "description": {
+        "ru": "TarCoins have recently started appearing in raids, and during the",
+        "en": "TarCoins have recently started appearing in raids, and during the"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1835236783557801",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-06-10T14:53:52.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-62b2b692d37fcd3b1b73",
+      "type": "news",
+      "title": {
+        "ru": "Streamer Challenge has concluded. Time for the results!",
+        "en": "Streamer Challenge has concluded. Time for the results!"
+      },
+      "description": {
+        "ru": "Congratulations to H4RD on a well-deserved victory in the #EscapefromTarkov",
+        "en": "Congratulations to H4RD on a well-deserved victory in the #EscapefromTarkov"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1834602721199182",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-06-08T15:08:44.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-fd5353184176883ae534",
+      "type": "news",
+      "title": {
+        "ru": "Streamer Challenge has begun!",
+        "en": "Streamer Challenge has begun!"
+      },
+      "description": {
+        "ru": "Starting today and throughout the next five days, participants will",
+        "en": "Starting today and throughout the next five days, participants will"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1834602721185060",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-06-03T15:01:53.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "event",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-3ad8d13614cf7ffa4916",
+      "type": "news",
+      "title": {
+        "ru": "Weekend XP boost!",
+        "en": "Weekend XP boost!"
+      },
+      "description": {
+        "ru": "There’s never too much XP. A veteran is just a",
+        "en": "There’s never too much XP. A veteran is just a"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1833968530891376",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-05-29T15:03:31.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-ec230c7206a7d57e4cbb",
+      "type": "news",
+      "title": {
+        "ru": "Streamer Challenge Returns!",
+        "en": "Streamer Challenge Returns!"
+      },
+      "description": {
+        "ru": "Get ready for five days of intense competition and unique",
+        "en": "Get ready for five days of intense competition and unique"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1833968530885273",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-05-27T12:30:26.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "event",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-25edbd19480ec0c9cd44",
+      "type": "news",
+      "title": {
+        "ru": "Icebreaker Twitch Drops are live!",
+        "en": "Icebreaker Twitch Drops are live!"
+      },
+      "description": {
+        "ru": "Following the release of Patch 1.0.5.0 and the launch of",
+        "en": "Following the release of Patch 1.0.5.0 and the launch of"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1833334318579628",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-05-26T15:08:49.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "update",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-403f2dfc0084a30a0660",
+      "type": "news",
+      "title": {
+        "ru": "Patch 1.0.5.0",
+        "en": "Patch 1.0.5.0"
+      },
+      "description": {
+        "ru": "In-game event “Icebreaker” and story chapter “Boreas” How did the",
+        "en": "In-game event “Icebreaker” and story chapter “Boreas” How did the"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1833334318577081",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-05-25T12:45:48.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "event",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-d54ae2b25a106bf66bf9",
+      "type": "news",
+      "title": {
+        "ru": "New in-game survey",
+        "en": "New in-game survey"
+      },
+      "description": {
+        "ru": "A new in-game survey is now available for Escape from",
+        "en": "A new in-game survey is now available for Escape from"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1833334318571485",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-05-22T11:58:35.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-f8f57487ff3f55674536",
+      "type": "news",
+      "title": {
+        "ru": "The Unheard Steam Edition is available!",
+        "en": "The Unheard Steam Edition is available!"
+      },
+      "description": {
+        "ru": "The long-awaited Unheard Steam Edition bundle is now available -",
+        "en": "The long-awaited Unheard Steam Edition bundle is now available -"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1833334318565703",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-05-20T08:41:01.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-bdbbeac6830b9b2a109f",
+      "type": "news",
+      "title": {
+        "ru": "Patch 1.0.4.9",
+        "en": "Patch 1.0.4.9"
+      },
+      "description": {
+        "ru": "New perks for game editions Starting today, Escape from Tarkov",
+        "en": "New perks for game editions Starting today, Escape from Tarkov"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1832700592800225",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-05-19T07:00:59.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-339939209693fa04bdb3",
+      "type": "news",
+      "title": {
+        "ru": "Developer’s Diary: Prestige system",
+        "en": "Developer’s Diary: Prestige system"
+      },
+      "description": {
+        "ru": "We would like to share some of the survey results",
+        "en": "We would like to share some of the survey results"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1832065502815698",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-05-08T16:19:40.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "update",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-cb5fb166ffe1326a879d",
+      "type": "news",
+      "title": {
+        "ru": "Next episode of TarkovTV broadcast on May 8!",
+        "en": "Next episode of TarkovTV broadcast on May 8!"
+      },
+      "description": {
+        "ru": "Watch the next episode of TarkovTV LIVE on May 8",
+        "en": "Watch the next episode of TarkovTV LIVE on May 8"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1832065502809683",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-05-06T16:43:02.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "news",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-06eb761ad6de82551683",
+      "type": "news",
+      "title": {
+        "ru": "ETS testing is back!",
+        "en": "ETS testing is back!"
+      },
+      "description": {
+        "ru": "ETS is now open to all game owners, including Steam",
+        "en": "ETS is now open to all game owners, including Steam"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1831432155569341",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-04-30T18:42:11.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "update",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    },
+    {
+      "id": "news-f3160f567bd3f72e9ab8",
+      "type": "news",
+      "title": {
+        "ru": "Developer’s Diary: Lighthouse",
+        "en": "Developer’s Diary: Lighthouse"
+      },
+      "description": {
+        "ru": "In the second part of the \"Diary\" we'll discuss PMC",
+        "en": "In the second part of the \"Diary\" we'll discuss PMC"
+      },
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1831432155567660",
+      "publisher": null,
+      "verified": "official",
+      "publishedAt": "2026-04-30T11:00:46.000Z",
+      "checkedAt": "2026-11-11T23:49:54.621Z",
+      "modes": [],
+      "category": "event",
+      "image": null,
+      "startsAt": null,
+      "endsAt": null,
+      "endsOn": null,
+      "endTimeConfirmed": false,
+      "active": false,
+      "endedConfirmed": false,
+      "activitySource": null,
+      "confirmationExpiresAt": null,
+      "guide": null,
+      "rewards": [],
+      "steps": []
+    }
+  ],
+  "sources": [
+    {
+      "id": "telegram",
+      "name": "Escape from Tarkov Official · Telegram",
+      "url": "https://t.me/escapefromtarkovEN",
+      "status": "connected",
+      "reason": {
+        "ru": "Лента успешно проверена.",
+        "en": "Feed checked successfully."
+      },
+      "checkedAt": "2026-11-11T23:49:54.621Z"
+    },
+    {
+      "id": "steam",
+      "name": "Battlestate Games · Steam",
+      "url": "https://steamcommunity.com/app/3932890/allnews/",
+      "status": "connected",
+      "reason": {
+        "ru": "Лента успешно проверена.",
+        "en": "Feed checked successfully."
+      },
+      "checkedAt": "2026-11-11T23:49:54.621Z"
+    },
+    {
+      "id": "site",
+      "name": "Escape from Tarkov",
+      "url": "https://www.escapefromtarkov.com/news",
+      "status": "unavailable",
+      "reason": {
+        "ru": "Сайт отвечает 403; ограничения не обходятся.",
+        "en": "The website returns 403; restrictions are not bypassed."
+      },
+      "checkedAt": "2026-11-11T23:25:00Z"
+    },
+    {
+      "id": "forum",
+      "name": "EFT Forum",
+      "url": "https://forum.escapefromtarkov.com/",
+      "status": "unavailable",
+      "reason": {
+        "ru": "Публичный разрешённый структурированный канал не подтверждён.",
+        "en": "A permitted structured public feed has not been confirmed."
+      },
+      "checkedAt": "2026-11-11T23:25:00Z"
+    },
+    {
+      "id": "youtube",
+      "name": "Battlestate · YouTube",
+      "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UC5QGploHhl9_XaxDiHZKamg",
+      "status": "connected",
+      "reason": {
+        "ru": "Лента успешно проверена.",
+        "en": "Feed checked successfully."
+      },
+      "checkedAt": "2026-11-11T23:49:54.621Z"
+    },
+    {
+      "id": "twitch",
+      "name": "Battlestate · Twitch",
+      "url": "https://www.twitch.tv/battlestategames",
+      "status": "requires-auth",
+      "reason": {
+        "ru": "Для Helix API нужны Client ID и токен приложения; транскрипция трансляций не подключена.",
+        "en": "Helix requires a Client ID and application token; livestream transcription is not connected."
+      },
+      "checkedAt": "2026-11-11T23:25:00Z"
+    },
+    {
+      "id": "tiktok",
+      "name": "Battlestate · TikTok",
+      "url": "https://www.tiktok.com/@battlestategames",
+      "status": "requires-auth",
+      "reason": {
+        "ru": "Нет подключённого разрешённого API для чтения публикаций.",
+        "en": "No authorised publishing API is connected."
+      },
+      "checkedAt": "2026-11-11T23:25:00Z"
+    },
+    {
+      "id": "reddit",
+      "name": "Escape from Tarkov · Reddit",
+      "url": "https://www.reddit.com/r/EscapefromTarkov/",
+      "status": "requires-auth",
+      "reason": {
+        "ru": "Нет подключённого доступа к API. Публикации сообщества требуют проверки.",
+        "en": "API access is not connected. Community reports require review."
+      },
+      "checkedAt": "2026-11-11T23:25:00Z"
+    }
+  ]
+}

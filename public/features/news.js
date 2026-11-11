@@ -1,6 +1,14 @@
+import {gameInfo} from "../core/game-info-client.js";
+import {language} from "../core/localization.js";
 import { localeCode } from "../core/localization.js";
 import { esc, heading } from "../core/ui.js";
 export const newsEntries = [
+  {
+    slug:"eft-gps-1-11",image:"/assets/news/app-overview.png",kind:"Приложение",date:"2026-11-12",label:"1.11.0",
+    title:"EFT GPS 1.11: события, промокоды и цветокоррекция",
+    summary:"Официальные новости, проверка наград, сезон и инструменты подбора изображения в одном приложении.",
+    paragraphs:["Сведения из Steam, Telegram и YouTube обновляются без переустановки. Для событий и промокодов показаны источники и статус проверки; неподтверждённые сроки не превращаются в таймеры.","В разделе цветокоррекции можно импортировать свои скриншоты, сравнить «До / После», сохранить пресет и вручную подобрать похожие настройки NVIDIA/PostFX. В настройках карты отдельно меняется фон без перекрашивания меток."]
+  },
   {
     slug: "eft-gps-1-9",
     image: "/assets/news/app-maps.png",
@@ -134,6 +142,11 @@ export const newsEntries = [
     source: "https://steamcommunity.com/app/3932890/announcements/?l=russian",
   },
 ];
+const bundledNewsEntries=[...newsEntries];
+export function refreshGameNews(){
+ const live=gameInfo().records.filter(x=>x.type==="news"&&x.verified==="official"&&x.publishedAt).map(x=>({slug:x.id,image:x.image||"/assets/news/app-overview.png",kind:"Игра",date:x.publishedAt.slice(0,10),label:language()==="en"?"Official":"Официально",title:x.title[language()]||x.title.en,summary:x.description[language()]||x.description.en,paragraphs:[language()==="en"?"Source language is preserved. This is a short publication preview; read the original for full details. Event activity and code redemption are checked separately.":"Сохранён язык первоисточника. Это краткое превью публикации; полный текст доступен по ссылке. Активность событий и активация промокодов проверяются отдельно."],source:x.source,live:true}));
+ newsEntries.splice(0,newsEntries.length,...[...live,...bundledNewsEntries].sort((a,b)=>b.date.localeCompare(a.date)));
+}
 export function newsPreview(entry) {
   const source = /^\/assets\/news\/[a-zA-Z0-9.-]+$/.test(entry.image || "")
     ? entry.image
@@ -181,5 +194,5 @@ export function renderNews(root, slug) {
       entry.title,
       `${entry.kind} · ${new Date(entry.date + "T12:00:00").toLocaleDateString(localeCode())}`,
     ) +
-    `<article class="news-detail" data-selectable><figure class="news-hero">${newsPreview(entry)}<figcaption class="small muted">${entry.kind === "Игра" ? "Иллюстрация Battlestate Games" : "Интерфейс EFT GPS · иллюстрация возможностей приложения"}</figcaption></figure><p class="news-lead">${esc(entry.summary)}</p>${entry.paragraphs.map((p) => `<p>${esc(p)}</p>`).join("")}${entry.source ? `<div class="official-source"><strong>Battlestate Games</strong><p>Официальное объявление разработчиков. Для открытия публикации нужен интернет.</p><a class="button" href="${esc(entry.source)}" target="_blank" rel="noopener">Читать оригинал ↗</a></div>` : ""}</article>`;
+    `<article class="news-detail" data-selectable><figure class="news-hero">${newsPreview(entry)}<figcaption class="small muted">${entry.live ? (language()==="en"?"EFT GPS interface · illustration":"Интерфейс EFT GPS · иллюстрация") : entry.kind === "Игра" ? "Иллюстрация Battlestate Games" : "Интерфейс EFT GPS · иллюстрация возможностей приложения"}</figcaption></figure><p class="news-lead">${esc(entry.summary)}</p>${entry.paragraphs.map((p) => `<p>${esc(p)}</p>`).join("")}${entry.source ? `<div class="official-source"><strong>Battlestate Games</strong><p>Официальное объявление разработчиков. Для открытия публикации нужен интернет.</p><a class="button" href="${esc(entry.source)}" target="_blank" rel="noopener">Читать оригинал ↗</a></div>` : ""}</article>`;
 }
