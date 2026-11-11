@@ -1,3 +1,4 @@
+import {startGameInfo,refreshGameInfo} from "../public/core/game-info-client.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
@@ -331,4 +332,14 @@ test("YouTube RSS accepts only the verified Battlestate channel and preserves so
 
 test("YouTube root channel ID may omit UC while video channel IDs retain it",()=>{
  const xml=`<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015"><yt:channelId>${YOUTUBE_CHANNEL.slice(2)}</yt:channelId><entry><yt:videoId>abcdefghijk</yt:videoId><yt:channelId>${YOUTUBE_CHANNEL}</yt:channelId><title>Trailer</title><published>2026-11-11T12:00:00Z</published></entry></feed>`;assert.equal(youtubePublications(xml).length,1);
+});
+
+test("manual information refresh accelerates the hourly poll until its result is received",async()=>{
+ const saved={fetch:globalThis.fetch,window:globalThis.window,setTimeout:globalThis.setTimeout,clearTimeout:globalThis.clearTimeout};
+ const scheduled=new Map();let next=0,phase="current",calls=0;
+ Object.assign(globalThis,{window:new EventTarget(),fetch:async()=>{calls++;return Response.json({state:{phase},data:feed()});},setTimeout:(fn,delay)=>{const id=++next;scheduled.set(id,{fn,delay});return id;},clearTimeout:id=>scheduled.delete(id)});
+ try{startGameInfo();await new Promise(resolve=>setImmediate(resolve));assert.equal([...scheduled.values()][0].delay,INFO_INTERVAL);
+  phase="checking";await refreshGameInfo();assert.equal([...scheduled.values()][0].delay,1500);
+  const followup=[...scheduled.values()][0];scheduled.clear();phase="current";await followup.fn();assert.equal([...scheduled.values()][0].delay,INFO_INTERVAL);assert.equal(calls,3);
+ }finally{Object.assign(globalThis,saved);}
 });

@@ -1,6 +1,6 @@
 # История версий / Version history
 
-- **1.11.0** — отдельные события и сезон на главной, обновляемые официальные ленты Steam/Telegram/YouTube, промокоды со статусами и архивом, цветокоррекция карт со сравнением, новые иконки режимов. Исправлены пустые публикации, даты видео и смена языка. 107 автоматизированных тестов. / Live sourced information, honest promo status, map colour comparison and mode icons; feed/date/language fixes.
+- **1.11.0** — отдельные события и сезон на главной, обновляемые официальные ленты Steam/Telegram/YouTube, промокоды со статусами и архивом, цветокоррекция карт со сравнением, новые иконки режимов. Исправлены пустые публикации, даты видео и смена языка. 108 автоматизированных тестов. / Live sourced information, honest promo status, map colour comparison and mode icons; feed/date/language fixes.
 
 - **1.10.1** — «Новости приложения и игры»; исправлена главная при изменении размера окна; полноэкранная карта без панелей; убрана отметка TEST; единый минималистичный значок; обновлённая строка состояния; информация и задания торговцев перед ассортиментом 1-го уровня; спорные контуры у моста на Маяке скрыты с пояснением. / Clearer news heading, home resize fix, map-only expanded view, no TEST badge, shared flat icon and explicit handling of disputed lighthouse bridge boundaries.
 

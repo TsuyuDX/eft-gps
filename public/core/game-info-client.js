@@ -36,9 +36,10 @@ export async function initializeGameInfo() {
 export function startGameInfo() {
   if (started) return;
   started = true;
-  const poll = async () => {
-    await refreshGameInfo();
-    setTimeout(poll, state.phase === "checking" ? 1500 : INFO_INTERVAL);
-  };
+  let timer;
+  const schedule = (delay) => { clearTimeout(timer); timer = setTimeout(poll, delay); };
+  const poll = async () => { await refreshGameInfo(); schedule(state.phase === "checking" ? 1500 : INFO_INTERVAL); };
+  // Manual checks receive their result promptly even while the hourly timer is pending.
+  window.addEventListener("game-info-updated", () => { if (state.phase === "checking") schedule(1500); });
   void poll();
 }
