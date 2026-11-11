@@ -1022,3 +1022,45 @@ body > footer {
 .connection-dot{width:6px;height:6px;display:inline-block;border-radius:50%;background:#8c8c87;flex:none}
 .connection-status.is-online .connection-dot{background:#44cc78;box-shadow:0 0 5px #44cc7833}
 .connection-status.is-offline .connection-dot{background:#ef6262;box-shadow:0 0 5px #ef626233}
+
+/* Expanded mode is the map itself; editing panels return unchanged on exit. */
+body.map-is-expanded > header,body.map-is-expanded > footer{display:none!important}
+body.map-is-expanded #app{padding:0!important;max-width:none!important;overflow:hidden!important}
+.map-workspace.map-expanded{padding:0!important;inset:0!important;width:100%!important;height:100dvh!important;border:0!important}
+.map-workspace.map-expanded .map-top,.map-workspace.map-expanded .map-searchbar,
+.map-workspace.map-expanded .map-controls,.map-workspace.map-expanded .map-quest-side,
+.map-workspace.map-expanded .zoom-controls,.map-workspace.map-expanded .gps-map-status,
+.map-workspace.map-expanded .map-caption{display:none!important}
+.map-workspace.map-expanded .map-layout{display:block!important;width:100%;height:100%;flex:1 1 0;min-height:0;border:0;border-radius:0}
+.map-workspace.map-expanded .map-viewport{display:block;width:100%;height:100%;border:0;border-radius:0}
+.map-exit-expanded{position:absolute;top:14px;right:14px;z-index:1002;width:40px;height:40px;min-height:40px;padding:8px;display:grid;place-items:center;opacity:.45;background:#0c100cbb;border:1px solid #73694d;border-radius:6px}
+.map-exit-expanded:hover,.map-exit-expanded:focus-visible{opacity:1}
+.map-exit-expanded[hidden]{display:none!important}
+#app:has(> .home-hero){overflow-anchor:none;scroll-behavior:auto}
+
+.statusline .status-metrics{gap:8px;flex-wrap:wrap}
+.status-metrics #raid-time,.status-metrics #snapshot-date,.status-metrics #gps-pill{display:inline-flex;align-items:center;gap:8px;min-height:34px;padding:6px 10px;border:1px solid #b9ab8226;border-radius:8px;background:#ffffff03;font-size:12px;line-height:1.3;white-space:nowrap;font-variant-numeric:tabular-nums}
+.status-metrics #raid-time{gap:12px;color:#c9bc97}
+#raid-time>span{display:inline-flex;align-items:center;gap:6px}
+#raid-time .raid-clock-night{color:#a0acba;border-left:1px solid #b9ab8220;padding-left:12px}
+.status-metrics #snapshot-date{color:#a6a79c}
+.status-metrics #snapshot-date>.ui-icon{color:#9b9279}
+.status-metrics #gps-pill{color:#979b94;text-decoration:none}
+.status-metrics #gps-pill.gps-on{color:#94d7b0;border-color:#78c69b45;background:#63ba8910}
+.status-metrics #gps-pill.gps-auto{color:#9bc5eb;border-color:#82b8e54a;background:#62a4d912}
+.gps-pill-state{font-size:11px;border-left:1px solid currentColor;padding-left:8px}
+.status-metrics #gps-pill:hover{border-color:currentColor}
+
+.trader-identity{display:flex;align-items:flex-start;gap:24px}
+.trader-identity>img{width:112px;height:112px;object-fit:cover;border:1px solid var(--line);border-radius:10px;flex:none}
+.trader-identity h2{margin-top:0}.trader-identity p{max-width:900px}
+.trader-information{margin-bottom:24px}
+.trader-unlock-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:8px}
+.trader-unlock-link{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px 14px;border:1px solid var(--line);border-radius:7px;margin-bottom:6px;background:#ffffff03}
+.trader-unlock-link:hover{border-color:var(--accent)}.trader-unlock-link small{white-space:nowrap;color:var(--muted)}
+.trader-offer-quests{margin:18px 0}.trader-offer-quests summary{cursor:pointer;margin-bottom:12px}
+@media(max-width:640px){.trader-identity{gap:14px}.trader-identity>img{width:72px;height:72px}.trader-unlock-link{flex-wrap:wrap}}
+
+.map-destination-label.label-above{top:auto;bottom:calc(100% + 2px)}
+.map-destination-label.label-edge-left{left:0;transform:none}
+.map-destination-label.label-edge-right{left:100%;transform:translateX(-100%)}

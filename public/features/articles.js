@@ -77,6 +77,7 @@ export async function renderArticle(root, path) {
     ),
     type = path.split("/")[0],
     slug = path.split("/").at(-1);
+  if (type === "trader") return renderTrader(root, slug, a.title);
   let prefix =
     type === "event" && slug === "halloween-2026-6"
       ? eventSyncMarkup()
@@ -221,46 +222,82 @@ export async function renderArticle(root, path) {
         }),
     );
   }
-  if (type === "trader") {
-    try {
-      const data = await json("traders/" + slug + ".json");
-      const box = root.querySelector("#article-interactive");
-      box.innerHTML = `<section class="panel"><h2>Ассортимент</h2><div class="toolbar"><input id="trader-search" placeholder="Найти в ассортименте"><select id="trader-level" aria-label="Уровень торговца"><option value="0">Все уровни</option>${[1, 2, 3, 4].map((x) => `<option value="${x}">Уровень ${x}</option>`).join("")}</select></div><div id="trader-items"></div><h3>Уровни лояльности</h3><div class="stats">${(data.levels || db.lookup.traders[slug]?.levels || []).map((x) => `<div class="stat"><span>Уровень ${x.level}</span><strong>Ур. ${x.requiredPlayerLevel}</strong><small>Репутация ${x.requiredReputation}<br>Оборот ${Number(x.requiredCommerce).toLocaleString(localeCode())}</small></div>`).join("")}</div></section>`;
-      const draw = () => {
-        const q = box.querySelector("#trader-search").value.toLowerCase(),
-          lvl = Number(box.querySelector("#trader-level").value);
-        const items = data.items
-          .filter(
-            (x) =>
-              x.name.toLowerCase().includes(q) &&
-              (!lvl ||
-                x.moneyOffers?.some((o) => o.vendor.minTraderLevel === lvl) ||
-                x.barters?.some((o) => o.level === lvl)),
-          )
-          .map((x) => {
-            const item = db.items.find((i) => i.id === x.id) || x;
-            const offer =
-              x.moneyOffers?.find(
-                (o) => !lvl || o.vendor.minTraderLevel === lvl,
-              ) || x.moneyOffers?.[0];
-            return {
-              ...item,
-              trades: {
-                ...item.trades,
-                bestBuyVendor: offer || item.trades?.bestBuyVendor,
-              },
-            };
-          });
-        box.querySelector("#trader-items").innerHTML =
-          `<div class="table-wrap"><table><thead><tr><th>★</th><th>Предмет</th><th>Барахолка</th><th>Купить у торговца, ₽</th><th>Продать торговцу, ₽</th><th>Размер</th></tr></thead><tbody>${itemRows(items)}</tbody></table></div><p class="muted small">${items.length} предметов. Ассортимент из общего снимка PvP.</p>`;
-        bindFavorites(box);
-      };
-      box
-        .querySelectorAll("input,select")
-        .forEach((e) =>
-          e.addEventListener(e.tagName === "INPUT" ? "input" : "change", draw),
-        );
-      draw();
-    } catch {}
-  }
+}
+
+async function renderTrader(root, slug, title) {
+  const controller = new AbortController();
+  window.addEventListener("view-changing", () => controller.abort(), {
+    once: true,
+  });
+  const [data, access] = await Promise.all([
+    json("traders/" + slug + ".json").catch(() => ({ items: [], levels: [] })),
+    json("trader-access.json", "ru").catch(() => ({ modes: {} })),
+  ]);
+  if (controller.signal.aborted) return;
+  const trader = db.lookup.traders?.[slug] || {},
+    levels = data.levels?.length ? data.levels : trader.levels || [];
+  const relations = access.modes?.[db.mode]?.[slug] || {
+    access: [],
+    assortment: [],
+  };
+  const bySlug = new Map(db.quests.map((q) => [q.normalizedName, q]));
+  const questLinks = (slugs) =>
+    slugs
+      .map((id) => bySlug.get(id))
+      .filter(Boolean)
+      .map(
+        (q) =>
+          `<a class="trader-unlock-link" href="#/quest/${db.mode}/${q.normalizedName}"><span>${esc(q.name)}</span><small>${current().quests[q.normalizedName] ? "✓ Выполнено" : "Открыть задание →"}</small></a>`,
+      )
+      .join("");
+  const direct = questLinks(relations.access || []),
+    offers = questLinks(relations.assortment || []),
+    story = questLinks(relations.story || []);
+  const lightkeeper =
+    slug === "lightkeeper"
+      ? questLinks(
+          db.quests
+            .filter((q) => q.lightkeeperRequired)
+            .map((q) => q.normalizedName),
+        )
+      : "";
+  root.innerHTML =
+    heading(title) +
+    `<section class="panel trader-information"><div class="trader-identity">${img(trader.imageLink, title)}<div><h2>О торговце</h2><p data-selectable>${esc(trader.description || "")}</p></div></div><h3>Как открыть и ключевые задания</h3>${direct || '<p class="muted">В локальных данных отдельное задание для открытия торговца не указано.</p>'}${story ? '<h3>Связанные сюжетные задания</h3><p class="muted small">Откройте задание, чтобы посмотреть этапы взаимодействия с торговцем.</p><div class="trader-unlock-list">' + story + "</div>" : ""}${lightkeeper ? '<p class="muted small">Задания, отмеченные в справочнике как требуемые для Смотрителя маяка. Полный порядок доступа в текущем патче не подтверждён.</p><div class="trader-unlock-list">' + lightkeeper + "</div>" : ""}${offers ? '<details class="trader-offer-quests"><summary><span>Задания, открывающие ассортимент</span> · ' + (relations.assortment || []).length + '</summary><div class="trader-unlock-list">' + offers + "</div></details>" : ""}<h3>Уровни лояльности</h3><div class="stats">${levels.map((x) => `<div class="stat"><span>Уровень ${esc(x.level)}</span><strong>Ур. ${esc(x.requiredPlayerLevel)}</strong><small>Репутация ${esc(x.requiredReputation)}<br>Оборот ${Number(x.requiredCommerce || 0).toLocaleString(localeCode())}</small></div>`).join("")}</div></section><div id="article-interactive"></div>`;
+  const box = root.querySelector("#article-interactive");
+  box.innerHTML = `<section class="panel"><h2>Ассортимент</h2><div class="toolbar"><input id="trader-search" placeholder="Найти в ассортименте"><select id="trader-level" aria-label="Уровень торговца">${[1, 2, 3, 4].map((level) => `<option value="${level}" ${level === 1 ? "selected" : ""}>Уровень ${level}</option>`).join("")}<option value="0">Все уровни</option></select></div><div id="trader-items"></div></section>`;
+  const draw = () => {
+    const q = box.querySelector("#trader-search").value.toLowerCase(),
+      lvl = Number(box.querySelector("#trader-level").value);
+    const items = data.items
+      .filter(
+        (x) =>
+          x.name.toLowerCase().includes(q) &&
+          (!lvl ||
+            x.moneyOffers?.some((o) => o.vendor.minTraderLevel === lvl) ||
+            x.barters?.some((o) => o.level === lvl)),
+      )
+      .map((x) => {
+        const item = db.items.find((i) => i.id === x.id) || x;
+        const offer =
+          x.moneyOffers?.find((o) => !lvl || o.vendor.minTraderLevel === lvl) ||
+          null;
+        return {
+          ...item,
+          trades: {
+            ...item.trades,
+            bestBuyVendor: offer || null,
+          },
+        };
+      });
+    box.querySelector("#trader-items").innerHTML =
+      `<div class="table-wrap"><table><thead><tr><th>★</th><th>Предмет</th><th>Барахолка</th><th>Купить у торговца, ₽</th><th>Продать торговцу, ₽</th><th>Размер</th></tr></thead><tbody>${itemRows(items)}</tbody></table></div><p class="muted small">${items.length} предметов. Ассортимент из общего снимка PvP.</p>`;
+    bindFavorites(box);
+  };
+  box
+    .querySelectorAll("input,select")
+    .forEach((e) =>
+      e.addEventListener(e.tagName === "INPUT" ? "input" : "change", draw),
+    );
+  draw();
 }

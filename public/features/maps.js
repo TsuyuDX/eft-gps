@@ -104,6 +104,14 @@ export function mapMarkers(m, {includeInvalid=false}={}) {
         a.push({ ...v, group, color, symbol, title });
       }
   }
+  // Keep the source coordinates, but do not shade disputed bridge rectangles as a proven firing boundary.
+  if (m.normalizedName === "lighthouse") for (const marker of a) {
+    const p = marker.position;
+    if (marker.group === "hazards" && marker.hazardType === "sniper" && p?.x >= 100 && p.x <= 200 && p.z >= 480 && p.z <= 570) {
+      marker.outlineSuppressed = true;
+      marker.bridgeBarrierObservation = true;
+    }
+  }
   return includeInvalid ? a : a.filter((x) => x.position && Number.isFinite(x.position.x) && Number.isFinite(x.position.z));
 }
 export async function renderMap(root, slug) {
@@ -173,7 +181,7 @@ export async function renderMap(root, slug) {
     quests: "quest_objective",
     seasonalDocuments: null,
   };
-  root.innerHTML = `<section class="map-workspace"><div class="map-top"><div class="row"><a href="#/map/${db.mode}">← Карты</a><h1>${esc(m.name)}</h1><span class="badge">${esc(String(m.duration).replace("min", "мин"))}</span><span class="badge map-test-badge" data-no-translate>TEST</span></div><div class="row"><select id="floor" aria-label="Этаж карты"><option value="">Основной слой</option>${(m.layers || []).map((x, i) => `<option value="${i}">${esc(floorLabel(x.name))}</option>`).join("")}</select><button id="map-full">⛶ Развернуть карту</button></div></div><div class="map-searchbar"><div class="map-panel-toggles"><button type="button" data-toggle-panel="sidebar" aria-controls="map-filters-panel">☷ Фильтры</button><button type="button" data-toggle-panel="questBrowser" aria-controls="map-tasks-panel">☷ Задания</button></div><div class="map-unified-search" id="map-search"></div></div><div class="map-layout"><aside class="map-controls" id="map-filters-panel"><div class="map-panel-heading"><strong>Фильтры карты</strong><button type="button" data-toggle-panel="sidebar" aria-label="Скрыть фильтры">‹</button></div><div class="map-panel-scroll"><h3>Слои карты</h3><label class="check hazard-display"><input id="hazard-show-all" type="checkbox" ${showHazardZones ? "checked" : ""}> Показывать все зоны опасностей</label>${Object.entries(
+  root.innerHTML = `<section class="map-workspace"><div class="map-top"><div class="row"><a href="#/map/${db.mode}">← Карты</a><h1>${esc(m.name)}</h1><span class="badge">${esc(String(m.duration).replace("min", "мин"))}</span></div><div class="row"><select id="floor" aria-label="Этаж карты"><option value="">Основной слой</option>${(m.layers || []).map((x, i) => `<option value="${i}">${esc(floorLabel(x.name))}</option>`).join("")}</select><button id="map-full">⛶ Развернуть карту</button></div></div><div class="map-searchbar"><div class="map-panel-toggles"><button type="button" data-toggle-panel="sidebar" aria-controls="map-filters-panel">☷ Фильтры</button><button type="button" data-toggle-panel="questBrowser" aria-controls="map-tasks-panel">☷ Задания</button></div><div class="map-unified-search" id="map-search"></div></div><div class="map-layout"><aside class="map-controls" id="map-filters-panel"><div class="map-panel-heading"><strong>Фильтры карты</strong><button type="button" data-toggle-panel="sidebar" aria-label="Скрыть фильтры">‹</button></div><div class="map-panel-scroll"><h3>Слои карты</h3><label class="check hazard-display"><input id="hazard-show-all" type="checkbox" ${showHazardZones ? "checked" : ""}> Показывать все зоны опасностей</label>${Object.entries(
     groups,
   )
     .map(([k, [name]]) => {
@@ -313,6 +321,7 @@ export async function renderMap(root, slug) {
   root.querySelector("#add-pin").innerHTML =
     uiIcon("plus", 18) + "<span>Своя метка</span>";
   const fit = () => {
+    if (viewController.signal.aborted || !viewport.isConnected) return;
     const ratio = (image.naturalWidth || 1) / (image.naturalHeight || 1),
       w = viewport.clientWidth,
       h = viewport.clientHeight,
@@ -352,6 +361,7 @@ export async function renderMap(root, slug) {
   let overlaySignature = "",
     listSignature = "";
   function transform() {
+    if (viewController.signal.aborted || !viewport.isConnected) return;
     const width = baseWidth * zoom,
       height = baseHeight * zoom;
     canvas.style.inset = "auto";
@@ -394,6 +404,7 @@ export async function renderMap(root, slug) {
       };
   }
   function draw() {
+    if (viewController.signal.aborted || !viewport.isConnected) return;
     const floor = layer === "" ? null : m.layers[Number(layer)];
     const floorImage = root.querySelector("#map-floor-image");
     const floorSource =
@@ -458,7 +469,7 @@ export async function renderMap(root, slug) {
           const { x, i, p } = cluster.entries[0];
           const count = cluster.entries.length;
           const presentation = markerPresentation(x, m);
-          return `<button class="map-marker map-marker-icon${count > 1 ? " map-marker-cluster" : ""}${floor && floorFor(x.position, m) !== Number(layer) ? " other-floor" : ""}" ${count > 1 ? 'data-cluster="' + ci + '"' : 'data-marker="' + i + '"'} style="left:${p.x}%;top:${p.y}%;--marker:${x.color}" aria-label="${esc(count > 1 ? "Рядом меток: " + count : x.title)}"><img src="${cachedMarkerIcon(x)}" alt="" width="32" height="32" draggable="false">${count > 1 ? '<span class="map-cluster-count">' + count + "</span>" : x.quest?.icon ? '<img class="quest-marker-badge" src="' + asset(x.quest.icon) + '" alt="">' : ""}${presentation.label ? `<span class="map-destination-label">${esc(presentation.label)}</span>` : ""}<span class="map-marker-tooltip"><strong>${esc(count > 1 ? "Рядом меток: " + count : presentation.name)}</strong><small>${esc(count > 1 ? "Нажмите, чтобы выбрать объект" : presentation.description)}</small></span></button>`;
+          return `<button class="map-marker map-marker-icon${count > 1 ? " map-marker-cluster" : ""}${floor && floorFor(x.position, m) !== Number(layer) ? " other-floor" : ""}" ${count > 1 ? 'data-cluster="' + ci + '"' : 'data-marker="' + i + '"'} style="left:${p.x}%;top:${p.y}%;--marker:${x.color}" aria-label="${esc(count > 1 ? "Рядом меток: " + count : x.title)}"><img src="${cachedMarkerIcon(x)}" alt="" width="32" height="32" draggable="false">${count > 1 ? '<span class="map-cluster-count">' + count + "</span>" : x.quest?.icon ? '<img class="quest-marker-badge" src="' + asset(x.quest.icon) + '" alt="">' : ""}${presentation.label ? `<span class="map-destination-label${p.y > 92 ? " label-above" : ""}${p.x < 10 ? " label-edge-left" : p.x > 90 ? " label-edge-right" : ""}">${esc(presentation.label)}</span>` : ""}<span class="map-marker-tooltip"><strong>${esc(count > 1 ? "Рядом меток: " + count : presentation.name)}</strong><small>${esc(count > 1 ? "Нажмите, чтобы выбрать объект" : presentation.description)}</small></span></button>`;
         })
         .join("") +
       pins()

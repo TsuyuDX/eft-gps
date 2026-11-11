@@ -1,5 +1,5 @@
-Created with the built-in ImageGen tool.
-
-Use case: logo-brand. Create one finished Windows desktop application icon for a black-themed offline Escape From Tarkov maps and inventory companion. Square icon artwork, single centered emblem, no mockup or presentation sheet. Bold ivory letter T integrated into a minimal four-point compass, muted antique brass compass ring, charcoal black background with subtly rounded square silhouette. Tactical navigation instrument, restrained premium utilitarian aesthetic. Flat frontal geometry, very subtle metal texture, strong readable silhouette at 16 and 32 pixels. Large thick strokes and generous spacing, emblem occupies 80% of the square. Only text is exactly the single letter T. No tiny labels, no additional text, no weapons, no skulls, no existing brand logo, no watermark, no surrounding empty canvas. 1024 x 1024 square.
-
-The generated artwork is preserved unchanged in app-source.png. BuildIcon.cs only resizes and packages the artwork into PNG and ICO formats.
+Flat EFT GPS icon: a small geometric T inside a thin reticle, sand/ivory on charcoal.
+Vector source: app.svg. No textures, shadows or font dependencies.
+Rebuild artwork: compile scripts/BuildMinimalIcon.cs with System.Drawing and run with public/icons.
+Package ICO/PNG: compile scripts/BuildIcon.cs and run with public/icons/app-source.png public/icons.
+Copy app.ico and app-192.png to .github/native before publishing; rebuild native components.

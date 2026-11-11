@@ -1,0 +1,452 @@
+{
+  "version": 1,
+  "method": "Existing local quest finishRewards.traderUnlock and offerUnlock; no inferred access requirements.",
+  "modes": {
+    "regular": {
+      "skier": {
+        "access": [],
+        "assortment": [
+          "bullshit",
+          "chemical-part-1",
+          "chemical-part-2",
+          "chemical-part-3",
+          "connections-up-north",
+          "dangerous-props",
+          "flint",
+          "friend-from-the-west-part-2",
+          "from-hand-to-hand",
+          "humanitarian-supplies",
+          "indisputable-authority",
+          "irresistible",
+          "long-road",
+          "night-sweep",
+          "peacekeeping-mission",
+          "pyramid-scheme",
+          "silent-caliber",
+          "stimulating-demand",
+          "the-walls-have-eyes",
+          "top-secret"
+        ],
+        "story": [
+          "accidental-witness",
+          "boreas",
+          "tour"
+        ]
+      },
+      "ragman": {
+        "access": [],
+        "assortment": [
+          "antique-enthusiast",
+          "audiophile",
+          "charisma-brings-success",
+          "drip-out-part-2-bear",
+          "fresh-stock",
+          "payback",
+          "sew-it-good-part-1",
+          "snatch",
+          "textile-part-1-bear",
+          "textile-part-1-usec",
+          "vacate-the-premises"
+        ],
+        "story": [
+          "accidental-witness",
+          "tour"
+        ]
+      },
+      "therapist": {
+        "access": [],
+        "assortment": [
+          "athlete",
+          "biochemistry",
+          "health-care-privacy-part-1",
+          "health-care-privacy-part-2",
+          "health-care-privacy-part-3",
+          "health-care-privacy-part-4",
+          "health-care-privacy-part-5",
+          "health-care-privacy-part-6",
+          "postman-pat-part-2"
+        ],
+        "story": [
+          "falling-skies",
+          "the-labyrinth",
+          "tour"
+        ]
+      },
+      "prapor": {
+        "access": [],
+        "assortment": [
+          "best-job-in-the-world",
+          "calibration",
+          "easy-job-part-2",
+          "escort",
+          "gendarmerie-mall-cop",
+          "gendarmerie-tickets-please",
+          "getting-some-air",
+          "ironclad-proof",
+          "kings-of-the-rooftops",
+          "oil-change",
+          "oil-run-bear",
+          "our-own-land-bear",
+          "perfect-mediator",
+          "reconnaissance",
+          "secrets-of-polikhim",
+          "shaking-up-the-teller-usec",
+          "special-order",
+          "textile-part-2-bear",
+          "textile-part-2-usec",
+          "the-art-of-explosion",
+          "the-punisher-part-2",
+          "the-punisher-part-3",
+          "the-punisher-part-4",
+          "the-punisher-part-5",
+          "the-punisher-part-6",
+          "unique-experience"
+        ],
+        "story": [
+          "batya",
+          "boreas",
+          "falling-skies",
+          "tour"
+        ]
+      },
+      "mechanic": {
+        "access": [],
+        "assortment": [
+          "farming",
+          "following-the-bread-crumbs",
+          "goals-and-means",
+          "gunsmith-as-val-bear",
+          "gunsmith-hk-mp5",
+          "gunsmith-master-part-1",
+          "gunsmith-master-part-11",
+          "gunsmith-master-part-12",
+          "gunsmith-master-part-13",
+          "gunsmith-master-part-3",
+          "gunsmith-master-part-4",
+          "gunsmith-master-part-6",
+          "gunsmith-model-870",
+          "gunsmith-mpx-usec",
+          "hobby-club",
+          "import",
+          "missing-informant",
+          "playing-the-market",
+          "protect-the-sky",
+          "psycho-sniper",
+          "secrets-of-polikhim",
+          "semiconductor-crisis",
+          "setting-priorities",
+          "shooter-born-in-heaven",
+          "the-courier",
+          "the-price-of-independence",
+          "the-price-of-independence-2",
+          "trouble-in-the-big-city"
+        ],
+        "story": [
+          "blue-fire",
+          "boreas",
+          "the-ticket",
+          "they-are-already-here",
+          "tour"
+        ]
+      },
+      "jaeger": {
+        "access": [
+          "introduction"
+        ],
+        "assortment": [
+          "broadcast-part-3",
+          "broadcast-part-5",
+          "hunting-trip",
+          "slaughterhouse",
+          "the-huntsman-path-control",
+          "the-huntsman-path-controller",
+          "the-huntsman-path-relentless",
+          "the-survivalist-path-eagle-owl",
+          "the-survivalist-path-junkie",
+          "the-survivalist-path-thrifty",
+          "the-survivalist-path-tough-guy",
+          "the-survivalist-path-unprotected-but-dangerous",
+          "the-survivalist-path-wounded-beast",
+          "the-survivalist-path-zhivchik",
+          "the-tarkov-shooter-part-1",
+          "the-tarkov-shooter-part-2",
+          "the-tarkov-shooter-part-3",
+          "the-tarkov-shooter-part-4",
+          "the-tarkov-shooter-part-5",
+          "the-tarkov-shooter-part-5-2",
+          "the-tarkov-shooter-part-6",
+          "the-tarkov-shooter-part-7"
+        ]
+      },
+      "peacekeeper": {
+        "access": [],
+        "assortment": [
+          "confidential-info",
+          "counteraction-usec",
+          "fishing-gear",
+          "gifts-from-tarkov",
+          "gunsmith-master-part-7",
+          "hiking",
+          "humanitarian-supplies",
+          "i-need-more-power",
+          "insomnia",
+          "master-key",
+          "one-less-loose-end",
+          "peacekeeping-mission",
+          "samples",
+          "spa-tour-part-2",
+          "special-equipment",
+          "terragroup-employee",
+          "the-cleaner",
+          "the-guide",
+          "trophies",
+          "trouble-in-the-big-city",
+          "weapons-circulation",
+          "wet-job-part-1",
+          "wet-job-part-2",
+          "wet-job-part-5",
+          "wet-job-part-6",
+          "wiring-the-vessel",
+          "worst-job-in-the-world",
+          "your-car-needs-a-service"
+        ]
+      },
+      "ref": {
+        "access": [
+          "easy-money-part-1-pvp-zone"
+        ],
+        "assortment": [
+          "drip-out-part-2-usec",
+          "farming",
+          "gunsmith-as-val-bear",
+          "gunsmith-model-870",
+          "gunsmith-mpx-usec",
+          "to-great-heights-part-6-pvp-zone"
+        ]
+      }
+    },
+    "pve": {
+      "skier": {
+        "access": [],
+        "assortment": [
+          "bullshit",
+          "chemical-part-1",
+          "chemical-part-2",
+          "chemical-part-3",
+          "connections-up-north",
+          "dangerous-props",
+          "flint",
+          "friend-from-the-west-part-2",
+          "from-hand-to-hand",
+          "humanitarian-supplies",
+          "indisputable-authority",
+          "irresistible",
+          "long-road",
+          "night-sweep",
+          "peacekeeping-mission",
+          "pyramid-scheme",
+          "silent-caliber",
+          "stimulating-demand",
+          "the-walls-have-eyes",
+          "top-secret"
+        ],
+        "story": [
+          "accidental-witness",
+          "boreas",
+          "tour"
+        ]
+      },
+      "ragman": {
+        "access": [],
+        "assortment": [
+          "antique-enthusiast",
+          "audiophile",
+          "charisma-brings-success",
+          "drip-out-part-2-bear",
+          "fresh-stock",
+          "payback",
+          "sew-it-good-part-1",
+          "snatch",
+          "textile-part-1-bear",
+          "textile-part-1-usec",
+          "vacate-the-premises"
+        ],
+        "story": [
+          "accidental-witness",
+          "tour"
+        ]
+      },
+      "therapist": {
+        "access": [],
+        "assortment": [
+          "athlete",
+          "biochemistry",
+          "health-care-privacy-part-1",
+          "health-care-privacy-part-2",
+          "health-care-privacy-part-3",
+          "health-care-privacy-part-4",
+          "health-care-privacy-part-5",
+          "health-care-privacy-part-6",
+          "postman-pat-part-2"
+        ],
+        "story": [
+          "falling-skies",
+          "the-labyrinth",
+          "tour"
+        ]
+      },
+      "prapor": {
+        "access": [],
+        "assortment": [
+          "best-job-in-the-world",
+          "calibration",
+          "easy-job-part-2",
+          "escort",
+          "gendarmerie-mall-cop",
+          "gendarmerie-tickets-please",
+          "getting-some-air",
+          "ironclad-proof",
+          "kings-of-the-rooftops",
+          "oil-change",
+          "oil-run-bear",
+          "our-own-land-bear",
+          "perfect-mediator",
+          "reconnaissance",
+          "secrets-of-polikhim",
+          "shaking-up-the-teller-usec",
+          "special-order",
+          "textile-part-2-bear",
+          "textile-part-2-usec",
+          "the-art-of-explosion",
+          "the-punisher-part-2",
+          "the-punisher-part-3",
+          "the-punisher-part-4",
+          "the-punisher-part-5",
+          "the-punisher-part-6",
+          "unique-experience"
+        ],
+        "story": [
+          "batya",
+          "boreas",
+          "falling-skies",
+          "tour"
+        ]
+      },
+      "mechanic": {
+        "access": [],
+        "assortment": [
+          "farming",
+          "following-the-bread-crumbs",
+          "goals-and-means",
+          "gunsmith-as-val-bear",
+          "gunsmith-hk-mp5",
+          "gunsmith-master-part-1",
+          "gunsmith-master-part-11",
+          "gunsmith-master-part-12",
+          "gunsmith-master-part-13",
+          "gunsmith-master-part-3",
+          "gunsmith-master-part-4",
+          "gunsmith-master-part-6",
+          "gunsmith-model-870",
+          "gunsmith-mpx-usec",
+          "hobby-club",
+          "import",
+          "missing-informant",
+          "playing-the-market",
+          "protect-the-sky",
+          "psycho-sniper",
+          "secrets-of-polikhim",
+          "semiconductor-crisis",
+          "setting-priorities",
+          "shooter-born-in-heaven",
+          "the-courier",
+          "the-price-of-independence",
+          "the-price-of-independence-2",
+          "trouble-in-the-big-city"
+        ],
+        "story": [
+          "blue-fire",
+          "boreas",
+          "the-ticket",
+          "they-are-already-here",
+          "tour"
+        ]
+      },
+      "jaeger": {
+        "access": [
+          "introduction"
+        ],
+        "assortment": [
+          "broadcast-part-3",
+          "broadcast-part-5",
+          "hunting-trip",
+          "slaughterhouse",
+          "the-huntsman-path-control",
+          "the-huntsman-path-controller",
+          "the-huntsman-path-relentless",
+          "the-survivalist-path-eagle-owl",
+          "the-survivalist-path-junkie",
+          "the-survivalist-path-thrifty",
+          "the-survivalist-path-tough-guy",
+          "the-survivalist-path-unprotected-but-dangerous",
+          "the-survivalist-path-wounded-beast",
+          "the-survivalist-path-zhivchik",
+          "the-tarkov-shooter-part-1",
+          "the-tarkov-shooter-part-2",
+          "the-tarkov-shooter-part-3",
+          "the-tarkov-shooter-part-4",
+          "the-tarkov-shooter-part-5",
+          "the-tarkov-shooter-part-5-2",
+          "the-tarkov-shooter-part-6",
+          "the-tarkov-shooter-part-7"
+        ]
+      },
+      "peacekeeper": {
+        "access": [],
+        "assortment": [
+          "confidential-info",
+          "counteraction-usec",
+          "fishing-gear",
+          "gifts-from-tarkov",
+          "gunsmith-master-part-7",
+          "hiking",
+          "humanitarian-supplies",
+          "i-need-more-power",
+          "insomnia",
+          "master-key",
+          "one-less-loose-end",
+          "peacekeeping-mission",
+          "samples",
+          "spa-tour-part-2",
+          "special-equipment",
+          "terragroup-employee",
+          "the-cleaner",
+          "the-guide",
+          "trophies",
+          "trouble-in-the-big-city",
+          "weapons-circulation",
+          "wet-job-part-1",
+          "wet-job-part-2",
+          "wet-job-part-5",
+          "wet-job-part-6",
+          "wiring-the-vessel",
+          "worst-job-in-the-world",
+          "your-car-needs-a-service"
+        ]
+      },
+      "ref": {
+        "access": [
+          "easy-money-part-1-pve-zone"
+        ],
+        "assortment": [
+          "drip-out-part-2-usec",
+          "farming",
+          "gunsmith-as-val-bear",
+          "gunsmith-model-870",
+          "gunsmith-mpx-usec",
+          "to-great-heights-part-6-pve-zone"
+        ]
+      }
+    }
+  }
+}

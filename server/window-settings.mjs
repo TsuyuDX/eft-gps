@@ -1,3 +1,4 @@
+import { validGraphics } from "../public/core/graphics-model.js";
 export function validWindowSettings(value) {
   if (
     !value ||
@@ -12,8 +13,9 @@ export function validWindowSettings(value) {
     entries.length <= 40 &&
     entries.every(
       ([key, text]) =>
-        (key === "tarkov-overlay-v1" ||
-  key === "tarkov-map-markers-v1" ||
+        (key === "eftgps-graphics-v1" ||
+          key === "tarkov-overlay-v1" ||
+          key === "tarkov-map-markers-v1" ||
           key === "tarkov-interface-v1" ||
           key === "tarkov-locale-v1" ||
           key === "tarkov-onboarding-v1" ||
@@ -27,7 +29,10 @@ export function validWindowSettings(value) {
               data &&
               typeof data === "object" &&
               !Array.isArray(data) &&
-              (key !== "tarkov-overlay-v1" || (typeof data.enabled === "boolean" && Object.keys(data).length === 1)) &&
+              (key !== "eftgps-graphics-v1" || validGraphics(data)) &&
+              (key !== "tarkov-overlay-v1" ||
+                (typeof data.enabled === "boolean" &&
+                  Object.keys(data).length === 1)) &&
               (key !== "tarkov-map-markers-v1" ||
                 (["new", "classic"].includes(data.style) &&
                   Object.keys(data).length === 1))

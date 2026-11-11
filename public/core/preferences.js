@@ -150,7 +150,7 @@ export function renderPreferences(root, selected = "Интерфейс") {
 }
 export function openPreferences(selected = "Интерфейс") {
   modal(
-    '<h2 id="preferences-title">Настройки интерфейса</h2><div id="preferences-controls"></div><p><a class="button" href="#/settings">Данные, резервные копии и заметки →</a></p>',
+    '<h2 id="preferences-title">Настройки интерфейса</h2><div id="preferences-controls"></div><p><a class="button" href="#/graphics">Графика и цветокоррекция →</a></p><p><a class="button" href="#/settings">Данные, резервные копии и заметки →</a></p>',
   );
   renderPreferences(document.querySelector("#preferences-controls"), selected);
 }

@@ -203,3 +203,6 @@ Game materials belong to Battlestate Games. An independent fan project.
 Статус разработки и ограничения проверки: [отчёт](USABILITY-REPORT.md). / Development status and verification limits: [report](USABILITY-REPORT.md).
 
 Внизу окна отображается состояние соединения: зелёная точка **«Онлайн»**, красная **«Оффлайн»**. Карты и сохранённые данные доступны и без интернета. / The footer shows a green **Online** or red **Offline** indicator; saved maps and data remain available without internet.
+
+
+Настройка изображения по своим скриншотам: [Графика и цветокоррекция](GRAPHICS.md).

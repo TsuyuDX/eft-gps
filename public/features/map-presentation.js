@@ -22,6 +22,10 @@ const plain = (value) =>
     .trim();
 export function markerFacts(marker) {
   const facts=[];
+  if(marker.bridgeBarrierObservation) {
+    facts.push(t("Охраняемый проход к маяку. По наблюдению игрока, обстрел начинается примерно через метр за заграждением."));
+    facts.push(t("Точная граница не подтверждена; спорный контур скрыт."));
+  }
   if(marker.referenceUnconfirmed && !["hazards","artillery"].includes(marker.group))facts.push(t("Расположение этой категории не подтверждено текущим справочником."));
   if(["hazards","artillery"].includes(marker.group))facts.push(t("Границы зоны указаны по справочнику; в текущем патче не подтверждены."));
   if(marker.needsPower===true)facts.push(t("Требуется электропитание"));

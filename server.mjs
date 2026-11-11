@@ -1,3 +1,4 @@
+import { GraphicsGallery, graphicsGalleryRoute } from "./server/graphics-gallery.mjs";
 import { Connectivity } from "./server/connectivity.mjs";
 import { OverlayManager } from "./server/overlay.mjs";
 import { EventContentService } from "./server/event-content.mjs";
@@ -42,6 +43,7 @@ export function safePath(base, name) {
   return p.startsWith(base + path.sep) ? p : null;
 }
 let lastPing = Date.now();
+const graphicsGallery = new GraphicsGallery(userRoot);
 const gps = new GpsService(root);
 const overlayManager=new OverlayManager(root,port);
 const connectivity = new Connectivity();
@@ -79,6 +81,7 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(403);
       return res.end("Forbidden origin");
     }
+    if (await graphicsGalleryRoute(graphicsGallery, req, res, url)) return;
     if (url.pathname === "/api/connectivity" && req.method === "GET") {
       res.setHeader("Content-Type", "application/json");res.setHeader("Cache-Control", "no-store");
       return res.end(JSON.stringify(await connectivity.check()));

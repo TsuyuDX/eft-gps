@@ -31,6 +31,7 @@ export function createHazardOverlay(svg, map) {
       nodes = new Map();
       const fragment = document.createDocumentFragment();
       markers.forEach((marker, index) => {
+        if (marker.outlineSuppressed) return;
         const outline = hazardOutline(marker, map);
         if (!outline) return;
         const node = document.createElementNS(

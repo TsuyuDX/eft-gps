@@ -56,3 +56,9 @@
 The audit covers 30 map views, 34,933 markers and 714 hazard records. No invalid X/Z positions, missing local icons or empty labels were found. Lighthouse spawn references and distinct Night Factory / Ground Zero 21+ routes were corrected, including missing PvE and English map files.
 
 Hazard data matches the current reference API, but **current in-game boundaries and the exact game build have not been independently verified**. Dashed outlines and tooltips explicitly warn about this. Fifteen views still differ in seasonal quest markers; unknown quest links were not fabricated and existing guides/progress were preserved. The affected categories are labelled unconfirmed. This is a reference audit, not a guarantee of safe movement in a raid.
+
+## Уточнение 1.10.1 / 1.10.1 clarification
+
+На проходе к маяку четыре справочных прямоугольника снайпера в каждом режиме не отрисовываются как зона поражения: их границы оспорены наблюдением игрока у заграждения. Исходные координаты сохранены для аудита, метки предупреждения остаются. Карточка прямо указывает, что «примерно метр за заграждением» — наблюдение игрока, точный порог не подтверждён. Новые координаты заграждения не выдумывались. Это не обозначает скрытый участок как безопасный.
+
+Four reference sniper rectangles at the lighthouse approach in each mode are not shaded as firing boundaries. The raw reference geometry and warning markers remain; the barricade-distance claim is labelled as an unverified player observation, not a measured safe boundary.

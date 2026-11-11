@@ -1,6 +1,6 @@
 # История версий / Version history
 
-- **1.10.1** — уточнён заголовок новостей на главной: «Новости приложения и игры». / Clearer home news heading: “App and game news”.
+- **1.10.1** — «Новости приложения и игры»; исправлена главная при изменении размера окна; полноэкранная карта без панелей; убрана отметка TEST; единый минималистичный значок; обновлённая строка состояния; информация и задания торговцев перед ассортиментом 1-го уровня; спорные контуры у моста на Маяке скрыты с пояснением. / Clearer news heading, home resize fix, map-only expanded view, no TEST badge, shared flat icon and explicit handling of disputed lighthouse bridge boundaries.
 
 - **1.10.0** — глобальный поиск RU/EN; сохранение состояния списков; управление GPS одной кнопкой; существующий Overlay в настройках как Beta, выключенный по умолчанию; обновления только по выбору пользователя; исправленные варианты карт и точки появления Маяка, явные предупреждения о непроверенных координатах. / Global bilingual search, persistent list navigation, GPS toggle, opt-in integrated Overlay Beta, user-approved updates, corrected map variants and Lighthouse reference spawns, explicit coordinate-verification notices.
 
@@ -23,3 +23,6 @@
 - **1.0.0** — первая сохранённая офлайн-сборка. / First saved offline snapshot.
 
 Отдельных сохранённых сборок 1.2 и 1.3 нет. Их история не выдумывалась. / No separate 1.2 or 1.3 snapshots were retained.
+
+
+1.10.1: добавлена вкладка цветокоррекции со своими скриншотами, сравнением «До / После», локальными пресетами и инструкцией NVIDIA/PostFX.

@@ -1,3 +1,5 @@
+import {uiIcon} from "./icons.js";
+import {t} from "./localization.js";
 export let gpsState = null;
 let timer = null,
   previousMap = null,
@@ -36,12 +38,14 @@ export function startGpsClient(getMode) {
   badge.textContent = "⌖ GPS";
   document.querySelector(".statusline .row")?.append(badge);
   window.addEventListener("gps-update", ({ detail: s }) => {
-    badge.classList.toggle("gps-on", s.config.enabled);
-    badge.textContent = s.auto
-      ? "⌖ GPS · авто"
-      : s.config.enabled
-        ? "⌖ GPS · вкл"
-        : "⌖ GPS · выкл";
+    const label=t(s.auto ? "Авто" : s.config.enabled ? "Включён" : "Выключен");
+    const key=String(s.config.enabled)+"/"+label;
+    if(badge.dataset.stateKey!==key){
+      badge.dataset.stateKey=key;
+      badge.classList.toggle("gps-on",s.config.enabled);badge.classList.toggle("gps-auto",s.auto);
+      badge.innerHTML=uiIcon("locate",16)+'<span>GPS</span><span class="gps-pill-state">'+label+'</span>';
+      badge.title=t("Настроить GPS");
+    }
     if (
       s.config.enabled &&
       s.config.autoMap &&

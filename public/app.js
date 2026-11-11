@@ -1,3 +1,5 @@
+import { renderGraphics } from "./features/graphics.js";
+import { uiIcon } from "./core/icons.js";
 import { startConnectivityStatus } from "./core/connectivity.js";
 import { refreshQuestList } from "./features/quests.js";
 import { initializeOverlay } from "./core/overlay-client.js";
@@ -77,6 +79,7 @@ const sections = [
   ["event", "События"],
   ["season", "Сезоны"],
   ["news", "Новости"],
+  ["graphics", "Цветокоррекция"],
 ];
 
 function nav() {
@@ -144,6 +147,9 @@ async function route() {
       case "settings":
         await renderSettings(app);
         break;
+      case "graphics":
+        await renderGraphics(app);
+        break;
       case "gps":
         await renderGps(app);
         break;
@@ -164,13 +170,23 @@ async function route() {
     if (version !== routeVersion) return;
     if (!restored) addBackButton(app);
     activeView = {key: cacheKey, catalog: ["item","quest"].includes(section) && !slug};
-    const position = viewCache.position(cacheKey);
+    const position = section ? viewCache.position(cacheKey) : {top:0,left:0};
     app.scrollTop = position.top; app.scrollLeft = position.left;
     requestAnimationFrame(() => {if (version === routeVersion) {app.scrollTop=position.top;app.scrollLeft=position.left;}});
   } catch (e) {
     if (version === routeVersion) app.innerHTML = errorView(e);
   }
 }
+// Start the home view at the top after maximize/restore instead of retaining a clipped hero.
+let homeResizeTimer, settledWidth=window.innerWidth, settledHeight=window.innerHeight;
+window.addEventListener("resize",()=>{
+  clearTimeout(homeResizeTimer);
+  homeResizeTimer=setTimeout(()=>{
+    const changed=Math.abs(window.innerWidth-settledWidth)>=120 || Math.abs(window.innerHeight-settledHeight)>=100;
+    settledWidth=window.innerWidth;settledHeight=window.innerHeight;
+    if(changed && app.querySelector(":scope > .home-hero"))app.scrollTop=0;
+  },120);
+});
 document.querySelector("#modal .close").onclick = () =>
   document.querySelector("#modal").close();
 document.querySelector("#modal").addEventListener("click", (e) => {
@@ -196,8 +212,7 @@ try {
   await init(profile().mode);
   document.querySelector("#mode").value = db.mode;
   document.querySelector("#logo").src = "/icons/app-192.png";
-  document.querySelector("#snapshot-date").textContent =
-    "Снимок " + new Date(db.manifest.savedAt).toLocaleDateString(localeCode());
+  renderSnapshotDate();
   nav();
   document.querySelector("#mode").onchange = async (e) => {
     await loadMode(e.target.value);
@@ -245,9 +260,7 @@ window.addEventListener("language-changed", async () => {
   try {
     const ready = await init(profile().mode);
     if (!ready || change !== languageChangeVersion) return;
-    document.querySelector("#snapshot-date").textContent =
-      "Снимок " +
-      new Date(db.manifest.savedAt).toLocaleDateString(localeCode());
+    renderSnapshotDate();
     nav();
     await route();
     if (preferencesOpen) openPreferences(selectedTab);
@@ -261,13 +274,21 @@ document.addEventListener("keydown", (e) => {
     openGlobalSearch(newsEntries);
   }
 });
+function renderSnapshotDate() {
+  const element=document.querySelector("#snapshot-date");
+  element.innerHTML=uiIcon("calendar",16)+"<span>"+esc(t("Снимок")+" "+new Date(db.manifest.savedAt).toLocaleDateString(localeCode()))+"</span>";
+  element.title=t("Дата сохранения справочника в верхней панели.");
+}
 function clock() {
   const elapsed = Date.now() / 1000,
     seconds = Math.floor((elapsed * 7 + 10800) % 86400),
     hours = Math.floor(seconds / 3600),
     mins = Math.floor((seconds % 3600) / 60);
-  document.querySelector("#raid-time").textContent =
-    `☀ ${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}  ☾ ${String((hours + 12) % 24).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
+  const time = document.querySelector("#raid-time");
+  const day=String(hours).padStart(2,"0")+":"+String(mins).padStart(2,"0"),night=String((hours+12)%24).padStart(2,"0")+":"+String(mins).padStart(2,"0");
+  time.innerHTML='<span class="raid-clock-day">'+uiIcon("sun",16)+'<span>'+day+'</span></span><span class="raid-clock-night">'+uiIcon("moon",15)+'<span>'+night+'</span></span>';
+  time.title=t("Время в Таркове");
+
 }
 clock();
 setInterval(clock, 10000);
