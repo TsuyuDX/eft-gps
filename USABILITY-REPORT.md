@@ -1,6 +1,6 @@
-# EFT GPS 1.10.0 — отчёт о доработке / Development report
+# EFT GPS 1.10.0 — отчёт о проверке / Verification report
 
-12 ноября 2026. Ветка `feature/usability-overlay-beta`. Основа: существующая `feature/tarkov-overlay`; стабильная `main` не переписывается. Это версия разработки, а не опубликованный установщик Latest.
+12 ноября 2026. Разработка выполнена в `feature/usability-overlay-beta`, после повторных проверок подготовлена к обычному объединению в `main`. История не переписывается. Выпуск: [v1.10.0](https://github.com/TsuyuDX/eft-gps/releases/tag/v1.10.0).
 
 ## Изменения
 
@@ -31,10 +31,10 @@
 
 - Не проводился новый реальный рейд с включённым античитом: совместимость Overlay с каждой конфигурацией игры не гарантируется. Нужен оконный режим без рамки; между скриншотами GPS не измеряет новую позицию.
 - Опасные границы и дополнительные сезонные точки остаются неподтверждёнными в игре; см. аудит карт. Полная ручная проверка каждой игровой статьи/перевода не проводилась; названия источника сохранены.
-- Полный установщик этой разработки и новая GitHub Release не выпускались; публикуется код и собранные компоненты в отдельной ветке. Старые установленные версии не получают новую логику согласия до обновления на неё.
+- Новая версия публикуется проверяемой сборкой GitHub Actions после успешных тестов. Старые установленные версии не получают новую логику согласия до обновления на 1.10.0.
 - Защита Windows не отключалась, исключения не создавались, заблокированные файлы не восстанавливались. Гарантировать отсутствие антивирусных предупреждений у неподписанной сборки нельзя.
 - Лицензии библиотек и существующие уведомления об источниках сохранены. Разрешение на распространение сторонних игровых карт, текстов и иллюстраций этой проверкой не устанавливается.
 
 ## English
 
-Development 1.10.0 adds bilingual global search, preserved list navigation, an immediate GPS toggle, opt-in integrated Overlay Beta, explicit update approval, corrected reference map variants, provenance notices and an online/offline indicator. Existing architecture, profile storage and rollback safeguards remain in use. Native components compile; automated, native and UI checks are recorded above. Current in-game map accuracy, a new anti-cheat raid test and complete manual proofreading of every reference article remain outside verified coverage. No new Latest installer is published by this source-branch push.
+Version 1.10.0 adds bilingual global search, preserved list navigation, an immediate GPS toggle, opt-in integrated Overlay Beta, explicit update approval, corrected reference map variants, provenance notices and an online/offline indicator. Existing architecture, profile storage and rollback safeguards remain in use. Native components compile; automated, native and UI checks are recorded above. Current in-game map accuracy, a new anti-cheat raid test and complete manual proofreading of every reference article remain outside verified coverage. The 1.10.0 release is built and verified by GitHub Actions after tests pass. Older installations retain their previous update behaviour until upgraded.

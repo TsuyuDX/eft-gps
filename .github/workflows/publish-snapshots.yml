@@ -14,6 +14,11 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 1
+      - name: Test the application before publishing
+        shell: pwsh
+        run: |
+          & .\runtime\node.exe --test test/*.test.mjs
+          if ($LASTEXITCODE -ne 0) { throw 'Application tests failed; release stopped.' }
       - name: Build and publish saved application versions sequentially
         shell: pwsh
         env:

@@ -1,8 +1,8 @@
 # EFT GPS — Overlay Beta
 
-В версии разработки 1.10.0 существующий прототип подключён к основному приложению: **Настройки → Экспериментальное → Экспериментальный оверлей**. По умолчанию выключен. Выбор сохраняется существующей системой настроек и не сбрасывается обновлением. Выключение закрывает только процесс оверлея этого приложения; при выключенном состоянии он не запускается.
+В версии 1.10.0 существующий прототип подключён к основному приложению: **Настройки → Экспериментальное → Экспериментальный оверлей**. По умолчанию выключен. Выбор сохраняется существующей системой настроек и не сбрасывается обновлением. Выключение закрывает только процесс оверлея этого приложения; при выключенном состоянии он не запускается.
 
-Development 1.10.0 integrates the existing host through **Settings → Experimental → Experimental overlay**. It is off by default, uses the existing persisted settings, and starts no overlay process while disabled. Disabling it closes only the host owned by this app instance.
+Version 1.10.0 integrates the existing host through **Settings → Experimental → Experimental overlay**. It is off by default, uses the existing persisted settings, and starts no overlay process while disabled. Disabling it closes only the host owned by this app instance.
 
 Отдельный тестовый запуск по-прежнему доступен.
 
