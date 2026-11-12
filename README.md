@@ -209,3 +209,7 @@ Game materials belong to Battlestate Games. An independent fan project.
 
 
 События, сезоны, промокоды и источники: [как обновляются сведения](GAME-INFORMATION.md).
+
+## Правка текстов / Editing text
+
+Подписи интерфейса и переводы RU/EN: [инструкция](public/locales/README.md). Быстрые исправления вносятся в `public/locales/custom.js`; над записями основного словаря указаны соответствующие экраны. / Interface copy and RU/EN translations: see the [editing guide](public/locales/README.md). Put quick overrides in `public/locales/custom.js`.

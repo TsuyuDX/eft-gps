@@ -1,3 +1,4 @@
+import {textPair} from "./localization.js";
 import {gameInfo} from "./game-info-client.js";
 import { db, json } from "./data.js";
 import { language, t } from "./localization.js";
@@ -172,16 +173,14 @@ export function bindGlobalSearch(field, box, news = []) {
   let generation = 0;
   field.setAttribute(
     "placeholder",
-    language() === "en"
-      ? "Search items, quests, maps and guides"
-      : "Предметы, задания, карты и справочник",
+    textPair("Предметы, задания, карты и справочник","Search items, quests, maps and guides"),
   );
   field.oninput = async () => {
     const own = ++generation,
       query = field.value;
     box.hidden = !query.trim();
     if (box.hidden) return;
-    box.textContent = language() === "en" ? "Searching…" : "Поиск…";
+    box.textContent = textPair("Поиск…","Searching…");
     try {
       const results = searchEntries(await globalIndex(news), query);
       if (own !== generation) return;
@@ -203,15 +202,11 @@ export function bindGlobalSearch(field, box, news = []) {
               `<a href="${esc(x.href)}">${img(x.icon, "")}<span>${esc(x.name)}</span><small class="muted">${esc(language() === "en" ? labels[x.type] : x.type)}</small></a>`,
           )
           .join("") ||
-        (language() === "en"
-          ? "Nothing found. Try different keywords."
-          : "Ничего не найдено. Попробуйте другие ключевые слова.");
+        (textPair("Ничего не найдено. Попробуйте другие ключевые слова.","Nothing found. Try different keywords."));
     } catch {
       if (own === generation)
         box.textContent =
-          language() === "en"
-            ? "Search is unavailable. Try again."
-            : "Поиск недоступен. Попробуйте ещё раз.";
+          textPair("Поиск недоступен. Попробуйте ещё раз.","Search is unavailable. Try again.");
     }
   };
   field.onkeydown = (e) => {
@@ -245,7 +240,7 @@ export function bindGlobalSearch(field, box, news = []) {
 export function openGlobalSearch(news = []) {
   modal(
     "<h2>" +
-      (language() === "en" ? "Search the application" : "Поиск по приложению") +
+      (textPair("Поиск по приложению","Search the application")) +
       '</h2><input id="app-search-field" type="search" autocomplete="off" style="width:100%"><div class="global-results" id="app-search-results"></div>',
   );
   const field = document.querySelector("#app-search-field");

@@ -1,3 +1,4 @@
+import {textPair} from "../core/localization.js";
 import { uiIcon } from "../core/icons.js";
 import { db, asset, detail } from "../core/data.js";
 import { esc, modal, img, rich } from "../core/ui.js";
@@ -220,7 +221,7 @@ export function createUnifiedMapSearch(
         '<div class="map-item-preview">' +
         img(d.imageLink || d.baseImageLink || d.iconLink, d.name) +
         '<div><span class="eyebrow">' +
-        (language() === "en" ? "ITEM" : "ПРЕДМЕТ") +
+        (textPair("ПРЕДМЕТ","ITEM")) +
         "</span><h2>" +
         esc(d.name) +
         '</h2><div class="description">' +
@@ -230,9 +231,7 @@ export function createUnifiedMapSearch(
         "/" +
         row.slug +
         '">' +
-        (language() === "en"
-          ? "Full item details →"
-          : "Полная карточка предмета →") +
+        (textPair("Полная карточка предмета →","Full item details →")) +
         "</a></div></div>";
     } catch (e) {
       if (request !== previewId || !document.querySelector("#modal").open)
@@ -278,9 +277,7 @@ export function createUnifiedMapSearch(
                   selected.has(row.id) +
                   '" aria-label="' +
                   esc(
-                    (language() === "en"
-                      ? "Show on map: "
-                      : "Показать на карте: ") + row.name,
+                    (textPair("Показать на карте: ","Show on map: ")) + row.name,
                   ) +
                   '">' +
                   uiIcon(selected.has(row.id) ? "check" : "plus", 18) +
@@ -314,9 +311,7 @@ export function createUnifiedMapSearch(
     results.innerHTML =
       html ||
       '<p class="map-search-empty">' +
-        (language() === "en"
-          ? "Nothing found. Try a different name."
-          : "Ничего не найдено. Попробуйте другое название.") +
+        (textPair("Ничего не найдено. Попробуйте другое название.","Nothing found. Try a different name.")) +
         "</p>";
     results.hidden = !query.trim();
     input.setAttribute("aria-expanded", String(!results.hidden));

@@ -1,3 +1,9 @@
+## В разработке / Unreleased
+
+- Единый редактируемый словарь RU/EN, быстрые правки в `public/locales/custom.js`, комментарии по экранам и инструкция для редактора.
+- Вычитка подписей, дополнение английских переводов, отдельный русский словарь нативных окон и проверка переменных перед сборкой.
+- Editable RU/EN catalogues, quick overrides, editor documentation, copy improvements and native Russian overrides.
+
 ## 1.11.1
 
 Баннер и статус Kord Breach, отметки новых разделов, официальные иллюстрации игровых новостей и история автора в поддержке. / Season banner and status, new-section badges, official news artwork and the creator’s story.

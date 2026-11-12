@@ -1,3 +1,4 @@
+import {textPair} from "./localization.js";
 import { db, asset } from "./data.js";
 import { language } from "./localization.js";
 import { esc } from "./ui.js";
@@ -31,8 +32,7 @@ export function bindMapColour(root, signal) {
   window.addEventListener("map-colour-changed", apply, { signal });
 }
 export function renderMapColourControls(root) {
-  const en = language() === "en",
-    tx = (ru, enText) => (en ? enText : ru);
+  const tx = textPair;
   let values = getMapColour();
   const controller = new AbortController(),
     signal = controller.signal;

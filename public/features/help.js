@@ -1,3 +1,4 @@
+import {textPair} from "../core/localization.js";
 import { supportUrl } from "../core/support-config.js";
 import { language } from "../core/localization.js";
 import { openSupport } from "./support.js";
@@ -13,7 +14,7 @@ import {
   APP_TITLE,
   PROJECT_URL,
 } from "../core/brand.js";
-const L = (ru, en) => (language() === "en" ? en : ru);
+const L = textPair;
 const tourKey = "tarkov-onboarding-v1";
 const steps = [
   {

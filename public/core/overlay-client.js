@@ -1,7 +1,8 @@
+import {textPair} from "./localization.js";
 import { readWindowSetting, writeWindowSetting } from "./window-settings.js";
 import { language } from "./localization.js";
 const key = "tarkov-overlay-v1";
-const L = (ru, en) => (language() === "en" ? en : ru);
+const L = textPair;
 export function overlayEnabled() {
   try {
     return JSON.parse(readWindowSetting(key))?.enabled === true;

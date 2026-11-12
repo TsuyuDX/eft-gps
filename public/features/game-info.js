@@ -1,3 +1,4 @@
+import {textPair} from "../core/localization.js";
 import {gameArtwork} from "../core/news-artwork.js";
 import {
   gameInfo,
@@ -13,7 +14,7 @@ import {
 import { language, localeCode } from "../core/localization.js";
 import { heading, esc, toast } from "../core/ui.js";
 import { uiIcon } from "../core/icons.js";
-const tr = (ru, en) => (language() === "en" ? en : ru);
+const tr = textPair;
 const value = (x) => x?.[language()] || x?.en || x?.ru || "";
 const date = (x) =>
   x

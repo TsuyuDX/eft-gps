@@ -84,12 +84,13 @@ for(const item of plan) {
     const releaseManifest={format:1,app:'TarkovOffline',version:item.version,builtAt:run('git',['show','-s','--format=%cI',item.commit]),files};
     const manifestFile=path.join(out,'release-input.json');await fs.writeFile(manifestFile,JSON.stringify(releaseManifest));
     const native=path.join(home,'native');
-    const nativeText=path.join(out,'NativeText.cs'),translations=path.join(out,'native.en.json'),maintenance=path.join(out,'Maintenance.cs');
+    const nativeText=path.join(out,'NativeText.cs'),translations=path.join(out,'native.en.json'),russianTranslations=path.join(out,'native.ru.json'),maintenance=path.join(out,'Maintenance.cs');
     await fs.writeFile(nativeText,(await fs.readFile(path.join(native,'NativeText.cs'),'utf8')).replace(/public const string Version="[^"]+"/,`public const string Version="${item.version}"`));
     await fs.writeFile(translations,(await fs.readFile(path.join(native,'native.en.json'),'utf8')).replaceAll('1.8.1',item.version));
     await fs.writeFile(maintenance,(await fs.readFile(path.join(native,'Maintenance.cs'),'utf8')).replaceAll('1.8.1',item.version));
     const compiler='C:/Windows/Microsoft.NET/Framework64/v4.0.30319/csc.exe';
-    const common=['/nologo','/target:winexe','/platform:x64','/reference:System.Windows.Forms.dll','/reference:System.Web.Extensions.dll','/reference:System.Drawing.dll','/reference:System.IO.Compression.dll','/reference:System.IO.Compression.FileSystem.dll',`/win32icon:${path.join(native,'app.ico')}`,`/resource:${path.join(native,'app-192.png')},installer-logo.png`,`/resource:${translations},native.en.json`];
+    await fs.writeFile(russianTranslations,(await fs.readFile(path.join(native,'native.ru.json'),'utf8')).replaceAll('1.8.1',item.version));
+    const common=['/nologo','/target:winexe','/platform:x64','/reference:System.Windows.Forms.dll','/reference:System.Web.Extensions.dll','/reference:System.Drawing.dll','/reference:System.IO.Compression.dll','/reference:System.IO.Compression.FileSystem.dll',`/win32icon:${path.join(native,'app.ico')}`,`/resource:${path.join(native,'app-192.png')},installer-logo.png`,`/resource:${translations},native.en.json`,`/resource:${russianTranslations},native.ru.json`];
     const stub=path.join(out,'UpdateSetup.exe');run(compiler,[...common,`/out:${stub}`,nativeText,maintenance]);
     const packager=path.join(out,'PackRelease.exe');run(compiler,['/nologo','/target:exe','/reference:System.Web.Extensions.dll','/reference:System.IO.Compression.dll','/reference:System.IO.Compression.FileSystem.dll',`/out:${packager}`,path.join(native,'PackRelease.cs')]);
     const portable=path.join(out,`TSUYU-EFTGPS-${item.version}-Windows.zip`),setup=path.join(out,`TSUYU-EFTGPS-${item.version}-Setup.exe`);

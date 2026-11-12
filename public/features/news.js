@@ -1,3 +1,4 @@
+import {textPair} from "../core/localization.js";
 import {gameArtwork,GAME_NEWS_FALLBACK} from "../core/news-artwork.js";
 import {gameInfo} from "../core/game-info-client.js";
 import {language} from "../core/localization.js";
@@ -145,7 +146,7 @@ export const newsEntries = [
 ];
 const bundledNewsEntries=[...newsEntries];
 export function refreshGameNews(){
- const live=gameInfo().records.filter(x=>x.type==="news"&&x.verified==="official"&&x.publishedAt).map(x=>({slug:x.id,image:gameArtwork(x),kind:"Игра",date:x.publishedAt.slice(0,10),label:language()==="en"?"Official":"Официально",title:x.title[language()]||x.title.en,summary:x.description[language()]||x.description.en,paragraphs:[language()==="en"?"Source language is preserved. This is a short publication preview; read the original for full details. Event activity and code redemption are checked separately.":"Сохранён язык первоисточника. Это краткое превью публикации; полный текст доступен по ссылке. Активность событий и активация промокодов проверяются отдельно."],source:x.source,artworkFromSource:!!x.imageRemote,live:true}));
+ const live=gameInfo().records.filter(x=>x.type==="news"&&x.verified==="official"&&x.publishedAt).map(x=>({slug:x.id,image:gameArtwork(x),kind:"Игра",date:x.publishedAt.slice(0,10),label:textPair("Официально","Official"),title:x.title[language()]||x.title.en,summary:x.description[language()]||x.description.en,paragraphs:[textPair("Сохранён язык первоисточника. Это краткое превью публикации; полный текст доступен по ссылке. Активность событий и активация промокодов проверяются отдельно.","Source language is preserved. This is a short publication preview; read the original for full details. Event activity and code redemption are checked separately.")],source:x.source,artworkFromSource:!!x.imageRemote,live:true}));
  newsEntries.splice(0,newsEntries.length,...[...live,...bundledNewsEntries].sort((a,b)=>b.date.localeCompare(a.date)));
 }
 export function newsPreview(entry) {
@@ -195,5 +196,5 @@ export function renderNews(root, slug) {
       entry.title,
       `${entry.kind} · ${new Date(entry.date + "T12:00:00").toLocaleDateString(localeCode())}`,
     ) +
-    `<article class="news-detail" data-selectable><figure class="news-hero">${newsPreview(entry)}<figcaption class="small muted">${entry.live && entry.artworkFromSource ? (language()==="en"?"Artwork from the developer’s publication":"Иллюстрация из публикации разработчиков") : entry.kind === "Игра" ? "Иллюстрация Battlestate Games" : "Интерфейс EFT GPS · иллюстрация возможностей приложения"}</figcaption></figure><p class="news-lead">${esc(entry.summary)}</p>${entry.paragraphs.map((p) => `<p>${esc(p)}</p>`).join("")}${entry.source ? `<div class="official-source"><strong>Battlestate Games</strong><p>Официальное объявление разработчиков. Для открытия публикации нужен интернет.</p><a class="button" href="${esc(entry.source)}" target="_blank" rel="noopener">Читать оригинал ↗</a></div>` : ""}</article>`;
+    `<article class="news-detail" data-selectable><figure class="news-hero">${newsPreview(entry)}<figcaption class="small muted">${entry.live && entry.artworkFromSource ? (textPair("Иллюстрация из публикации разработчиков","Artwork from the developer’s publication")) : entry.kind === "Игра" ? "Иллюстрация Battlestate Games" : "Интерфейс EFT GPS · иллюстрация возможностей приложения"}</figcaption></figure><p class="news-lead">${esc(entry.summary)}</p>${entry.paragraphs.map((p) => `<p>${esc(p)}</p>`).join("")}${entry.source ? `<div class="official-source"><strong>Battlestate Games</strong><p>Официальное объявление разработчиков. Для открытия публикации нужен интернет.</p><a class="button" href="${esc(entry.source)}" target="_blank" rel="noopener">Читать оригинал ↗</a></div>` : ""}</article>`;
 }

@@ -74,7 +74,6 @@
   "Сначала закройте окно EFT GPS": "Close the EFT GPS window first",
   "Microsoft WebView2 установлен.": "Microsoft WebView2 installed.",
   "Создать ярлык на рабочем столе": "Create a desktop shortcut",
-  "УСТАНОВКА ПРИЛОЖЕНИЯ  /  1.8.1": "APPLICATION SETUP  /  1.8.1",
   "Резервная копия (*.json)": "Backup (*.json)",
   "Файл установки является ссылкой": "The installation file is a link",
   "Путь выходит за папку приложения": "The path is outside the application folder",
@@ -219,5 +218,6 @@
   "Карта": "Map",
   "Режим игры": "Game mode",
   "Горячая клавиша": "Hotkey",
-  "Непрозрачность карты": "Map opacity"
+  "Непрозрачность карты": "Map opacity",
+  "УСТАНОВКА ПРИЛОЖЕНИЯ": "APPLICATION SETUP"
 }

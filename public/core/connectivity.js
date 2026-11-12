@@ -1,3 +1,4 @@
+import {textPair} from "./localization.js";
 import { language } from "./localization.js";
 export function startConnectivityStatus() {
   const element = document.querySelector("#connection-status");
@@ -11,20 +12,12 @@ export function startConnectivityStatus() {
     element.classList.toggle("is-offline", online === false);
     element.querySelector("[data-connection-label]").textContent =
       online === null
-        ? language() === "en"
-          ? "Checking connection…"
-          : "Проверка связи…"
+        ? textPair("Проверка связи…","Checking connection…")
         : online
-          ? language() === "en"
-            ? "Online"
-            : "Онлайн"
-          : language() === "en"
-            ? "Offline"
-            : "Оффлайн";
+          ? textPair("Онлайн","Online")
+          : textPair("Оффлайн","Offline");
     element.title =
-      language() === "en"
-        ? "Internet connectivity. Maps and the saved reference remain available offline."
-        : "Доступ к интернету. Карты и сохранённый справочник доступны и без сети.";
+      textPair("Доступ к интернету. Карты и сохранённый справочник доступны и без сети.","Internet connectivity. Maps and the saved reference remain available offline.");
   };
   const refresh = async () => {
     clearTimeout(timer);

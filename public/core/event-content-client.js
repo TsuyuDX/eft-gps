@@ -1,3 +1,4 @@
+import {textPair} from "./localization.js";
 import {
   acceptEventContent,
   eventContentState,
@@ -61,29 +62,19 @@ export function bindEventSync(root) {
   function draw() {
     const en = language() === "en",
       state = eventContentState;
-    title.textContent = en
-      ? "Event walkthrough updates"
-      : "Обновление прохождений события";
+    title.textContent = textPair("Обновление прохождений события","Event walkthrough updates");
     const checked = state.lastSuccess
       ? new Date(state.lastSuccess).toLocaleString(en ? "en-US" : "ru-RU")
       : "";
     status.textContent =
       state.phase === "checking"
-        ? en
-          ? "Checking for new guides…"
-          : "Проверяем новые материалы…"
+        ? textPair("Проверяем новые материалы…","Checking for new guides…")
         : state.phase === "offline"
-          ? en
-            ? "Source unavailable. Saved guides remain available offline."
-            : "Источник недоступен. Сохранённые прохождения работают офлайн."
+          ? textPair("Источник недоступен. Сохранённые прохождения работают офлайн.","Source unavailable. Saved guides remain available offline.")
           : checked
-            ? (en
-                ? "Last successful check: "
-                : "Последняя успешная проверка: ") + checked
-            : en
-              ? "Checks at startup and every 15 minutes. Offline guides are included."
-              : "Проверка при запуске и раз в 15 минут. Офлайн-прохождения уже в комплекте.";
-    button.textContent = en ? "Check now" : "Проверить сейчас";
+            ? (textPair("Последняя успешная проверка: ","Last successful check: ")) + checked
+            : textPair("Проверка при запуске и раз в 15 минут. Офлайн-прохождения уже в комплекте.","Checks at startup and every 15 minutes. Offline guides are included.");
+    button.textContent = textPair("Проверить сейчас","Check now");
     button.disabled = state.phase === "checking";
   }
   button.onclick = async () => {

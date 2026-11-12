@@ -1,7 +1,8 @@
+import {textPair} from "../core/localization.js";
 import { language } from "../core/localization.js";
 import { modal, esc } from "../core/ui.js";
 import { supportLinks, supportCommunity, supportUrl } from "../core/support-config.js";
-const L = (ru,en) => language() === "en" ? en : ru;
+const L = textPair;
 
 function publicNames(entries) {
   return [...new Set((Array.isArray(entries) ? entries : [])

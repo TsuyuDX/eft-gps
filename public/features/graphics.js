@@ -1,3 +1,4 @@
+import {textPair} from "../core/localization.js";
 import { esc, heading, toast, confirmAction } from "../core/ui.js";
 import { language } from "../core/localization.js";
 import {
@@ -14,34 +15,8 @@ import {
   normalizeAdjustments,
   filterValues,
 } from "../core/graphics-model.js";
-const words = {
-  "Графика и цветокоррекция": "Graphics and colour correction",
-  Яркость: "Brightness",
-  Контрастность: "Contrast",
-  Насыщенность: "Saturation",
-  Гамма: "Gamma",
-  Температура: "Temperature",
-  Резкость: "Sharpness",
-  Интенсивность: "Intensity",
-  Оригинал: "Original",
-  Светлее: "Brighter",
-  Темнее: "Darker",
-  "Повышенная видимость": "Visibility",
-  "Естественные цвета": "Natural colours",
-  Кинематографический: "Cinematic",
-  Лес: "Woods",
-  Таможня: "Customs",
-  Развязка: "Interchange",
-  Берег: "Shoreline",
-  "Улицы Таркова": "Streets of Tarkov",
-  Лаборатория: "The Lab",
-  Завод: "Factory",
-  Маяк: "Lighthouse",
-  Резерв: "Reserve",
-  Эпицентр: "Ground Zero",
-  "Другая локация": "Other location",
-};
-const tr = (ru, en) => (language() === "en" ? en || words[ru] || ru : ru);
+
+const tr = textPair;
 function loadSettings() {
   try {
     return normalizeGraphics(

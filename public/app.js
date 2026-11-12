@@ -1,3 +1,4 @@
+import {textPair} from "./core/localization.js";
 import { initializeGameInfo, startGameInfo } from "./core/game-info-client.js";
 import { renderHomeInformation, renderInformation, renderPromocodes, bindSeasonStatus } from "./features/game-info.js";
 import { renderGraphics } from "./features/graphics.js";
@@ -101,13 +102,13 @@ function nav() {
   navigation.innerHTML = sections
     .map(
       ([k, v]) =>
-        `<a href="#/${k}/${["map", "boss", "trader", "item", "quest", "hideout", "items-tracker"].includes(k) ? db.mode : ""}" data-section="${k}" class="${["promocodes","graphics"].includes(k)?"nav-has-new":""}"><span>${v}</span>${["promocodes","graphics"].includes(k)?`<span class="nav-new-badge" aria-hidden="true" data-no-translate>${language()==="en"?"NEW":"НОВОЕ"}</span>`:""}</a>`,
+        `<a href="#/${k}/${["map", "boss", "trader", "item", "quest", "hideout", "items-tracker"].includes(k) ? db.mode : ""}" data-section="${k}" class="${["promocodes","graphics"].includes(k)?"nav-has-new":""}"><span>${v}</span>${["promocodes","graphics"].includes(k)?`<span class="nav-new-badge" aria-hidden="true" data-no-translate>${textPair("НОВОЕ","NEW")}</span>`:""}</a>`,
     )
     .join("");
 }
 function home() {
   const completed = Object.values(current().quests).filter(Boolean).length;
-  app.innerHTML = `<section class="home-hero"><div class="eyebrow">НАВИГАЦИЯ / ПОДГОТОВКА / РЕЙД</div><h1>EFT <span>GPS</span></h1><div class="badge home-version" data-no-translate>${language() === "en" ? "Version" : "Версия"} ${APP_VERSION}</div><p>Всё для следующего рейда. Карты, GPS, задания и личный прогресс.</p><div class="row wrap home-actions"><a class="button primary" href="#/map/${db.mode}">Открыть карты ↗</a><a class="button" href="#/gps">Настроить GPS</a></div><div class="home-search"><span>⌕</span><input type="search" id="global-search" placeholder="Найти предметы, задания, модули убежища" autocomplete="off"><kbd>Ctrl K</kbd></div><div id="global-results" class="global-results" hidden></div></section><div class="dashboard-strip"><a href="#/map/${db.mode}"><b>${db.maps.length}</b> карт</a><a href="#/item/${db.mode}"><b>${db.items.length.toLocaleString(localeCode())}</b> предметов</a><a href="#/quest/${db.mode}"><b>${completed} / ${db.quests.length}</b> заданий</a><a href="#/items-tracker/${db.mode}"><b>Мой прогресс</b> →</a></div><div id="home-information"></div><section class="home-news"><h2 class="center">Новости приложения и игры</h2><div class="card-grid news-grid">${newsCards(newsEntries.slice(0, 4))}</div><p class="center" style="margin-top:24px"><a class="button" href="#/news">Все новости →</a></p></section>`;
+  app.innerHTML = `<section class="home-hero"><div class="eyebrow">НАВИГАЦИЯ / ПОДГОТОВКА / РЕЙД</div><h1>EFT <span>GPS</span></h1><div class="badge home-version" data-no-translate>${textPair("Версия","Version")} ${APP_VERSION}</div><p>Всё для следующего рейда. Карты, GPS, задания и личный прогресс.</p><div class="row wrap home-actions"><a class="button primary" href="#/map/${db.mode}">Открыть карты ↗</a><a class="button" href="#/gps">Настроить GPS</a></div><div class="home-search"><span>⌕</span><input type="search" id="global-search" placeholder="Найти предметы, задания, модули убежища" autocomplete="off"><kbd>Ctrl K</kbd></div><div id="global-results" class="global-results" hidden></div></section><div class="dashboard-strip"><a href="#/map/${db.mode}"><b>${db.maps.length}</b> карт</a><a href="#/item/${db.mode}"><b>${db.items.length.toLocaleString(localeCode())}</b> предметов</a><a href="#/quest/${db.mode}"><b>${completed} / ${db.quests.length}</b> заданий</a><a href="#/items-tracker/${db.mode}"><b>Мой прогресс</b> →</a></div><div id="home-information"></div><section class="home-news"><h2 class="center">Новости приложения и игры</h2><div class="card-grid news-grid">${newsCards(newsEntries.slice(0, 4))}</div><p class="center" style="margin-top:24px"><a class="button" href="#/news">Все новости →</a></p></section>`;
   renderHomeInformation(app.querySelector("#home-information"));
   bindGlobalSearch(app.querySelector("#global-search"), app.querySelector("#global-results"), newsEntries);
 }

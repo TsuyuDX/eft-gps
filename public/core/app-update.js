@@ -1,9 +1,10 @@
+import {textPair} from "./localization.js";
 import { language } from "./localization.js";
 let started = false;
 export function startAppUpdates() {
   if (started) return;
   started = true;
-  const L = (ru, en) => (language() === "en" ? en : ru);
+  const L = textPair;
   const panel = document.createElement("aside");
   panel.className = "app-update";
   panel.hidden = true;
