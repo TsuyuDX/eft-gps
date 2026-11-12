@@ -1,3 +1,4 @@
+import {officialArtworkUrl} from "./news-artwork.js";
 export const INFO_INTERVAL = 60 * 60 * 1000;
 const hosts = new Set([
   "t.me",
@@ -113,6 +114,8 @@ export function sanitizeGameInfo(input) {
         /^\/assets\/news\/[a-z0-9-]+\.(png|jpg|webp)$/.test(item.image)
           ? item.image
           : null,
+      imageRemote:officialArtworkUrl(item.imageRemote),
+      imageSource:infoSource(item.imageSource)||null,
       startsAt: date(item.startsAt),
       endsAt: date(item.endsAt),
       endsOn: /^\d{4}-\d{2}-\d{2}$/.test(item.endsOn || "")
@@ -243,4 +246,8 @@ export function mergeGameInfo(oldData, newData) {
       )
       .slice(0, 500),
   });
+}
+
+export function activeSeason(records,now=Date.now()){
+ return records.filter(x=>x.type==="season" && x.verified!=="unverified" && !x.endedConfirmed && x.startsAt && Date.parse(x.startsAt)<=now && recordState(x,now)!=="archived" && (x.endsAt?Date.parse(x.endsAt)>now:x.endsOn?Date.parse(x.endsOn+"T00:00:00Z")>now:x.active && Date.parse(x.confirmationExpiresAt)>now)).sort((a,b)=>(b.startsAt||"").localeCompare(a.startsAt||""))[0]||null;
 }

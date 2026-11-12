@@ -1,3 +1,7 @@
+## 1.11.1
+
+Баннер и статус Kord Breach, отметки новых разделов, официальные иллюстрации игровых новостей и история автора в поддержке. / Season banner and status, new-section badges, official news artwork and the creator’s story.
+
 # История версий / Version history
 
 - **1.11.0** — отдельные события и сезон на главной, обновляемые официальные ленты Steam/Telegram/YouTube, промокоды со статусами и архивом, цветокоррекция карт со сравнением, новые иконки режимов. Исправлены пустые публикации, даты видео и смена языка. 108 автоматизированных тестов. / Live sourced information, honest promo status, map colour comparison and mode icons; feed/date/language fixes.

@@ -1,3 +1,4 @@
+import {officialArtworkUrl} from "../public/core/news-artwork.js";
 import fs from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";
@@ -35,7 +36,7 @@ const plain = (html) =>
     .replace(/\s+/g, " ")
     .trim();
 const short = (text) => text.split(/\s+/).slice(0, 20).join(" ");
-export function discoverPublication({ title, body, url, date, publisher }, now) {
+export function discoverPublication({ title, body, url, date, publisher, imageRemote }, now) {
   if (!title || !body || !Number.isFinite(Date.parse(date))) return [];
   const text = plain(body);
   if(text.replace(/#[A-Za-z0-9_]+/g,"").trim().length<20)return [];
@@ -65,6 +66,8 @@ export function discoverPublication({ title, body, url, date, publisher }, now) 
     },
     source: url,
     publisher:publisher||null,
+    imageRemote:officialArtworkUrl(imageRemote),
+    imageSource:officialArtworkUrl(imageRemote)?url:null,
     verified: "official",
     publishedAt: date,
     checkedAt: now,
@@ -130,6 +133,7 @@ export function steamPublications(raw) {
     .map((x) => ({
       title: x.title,
       body: x.contents,
+      imageRemote:officialArtworkUrl((x.contents.match(/\[img\]([^[]+)\[\/img\]/i)||[])[1]?.replace("{STEAM_CLAN_IMAGE}","https://clan.akamai.steamstatic.com/images")),
       url: x.url,
       date: new Date(x.date * 1000).toISOString(),
     }));
@@ -152,6 +156,7 @@ export function telegramPublications(html) {
         title: text.split(/(?<=[.!?])\s|[\r\n]/)[0]?.slice(0, 160),
         body,
         url: "https://t.me/" + e.getAttribute("data-post"),
+        imageRemote:officialArtworkUrl((e.querySelector(".tgme_widget_message_photo_wrap")?.getAttribute("style")?.match(/background-image:\s*url\([\'\"]?([^\'\")]+)/i)||[])[1]),
         date: e.querySelector("time[datetime]")?.getAttribute("datetime"),
       };
     });
@@ -163,7 +168,7 @@ export function youtubePublications(xml){
  return [...document.querySelectorAll("entry")].map(entry=>{
   const id=entry.getElementsByTagName("yt:videoId")[0]?.textContent;if(!/^[a-zA-Z0-9_-]{11}$/.test(id||""))return null;
   const title=entry.querySelector("title")?.textContent||"";
-  return {title,body:title+" "+(entry.getElementsByTagName("media:description")[0]?.textContent||""),date:entry.querySelector("published")?.textContent,url:"https://www.youtube.com/watch?v="+id,publisher:YOUTUBE_CHANNEL};
+  return {title,body:title+" "+(entry.getElementsByTagName("media:description")[0]?.textContent||""),date:entry.querySelector("published")?.textContent,url:"https://www.youtube.com/watch?v="+id,publisher:YOUTUBE_CHANNEL,imageRemote:officialArtworkUrl(entry.getElementsByTagName("media:thumbnail")[0]?.getAttribute("url"))};
  }).filter(Boolean);
 }
 export function applyLifecycleEvidence(records,publications,now){

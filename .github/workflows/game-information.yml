@@ -21,6 +21,7 @@ jobs:
             package.json
             scripts/collect-game-info.mjs
             public/core/game-info-model.js
+            public/core/news-artwork.js
             public/data/game-info.json
             node_modules/
       - name: Collect public official feeds and retain unverified candidates for review

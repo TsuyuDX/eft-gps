@@ -1,0 +1,133 @@
+{
+  "keyart": {
+    "file": "/assets/news/eft-keyart.jpg",
+    "source": "https://store.steampowered.com/app/3932890/Escape_from_Tarkov/",
+    "credit": "Battlestate Games"
+  },
+  "season": {
+    "file": "/assets/news/kord-breach.webp",
+    "source": "https://t.me/escapefromtarkovEN/6985",
+    "credit": "Battlestate Games"
+  },
+  "images": [
+    {
+      "file": "/assets/news/news-9264c64d76a5193aa9623adf.jpg",
+      "image": "https://i2.ytimg.com/vi/ahr1yVNOyuw/hqdefault.jpg",
+      "source": "https://www.youtube.com/watch?v=ahr1yVNOyuw",
+      "credit": "Battlestate Games / official publication",
+      "sha256": "4921ee4fb46bc603e40adeef1272dced5e197e6c4439a5b3468eb81e51e9016b"
+    },
+    {
+      "file": "/assets/news/news-c55a84b1eab54569b19a37ad.jpg",
+      "image": "https://cdn4.telesco.pe/file/Oon5LdOaIUb5YPKLu-I507VfB2BwVwlvh-61OpMDuFc7zcMTVndTmGPTI-Wm-CfLlb6ONMAbJAQSljG8BBn0F7K1sT246s6mnETDQkLP9PqulgVLfxhteHMJEOnuxBDfK7lWnD9QxD28VHIhbkD_PTv_8Lukwgzk79hoLep-n1vRuSFBSQhb6a_d4AYXloOIxNRwkKfJhQOioW7tNsQAetkOsAS-4P-1-D2PnrBiWAhGhl6u9VYncv6Dnb5Hqvyqbewb3d2ThLKiU_vvc-htmmQodjyYTyMM8sPjVWuXWFaYi2-h20dN5KEzm3AUXoYh4dj3MgnbqJ1_ZGQ2zt12Vw.jpg",
+      "source": "https://t.me/escapefromtarkovEN/6979",
+      "credit": "Battlestate Games / official publication",
+      "sha256": "fb9941e84c3889a0ffda419235cc5b751f2f1c1b3d34a0edd64ba5fec27f8887"
+    },
+    {
+      "file": "/assets/news/news-fee998fb11cb868724be7aac.jpg",
+      "image": "https://cdn4.telesco.pe/file/K72vO0_0lptWFr63HezPU8KQlcumsDaTsjSdmC7PVGSLsCyhFFynE7c0A6b7keBJlfutcGb7vGQQnNBSEuzBLjwgO24AGVO_iTDo5kjSsyMasvbmIqBMLvgxBprWk2-bqO3i_E4TIfBHJOdQj5vYucF8N65WItyA92ZffJGNPpFr8tLhslz-KqzQaT23dW5rupPjEObEXIbTLETAO6gH1Ns5OSRSUTAvrRUNZq6262-JmwOF5XIy5P3oyxUcrSviKfLW_t999UiYp79p7-ondgXjL1btcfrSgxHlhgpInawWZDf2gbZzDNECw-T4ajIto8ew4MO0ANrXBty-pqI3hA.jpg",
+      "source": "https://t.me/escapefromtarkovEN/6984",
+      "credit": "Battlestate Games / official publication",
+      "sha256": "7f07be61d199c96f6c8931faf677b7013ce35392b8ac0e8835ae2a71094e495a"
+    },
+    {
+      "file": "/assets/news/news-7b8805b43f3d43f96d455671.jpg",
+      "image": "https://cdn4.telesco.pe/file/RBE40sOCRtwVGtkhjT8SyI-7klY1_Z9g3YQw7Zjh5r4rjZGiYFNXPaoNhmBIw2iIK7Yl-t5SEOv0MiqcpD33KwMij5UmPjQ2jsaLei_hF2NF7z6uUYHeG_ZaY3pjgrH6XM9mv5XDr5Wo0vgmiUukiM_tPjelYRRWM_WEUTHRBvPstD-rOLM_8Or8RKh2AQJ-G8oNa8k-SqUToF7sY7OgWake0sYmeOUgbQ6OkYZojN0LSEMF1Iac-j_ACjD462qfgbr3MB0AUn_7eEn8vrI-FlG33FHZPrhGXPFpzKwuHP0-gYrTSOV6FjDrgec0jym6CzgiX0IKvzai0KQrYtKL4Q.jpg",
+      "source": "https://t.me/escapefromtarkovEN/6970",
+      "credit": "Battlestate Games / official publication",
+      "sha256": "83915a21974a249af5893f2b0a6742d312f5bccf5c348a073b51ed4e554df327"
+    },
+    {
+      "file": "/assets/news/news-7b8805b43f3d43f96d455671.jpg",
+      "image": "https://cdn4.telesco.pe/file/RBE40sOCRtwVGtkhjT8SyI-7klY1_Z9g3YQw7Zjh5r4rjZGiYFNXPaoNhmBIw2iIK7Yl-t5SEOv0MiqcpD33KwMij5UmPjQ2jsaLei_hF2NF7z6uUYHeG_ZaY3pjgrH6XM9mv5XDr5Wo0vgmiUukiM_tPjelYRRWM_WEUTHRBvPstD-rOLM_8Or8RKh2AQJ-G8oNa8k-SqUToF7sY7OgWake0sYmeOUgbQ6OkYZojN0LSEMF1Iac-j_ACjD462qfgbr3MB0AUn_7eEn8vrI-FlG33FHZPrhGXPFpzKwuHP0-gYrTSOV6FjDrgec0jym6CzgiX0IKvzai0KQrYtKL4Q.jpg",
+      "source": "https://t.me/escapefromtarkovEN/6970",
+      "credit": "Battlestate Games / official publication",
+      "sha256": "83915a21974a249af5893f2b0a6742d312f5bccf5c348a073b51ed4e554df327"
+    },
+    {
+      "file": "/assets/news/news-eb8690850f46d11917577d05.jpg",
+      "image": "https://cdn4.telesco.pe/file/aELJ46L4Vrt5OUPU8mq34R-v023bYhrlouRGiU2aHtkncdfRtfMwspdUKT3dm6vNyHytozvMa8ytnaK6xH1uazPdsLEAG3ahRJUXx6eLPuiKvpx--S6JEKrCmgLh5zEYtp1EEuaJthrrrk5ZYq-44vq4PcSlUwiP_1jNtHPige1KYZfIeKKCTg3OZoJ7D6HS6VK_H8Z-ojq0kxABKWcWfotfNDZGH5Jr9KkO3cC-IsGF8siw_ieAJJe2an5BAONChrxFKvWSZ8nkxZyMvuXX2IuUCQAHC6DG8B6BO1o0CEOAXoDYWHscpSoVCxT2w76EwASVDAVm2mi3MKeTY4GSag.jpg",
+      "source": "https://t.me/escapefromtarkovEN/6972",
+      "credit": "Battlestate Games / official publication",
+      "sha256": "83915a21974a249af5893f2b0a6742d312f5bccf5c348a073b51ed4e554df327"
+    },
+    {
+      "file": "/assets/news/news-a299491d6b820027d9206b76.jpg",
+      "image": "https://cdn4.telesco.pe/file/ra6V9sJzSg0-nOIpI-5L7cP_NERGFuSzZnf914sZOnlhItz7dt69MqUPZCmn9MUnColH-k6capCuUliK8DkjYsIZwQjKac-FE6v4e-XogvxWdM-sg9C1fY_RNRPAImv0ukfZ96uUQQVGgPDft10RIJLApySLVDh6gF2O6FoFmtMv9cYlQfAxKszSgXgFZjvCfe0w2yHSl2Lhg1djn9C19HuIuwGvqOiGpCq8rdfFIWoGgTJk-jnY0VkN7UA9N9zlDbYM-5XJXMnWXcha4KwuFElVREGFvWs6zPU80mtZud2bfM389kR-42JF8_C_f7shRB1h0ne-EkhxsoQEXdentw.jpg",
+      "source": "https://t.me/escapefromtarkovEN/6969",
+      "credit": "Battlestate Games / official publication",
+      "sha256": "36a5eee416e5c4c692fc5966faf8c88fa9b358afd2579f66106a8c0ab8fb550e"
+    },
+    {
+      "file": "/assets/news/news-bbae16bb0e6904fd9ad36b4a.jpg",
+      "image": "https://cdn4.telesco.pe/file/UaKOzBXT5sc8xPhWDyYUR_xve3N5jBYttYT8uVwOw7TrHaQF-mQlkdCzW3Pb6xCnnFZL2TVihaN73c84ZttZLz3t2gW--4fpZM7GZGzl4EsjeKZRGzjl-bcH5jcTSMND9T3L5BDE8yo8EldkXgipUMrCnaLolsvHZyFKxNo0u6L-p2pwbJwms2SeMSD2ey6B2OoQih2TA9Box2P5d8ece98zP7mYK4CTNyai2miuOXZZ3qRjNbn7wrmi-Y7W4kuUQdMqEw2yExvGPUg74_-QL-MZRlqcDNOb-W6jcPIf5-dvwPycneTtlkhRtPouVE0hQ-9bXd9kh12HP7NhcpYKFA.jpg",
+      "source": "https://t.me/escapefromtarkovEN/6968",
+      "credit": "Battlestate Games / official publication",
+      "sha256": "7f07be61d199c96f6c8931faf677b7013ce35392b8ac0e8835ae2a71094e495a"
+    },
+    {
+      "file": "/assets/news/news-796642468c942f1891042ebe.jpg",
+      "image": "https://cdn4.telesco.pe/file/aWBW1zjFOGWwkw-3I1WRzS-3xgfS3P082SDzaCEdZ2p9WtWPAT0pbZzMHR3u430SOmVhnQY8kH_XME-U9us7fv2dfsuMYfVmH4Oz6oeHvCcWTKZvIavaPCFwEmBWPyo2QQ3qFkB-5kVe3tOTucEoF-k95fwhZwR8dUSfB7Ukq5eX7JbAXumO3SfGM7wWHyLnLJXr_9EcotQMTGP4KywvrpIE-v7rpa9JZFex6255iQgvmbc1W6wE5DxA8JrOaI5pTWOCyu4OraexXM-52Tki7wB8PrvgEP9GTEQp8sAa2JKhTgSlMUnk5AKemIhlVXoAvgE8f5ThgJQwlF5IXdkZNg.jpg",
+      "source": "https://t.me/escapefromtarkovEN/6966",
+      "credit": "Battlestate Games / official publication",
+      "sha256": "9d8e1acf6dacefb98d4211c602b073ba1c21c0fdfb0dafffa71d0f63ae5f11c4"
+    },
+    {
+      "file": "/assets/news/news-a9a618577c6e102c7461acd8.jpg",
+      "image": "https://cdn4.telesco.pe/file/Kb58NVwd8WAI-EHWj0D1opaWmrNqKi4jgxojfH-Eni-MqCh25s_j4rK5BaLmEWqL1Fcoq3kNUSz1GLFiqpWSHkO_E2cAEPeDdQlKQUZqNfciWDUsg6Nwdt6XoPLH1UuQV_28XFnVyCE_mzlqWU7lDO7942fJyfZuMbxO3NDnZso2PiwAaDFqUE8D4vSda34lW-y6GcpPFk68C_BqkStiaYXP-LfdNAHFSMDJr2rv_Y71HXUWvIJJPNUmjhaYdvUWtH0OBG0ELevOcmhnGM4FbZbigOPj3tMWR4WzZlGqKauT2EmWNP7IU5tuF-JzujiSHjQg4EcoZwAMgKocE0KfMg.jpg",
+      "source": "https://t.me/escapefromtarkovEN/6975",
+      "credit": "Battlestate Games / official publication",
+      "sha256": "83915a21974a249af5893f2b0a6742d312f5bccf5c348a073b51ed4e554df327"
+    },
+    {
+      "file": "/assets/news/news-a86fd6cedca7356fa5c56075.jpg",
+      "image": "https://i4.ytimg.com/vi/7vsgWJ-c6Ck/hqdefault.jpg",
+      "source": "https://www.youtube.com/watch?v=7vsgWJ-c6Ck",
+      "credit": "Battlestate Games / official publication",
+      "sha256": "9633aa991f4716f03ba0a76ff6eaf51f74500baab2cb0f8f0cbb2fc426e5f0ee"
+    },
+    {
+      "file": "/assets/news/news-f53b472537824fc1c9148abf.jpg",
+      "image": "https://i3.ytimg.com/vi/vwxTdtLsf28/hqdefault.jpg",
+      "source": "https://www.youtube.com/watch?v=vwxTdtLsf28",
+      "credit": "Battlestate Games / official publication",
+      "sha256": "03a990253b8a3e437c04158a08ae8384b6cffcb5b5d1a35d572d81d899776fa9"
+    },
+    {
+      "file": "/assets/news/news-ee5e616b5af3db98c1f839d9.jpg",
+      "image": "https://i4.ytimg.com/vi/g3bgoyj03H0/hqdefault.jpg",
+      "source": "https://www.youtube.com/watch?v=g3bgoyj03H0",
+      "credit": "Battlestate Games / official publication",
+      "sha256": "e5390b52b04293bd2bfe67a4d76293b793cc9136eb493181fc8426a4bfe7decc"
+    },
+    {
+      "file": "/assets/news/news-dde1c7e6fb04ddcb47ccb76e.jpg",
+      "image": "https://i2.ytimg.com/vi/ymJ35SGR-_E/hqdefault.jpg",
+      "source": "https://www.youtube.com/watch?v=ymJ35SGR-_E",
+      "credit": "Battlestate Games / official publication",
+      "sha256": "d9ac8a535c2386108ce769f5c79a12ba2cea2c5e0b6856347c151cade56912a6"
+    },
+    {
+      "file": "/assets/news/news-dde1c7e6fb04ddcb47ccb76e.jpg",
+      "image": "https://i2.ytimg.com/vi/ymJ35SGR-_E/hqdefault.jpg",
+      "source": "https://www.youtube.com/watch?v=ymJ35SGR-_E",
+      "credit": "Battlestate Games / official publication",
+      "sha256": "d9ac8a535c2386108ce769f5c79a12ba2cea2c5e0b6856347c151cade56912a6"
+    },
+    {
+      "file": "/assets/news/news-394763c2783710c1a8ec27a5.jpg",
+      "image": "https://i1.ytimg.com/vi/He_4TvAr0Xs/hqdefault.jpg",
+      "source": "https://www.youtube.com/watch?v=He_4TvAr0Xs",
+      "credit": "Battlestate Games / official publication",
+      "sha256": "7d976bf66b0b5150dc1de875206c7661626fe3acdd60d20820574f6acddeb423"
+    },
+    {
+      "file": "/assets/news/news-2219599417d0ddddcef3c21b.jpg",
+      "image": "https://i4.ytimg.com/vi/3Bqzzpq7vbk/hqdefault.jpg",
+      "source": "https://www.youtube.com/watch?v=3Bqzzpq7vbk",
+      "credit": "Battlestate Games / official publication",
+      "sha256": "20d43b2d84fa3cf8540a3cb2141eaf9a9e5460875f09079f46c0d777b751c4f7"
+    }
+  ]
+}

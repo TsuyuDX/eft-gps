@@ -1,5 +1,5 @@
 import { initializeGameInfo, startGameInfo } from "./core/game-info-client.js";
-import { renderHomeInformation, renderInformation, renderPromocodes } from "./features/game-info.js";
+import { renderHomeInformation, renderInformation, renderPromocodes, bindSeasonStatus } from "./features/game-info.js";
 import { renderGraphics } from "./features/graphics.js";
 import { uiIcon } from "./core/icons.js";
 import { startConnectivityStatus } from "./core/connectivity.js";
@@ -101,7 +101,7 @@ function nav() {
   navigation.innerHTML = sections
     .map(
       ([k, v]) =>
-        `<a href="#/${k}/${["map", "boss", "trader", "item", "quest", "hideout", "items-tracker"].includes(k) ? db.mode : ""}" data-section="${k}">${v}</a>`,
+        `<a href="#/${k}/${["map", "boss", "trader", "item", "quest", "hideout", "items-tracker"].includes(k) ? db.mode : ""}" data-section="${k}" class="${["promocodes","graphics"].includes(k)?"nav-has-new":""}"><span>${v}</span>${["promocodes","graphics"].includes(k)?`<span class="nav-new-badge" aria-hidden="true" data-no-translate>${language()==="en"?"NEW":"НОВОЕ"}</span>`:""}</a>`,
     )
     .join("");
 }
@@ -238,7 +238,7 @@ try {
   await loadState();
   await refreshEventContent();
   await init(profile().mode);
-  if(!overlayMode) await initializeGameInfo();
+  if(!overlayMode) {await initializeGameInfo();const seasonStatus=document.createElement("a");seasonStatus.id="season-status";seasonStatus.className="season-header-status";seasonStatus.hidden=true;document.querySelector(".statusline").insertBefore(seasonStatus,document.querySelector(".statusline").lastElementChild);const eventStatus=document.createElement("a");eventStatus.id="event-status";eventStatus.className="season-header-status event-header-status";eventStatus.hidden=true;seasonStatus.after(eventStatus);bindSeasonStatus(seasonStatus,eventStatus);}
   refreshGameNews();
   document.querySelector("#mode").value = db.mode;
       drawModeEmblem();

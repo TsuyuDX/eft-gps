@@ -47,7 +47,7 @@
 
 Events and seasons are separate. Active event cards require fresh confirmed activity; expired confirmations hide the card without inventing an event deadline. Confirmed completions are archived. Date-only season announcements never create a fictional hourly countdown.
 
-An hourly GitHub Actions collector reads developer-only Steam announcements, the public official Telegram feed and the verified Battlestate YouTube RSS. It publishes a small sanitised JSON to the dedicated `content-feed` branch, leaving application source history unchanged. The app retrieves it at startup/hourly, caches it privately and keeps prior data when offline. Short publication previews retain the original language; no unreviewed AI walkthroughs or third-party images are generated/downloaded. Existing local walkthroughs remain available.
+An hourly GitHub Actions collector reads developer-only Steam announcements, the public official Telegram feed and the verified Battlestate YouTube RSS. It publishes a small sanitised JSON to the dedicated `content-feed` branch, leaving application source history unchanged. The app retrieves it at startup/hourly, caches it privately and keeps prior data when offline. Short publication previews retain the original language; no unreviewed AI walkthroughs are generated. Official publication thumbnails are downloaded only from approved publisher CDNs, bounded to 4 MB per image and a 64 MB private cache. Previously bundled artwork works offline; text-only publications use clearly labelled official game key art. Image provenance is recorded in public/data/news-artwork-sources.json. Existing local walkthroughs remain available.
 
 Promo codes are separated by permanence/temporary/archive and confirmed mode eligibility. Detection is not redemption verification. No code is currently claimed as permanently valid or activation-tested.
 
@@ -56,3 +56,7 @@ EFT website returns 403; forum integration is unconfirmed. Twitch, TikTok and Re
 Kord Breach ends on 7 December 2026 according to the official announcement, with no exact time given. The Halloween background is officially included in the two named achievement rewards; permanent retention and poster conditions are not claimed as guaranteed. The separate November Twitch Drops promotion is archived.
 
 Tests cover activity expiry/completion, date-only timers, code status/mode filtering, hostile sources, source parsing, cache failure/restart/junctions and map-colour persistence. Manual UI checks cover RU/EN, news, promo filters, rewards, map background/marker separation, comparison and saved settings. Real redemption and unavailable third-party APIs have not been tested.
+
+## Иллюстрации / Artwork (1.11.1)
+
+Баннер Kord Breach и иллюстрации официальных публикаций включены в офлайн-набор. Новые изображения загружаются только с разрешённых CDN Telegram, YouTube и Steam; произвольные адреса, перенаправления, SVG и HTML не принимаются. Лимит изображения — 4 МБ, приватного кеша — 64 МБ. Для текстовых публикаций используется подписанная иллюстрация игры. Источники и контрольные суммы: `public/data/news-artwork-sources.json`.

@@ -83,6 +83,12 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(403);
       return res.end("Forbidden origin");
     }
+    if(url.pathname.startsWith("/api/game-info/image/") && req.method==="GET"){
+      const id=url.pathname.slice("/api/game-info/image/".length);const image=await gameInfoService.image(id);
+      if(image){res.setHeader("Content-Type",image.type);res.setHeader("Cache-Control","private, max-age=3600");return res.end(image.bytes);}
+      if(!/^[a-z0-9-]{1,100}$/.test(id)||!gameInfoService.data.records.some(x=>x.id===id)){res.writeHead(404);return res.end();}
+      res.setHeader("Content-Type","image/jpeg");return res.end(fs.readFileSync(path.join(publicRoot,"assets/news/eft-keyart.jpg")));
+    }
     if (url.pathname === "/api/game-info" && req.method === "GET") {
       await gameInfoService.ready;void gameInfoService.check();
       res.setHeader("Content-Type","application/json");res.setHeader("Cache-Control","no-store");

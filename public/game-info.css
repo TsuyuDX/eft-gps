@@ -107,3 +107,9 @@
     flex-direction: column;
   }
 }
+
+.info-card-season figure{aspect-ratio:16/9;background:#101917;overflow:hidden}.info-card-season figure img{height:100%;object-fit:cover}.season-header-status{display:inline-flex;align-items:center;gap:8px;min-height:34px;padding:6px 12px;margin-right:auto;border:1px solid #326b47;border-radius:6px;background:#12301c55;color:#b5edc5;white-space:nowrap;font-size:12px}.season-header-status[hidden]{display:none}.season-header-status i{width:7px;height:7px;border-radius:50%;background:#4bd17e;box-shadow:0 0 7px #4bd17e44}.season-header-status:hover{border-color:#4bd17e;color:#d8ffe2}.season-header-status:focus-visible{outline:2px solid #4bd17e;outline-offset:3px}#navigation .nav-has-new{position:relative}#navigation .nav-new-badge{position:absolute;right:2px;top:-6px;padding:2px 5px;border-radius:5px;background:#25c66a;color:#071d10;font-size:8px;font-weight:800;line-height:1;letter-spacing:.4px;transform:rotate(-7deg);pointer-events:none;box-shadow:0 1px 4px #0008}@media(max-width:900px){.season-header-status{margin-right:0}#navigation .nav-new-badge{top:0;right:0}}
+
+.support-story{text-align:left;border-top:1px solid var(--border,#353329);padding-top:22px;margin:0 0 24px;line-height:1.75}.support-story h3{color:var(--accent,#c7b98e)}.support-story p:last-child{margin-bottom:0}
+
+.season-header-status:has(+ .event-header-status:not([hidden])){margin-right:0}.event-header-status:not(.event-status-active){color:var(--muted);border-color:var(--border);background:rgba(160,160,160,.05)}.event-header-status:not(.event-status-active) i{background:#979b99;box-shadow:none}
