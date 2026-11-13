@@ -1,3 +1,4 @@
+import {installDiagnostics} from "./core/diagnostics-client.js";
 import {textPair} from "./core/localization.js";
 import { initializeGameInfo, startGameInfo } from "./core/game-info-client.js";
 import { renderHomeInformation, renderInformation, renderPromocodes, bindSeasonStatus } from "./features/game-info.js";
@@ -239,7 +240,7 @@ try {
   await loadState();
   await refreshEventContent();
   await init(profile().mode);
-  if(!overlayMode) {await initializeGameInfo();const seasonStatus=document.createElement("a");seasonStatus.id="season-status";seasonStatus.className="season-header-status";seasonStatus.hidden=true;document.querySelector(".statusline").insertBefore(seasonStatus,document.querySelector(".statusline").lastElementChild);const eventStatus=document.createElement("a");eventStatus.id="event-status";eventStatus.className="season-header-status event-header-status";eventStatus.hidden=true;seasonStatus.after(eventStatus);bindSeasonStatus(seasonStatus,eventStatus);}
+  if(!overlayMode) {void installDiagnostics();await initializeGameInfo();const seasonStatus=document.createElement("a");seasonStatus.id="season-status";seasonStatus.className="season-header-status";seasonStatus.hidden=true;document.querySelector(".statusline").insertBefore(seasonStatus,document.querySelector(".statusline").lastElementChild);const eventStatus=document.createElement("a");eventStatus.id="event-status";eventStatus.className="season-header-status event-header-status";eventStatus.hidden=true;seasonStatus.after(eventStatus);bindSeasonStatus(seasonStatus,eventStatus);}
   refreshGameNews();
   document.querySelector("#mode").value = db.mode;
       drawModeEmblem();

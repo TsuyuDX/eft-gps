@@ -19,6 +19,11 @@ jobs:
         run: |
           & .\runtime\node.exe --test test/*.test.mjs
           if ($LASTEXITCODE -ne 0) { throw 'Application tests failed; release stopped.' }
+      - name: Test native downloader and resume behaviour
+        shell: pwsh
+        run: |
+          & .\test\setup-transfer.ps1
+          if ($LASTEXITCODE -ne 0) { throw 'Native downloader checks failed.' }
       - name: Build and publish saved application versions sequentially
         shell: pwsh
         env:

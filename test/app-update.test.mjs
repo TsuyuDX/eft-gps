@@ -154,3 +154,11 @@ test('update notification waits for approval, exposes plain changelog and lets t
   const calls=requests.filter(([url])=>url.endsWith('/install'));assert.equal(calls.length,1);assert.deepEqual(JSON.parse(calls[0][1].body),{version:'1.11.0'});
  }finally{globalThis.fetch=originalFetch;globalThis.setTimeout=originalTimeout;}
 });
+test('an interrupted update can be retried and the retry resets byte counters',async t=>{
+ const f=await fixture(t);let fail=true;const fetcher=async(url,options)=>{if(fail&&!url.endsWith('/releases/latest')&&!url.endsWith('EFTGPS-update.json'))throw Error('connection lost');return f.fetcher(url,options);};
+ const updater=new AppUpdater(f.root,'1.7.0',{fetcher,launch:f.launch,temporary:f.directory});await updater.start();await updater.install('1.8.0');assert.equal(updater.state.phase,'error');assert.equal(f.launches.length,0);fail=false;await updater.install('1.8.0');assert.equal(updater.state.phase,'installer');assert.equal(updater.state.downloaded,f.bytes.length);assert.equal(f.launches.length,1);await updater.install('1.8.0');assert.equal(f.launches.length,1);
+});
+test('a stalled response is stopped by the inactivity deadline rather than hanging silently',async t=>{
+ const f=await fixture(t);const fetcher=async(url,options)=>{if(url.endsWith('/releases/latest')||url.endsWith('EFTGPS-update.json'))return f.fetcher(url,options);return new Response(new ReadableStream({start(controller){options.signal.addEventListener('abort',()=>controller.error(new Error('aborted')),{once:true});}}));};
+ const updater=new AppUpdater(f.root,'1.7.0',{fetcher,launch:f.launch,temporary:f.directory,inactivityTimeoutMs:30});await applyOffered(updater);assert.equal(updater.state.phase,'error');assert.equal(updater.state.error,'download-timeout');assert.equal(f.launches.length,0);
+});

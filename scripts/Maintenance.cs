@@ -190,17 +190,21 @@ public static class PackageInstaller {
             var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             var indexed = new Dictionary<string, ZipArchiveEntry>(StringComparer.OrdinalIgnoreCase);
             long total = 0;
+            Notify(detail,"Проверка состава пакета","",0,release.files.Length+1,0,10);
             foreach (var item in archive.Entries) {
                 cancellation.ThrowIfCancellationRequested();
                 if (!indexed.TryAddCompat(item.FullName, item)) throw new IOException("Повторяющийся путь в пакете");
                 if (item.FullName != "release.json") {if(item.FullName.EndsWith(".install-new",StringComparison.OrdinalIgnoreCase))throw new IOException("Пакет содержит служебный временный файл");SafePath(staged, item.FullName);}
                 if (((item.ExternalAttributes >> 16) & 0xF000) == 0xA000) throw new IOException("Ссылки в пакете запрещены");
+                if(indexed.Count%500==0) Notify(detail,"Проверка состава пакета",item.FullName,indexed.Count,release.files.Length+1,0,10);
             }
             if (indexed.Count != release.files.Length + 1) throw new IOException("Состав пакета не совпадает с описанием");
             int count = 0; long written=0,expectedBytes=0;
             foreach(var file in release.files) {if(file.size<0 || file.size>8L*1024*1024*1024-expectedBytes) throw new IOException("Пакет слишком большой");expectedBytes+=file.size;}
             var drive=new DriveInfo(Path.GetPathRoot(Path.GetFullPath(staged)));if(drive.IsReady&&drive.AvailableFreeSpace<expectedBytes+128L*1024*1024)throw new IOException("Недостаточно места для распаковки");
             var directories=new HashSet<string>(StringComparer.OrdinalIgnoreCase);var buffer=new byte[128*1024];var clock=Stopwatch.StartNew();
+            // Один экземпляр SHA-256 на проход вместо создания для каждого из тысяч файлов.
+            using(var sha=SHA256.Create())
             foreach (var file in release.files) {
                 cancellation.ThrowIfCancellationRequested();
                 if (!names.Add(file.path) || file.sha256 == null || file.sha256.Length != 64 || file.size < 0) throw new IOException("Повреждён список файлов");
@@ -210,7 +214,8 @@ public static class PackageInstaller {
                 total += item.Length;
                 if (total > 8L * 1024 * 1024 * 1024) throw new IOException("Пакет слишком большой");
                 string directory=Path.GetDirectoryName(destination);if(directories.Add(directory)) Directory.CreateDirectory(directory);
-                using(var sha=SHA256.Create()) using(var source=item.Open()) using(var target=new FileStream(destination,FileMode.Create,FileAccess.Write,FileShare.None,128*1024,FileOptions.SequentialScan)) {
+                sha.Initialize();
+                using(var source=item.Open()) using(var target=new FileStream(destination,FileMode.Create,FileAccess.Write,FileShare.None,128*1024,FileOptions.SequentialScan)) {
                     int size;long length=0;
                     while((size=source.Read(buffer,0,buffer.Length))>0) {cancellation.ThrowIfCancellationRequested();length+=size;if(length>file.size) throw new IOException("Повреждён размер файла");target.Write(buffer,0,size);sha.TransformBlock(buffer,0,size,buffer,0);written+=size;
                         if(clock.ElapsedMilliseconds>=100) {Notify(detail,"Распаковка и проверка",file.path,written,expectedBytes,10,65);clock.Restart();}}
@@ -587,7 +592,7 @@ class Maintenance : DarkWindow {
         var logo=new PictureBox { Bounds=new Rectangle(28,24,62,62), Image=branding, SizeMode=PictureBoxSizeMode.Zoom };
         Controls.Add(logo);
         TextAt("T_S_U_Y_U EFT GPS",106,22,520,40,22,ForeColor);
-        TextAt(data ? "ОБНОВЛЕНИЕ СПРАВОЧНИКА" : updating ? "ОБНОВЛЕНИЕ ПРИЛОЖЕНИЯ" : "УСТАНОВКА ПРИЛОЖЕНИЯ  /  1.11.1",108,67,500,24,9,muted);
+        TextAt(data ? "ОБНОВЛЕНИЕ СПРАВОЧНИКА" : updating ? "ОБНОВЛЕНИЕ ПРИЛОЖЕНИЯ" : "УСТАНОВКА ПРИЛОЖЕНИЯ  /  1.11.2",108,67,500,24,9,muted);
         steps.SetBounds(28,108,764,32); steps.Text="01  Подготовка     /     02  Установка     /     03  Готово"; steps.ForeColor=Color.FromArgb(185,171,130);
         Controls.Add(steps);
         TextAt(data ? "Свежая база — привычный прогресс" : updating ? "Новая версия — ваш прогресс на месте" : "Тарков под рукой. Даже без интернета.",28,154,764,38,18,ForeColor);

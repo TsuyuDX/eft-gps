@@ -54,7 +54,8 @@ export function startAppUpdates() {
       if (!["idle", "checking"].includes(state.phase)) {
         panel.hidden = dismissed;
         offered = state.version;
-        install.hidden = state.phase !== "available";
+        install.hidden = state.phase !== "available" && !(["error","cancelled"].includes(state.phase) && state.version);
+        install.disabled = false;install.textContent=["error","cancelled"].includes(state.phase)?L("Повторить", "Retry"):L("Обновить", "Update");
         notes.hidden = state.phase !== "available";
         notes.querySelector("summary").textContent = L(
           "Что нового",
@@ -109,6 +110,8 @@ export function startAppUpdates() {
                           "Пакет проверен и сохранён. Не удалось запустить установщик. Проверьте журнал защиты Windows; не игнорируйте обнаружение угрозы.",
                           "The verified package is saved. Setup could not start. Check Windows protection history; do not ignore a threat detection.",
                         )
+                      : state.error === "download-timeout"
+                        ? L("Загрузка остановилась: сервер не передаёт данные. Проверьте соединение и нажмите «Повторить».", "The download stalled: the server stopped sending data. Check your connection and click Retry.")
                       : state.error === "disk-space"
                         ? L(
                             "Недостаточно места для обновления.",
@@ -124,7 +127,7 @@ export function startAppUpdates() {
                               "Updates are unavailable. We will check on the next launch.",
                             );
         if (
-          ["available", "error", "cancelled", "installer"].includes(state.phase)
+          ["available", "error", "cancelled"].includes(state.phase)
         )
           return;
       }

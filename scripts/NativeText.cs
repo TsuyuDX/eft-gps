@@ -8,7 +8,7 @@ using System.Web.Script.Serialization;
 using System.Windows.Forms;
 public static class NativeText {
  public const string Brand="T_S_U_Y_U EFT GPS";
- public const string Version="1.11.1";
+ public const string Version="1.11.2";
  public static bool English;
  // Переводы оболочки и установщика: ключи — исходные фразы, значения можно править в JSON.
  static readonly Dictionary<string,string> words=Load("native.en.json");

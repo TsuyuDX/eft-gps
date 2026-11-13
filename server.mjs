@@ -1,3 +1,4 @@
+import {Diagnostics,diagnosticPolicyVersion} from "./server/diagnostics.mjs";
 import { GameInfoService } from "./server/game-info.mjs";
 import { GraphicsGallery, graphicsGalleryRoute } from "./server/graphics-gallery.mjs";
 import { Connectivity } from "./server/connectivity.mjs";
@@ -44,6 +45,8 @@ export function safePath(base, name) {
   return p.startsWith(base + path.sep) ? p : null;
 }
 let lastPing = Date.now();
+const diagnostics=new Diagnostics(userRoot,appVersion);
+void diagnostics.ready.then(()=>diagnostics.record({category:"startup",code:"started"}));
 const gameInfoService = new GameInfoService(root);
 const graphicsGallery = new GraphicsGallery(userRoot);
 const gps = new GpsService(root);
@@ -59,6 +62,7 @@ const appUpdater =
       }
     : new AppUpdater(root, appVersion);
 const server = http.createServer(async (req, res) => {
+  const requestStarted=Date.now();res.once("finish",()=>{if(req.url?.startsWith("/api/")&&!req.url.startsWith("/api/diagnostics")&&(res.statusCode>=500||Date.now()-requestStarted>2000))void diagnostics.record({category:"server",code:res.statusCode>=500?"operation-failed":"slow-operation",durationMs:Math.min(86400000,Date.now()-requestStarted)});});
   try {
     const url = new URL(req.url, "http://127.0.0.1:" + port);
     if (
@@ -82,6 +86,19 @@ const server = http.createServer(async (req, res) => {
     ) {
       res.writeHead(403);
       return res.end("Forbidden origin");
+    }
+    if(url.pathname.startsWith("/api/diagnostics")){
+      res.setHeader("Content-Type","application/json");res.setHeader("Cache-Control","no-store");await diagnostics.ready;
+      if(req.method==="GET"&&url.pathname==="/api/diagnostics")return res.end(JSON.stringify(diagnostics.state()));
+      if(req.method==="GET"&&url.pathname==="/api/diagnostics/report"){await diagnostics.queue;return res.end(JSON.stringify(diagnostics.report()));}
+      if(req.method!=="POST"){res.writeHead(405);return res.end("{}");}
+      if(req.headers.origin!==`http://${req.headers.host}`){res.writeHead(403);return res.end("{}");}
+      let body="";for await(const chunk of req){body+=chunk.toString();if(body.length>2048){res.writeHead(413);res.end("{}");req.destroy();return;}}
+      const data=JSON.parse(body||"{}");
+      if(url.pathname==="/api/diagnostics/consent"&&Object.keys(data).every(k=>["enabled","policyVersion"].includes(k))){try{return res.end(JSON.stringify(await diagnostics.consent(data.enabled,data.policyVersion)));}catch{res.writeHead(400);return res.end("{}");}}
+      if(url.pathname==="/api/diagnostics/clear"&&Object.keys(data).length===0)return res.end(JSON.stringify(await diagnostics.clear()));
+      if(url.pathname==="/api/diagnostics/event"&&diagnostics.valid(data)&&!Object.hasOwn(data,"at")){await diagnostics.record(data);return res.end("{}");}
+      res.writeHead(400);return res.end("{}");
     }
     if(url.pathname.startsWith("/api/game-info/image/") && req.method==="GET"){
       const id=url.pathname.slice("/api/game-info/image/".length);const image=await gameInfoService.image(id);
@@ -156,6 +173,7 @@ const server = http.createServer(async (req, res) => {
     if (url.pathname === "/api/app-update/state" && req.method === "GET") {
       res.setHeader("Content-Type", "application/json");
       res.setHeader("Cache-Control", "no-store");
+      if(appUpdater.state.phase==="error")void diagnostics.record({category:"update",code:["checksum","disk-space","download-size","download-timeout","installer-missing","installer-access","installer-start"].includes(appUpdater.state.error)?appUpdater.state.error:"unavailable"});
       return res.end(JSON.stringify(appUpdater.state));
     }
     if (url.pathname === "/api/app-update/start" && req.method === "POST") {

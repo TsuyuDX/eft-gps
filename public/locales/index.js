@@ -1,3 +1,4 @@
+import { diagnosticTexts } from "./diagnostics.js";
 import { customTexts } from "./custom.js";
 import { markup } from "./markup.js";
 import { interfaceMessages } from "./interface.js";
@@ -39,6 +40,7 @@ export const interfaceTexts = Object.assign(
   support,
   other_interface,
   markup,
+  diagnosticTexts,
   customTexts,
 );
 

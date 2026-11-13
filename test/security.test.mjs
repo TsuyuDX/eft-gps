@@ -29,7 +29,7 @@ test('reference links and assets reject executable protocols and attribute injec
 test('live server blocks foreign origins, rebinding, static junction escapes and invalid profile writes',async t=>{
  const directory=await fs.mkdtemp(path.join(process.cwd(),'work/security-server-'));
  let child; t.after(async()=>{if(child && child.exitCode===null){const exited=once(child,'exit');child.kill('SIGKILL');await exited;}await fs.rm(directory,{recursive:true,force:true});});
- for(const file of ['server.mjs','server/connectivity.mjs','server/app-update.mjs','server/overlay.mjs','server/event-content.mjs','server/startup.mjs','server/gps.mjs','server/screenshot-cleanup.mjs','server/window-settings.mjs','server/graphics-gallery.mjs','server/game-info.mjs','public/core/game-info-model.js','public/core/news-artwork.js','public/core/map-colour-model.js','public/data/game-info.json','public/core/graphics-model.js','public/core/gps-format.js','public/core/profile-schema.js']){
+ for(const file of ['server.mjs','server/connectivity.mjs','server/app-update.mjs','server/overlay.mjs','server/event-content.mjs','server/startup.mjs','server/gps.mjs','server/screenshot-cleanup.mjs','server/window-settings.mjs','server/graphics-gallery.mjs','server/game-info.mjs','server/diagnostics.mjs','public/core/game-info-model.js','public/core/news-artwork.js','public/core/map-colour-model.js','public/data/game-info.json','public/core/graphics-model.js','public/core/gps-format.js','public/core/profile-schema.js']){
    await fs.mkdir(path.dirname(path.join(directory,file)),{recursive:true});await fs.copyFile(file,path.join(directory,file));
  }
  await fs.writeFile(path.join(directory,'package.json'),JSON.stringify({type:'module',version:'1.8.1'}));

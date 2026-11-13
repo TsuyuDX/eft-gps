@@ -65,11 +65,11 @@ async function readJSON(url,fetcher) {
   return JSON.parse(Buffer.concat(chunks).toString('utf8'));
 }
 export class AppUpdater {
-  constructor(root,version,{fetcher=fetch,launch,temporary=os.tmpdir()}={}) {
-    this.root=root;this.version=version;this.fetcher=fetcher;this.temporary=temporary;
+  constructor(root,version,{fetcher=fetch,launch,temporary=os.tmpdir(),inactivityTimeoutMs=20000}={}) {
+    this.inactivityTimeoutMs=Math.max(10,Math.min(60000,inactivityTimeoutMs));this.root=root;this.version=version;this.fetcher=fetcher;this.temporary=temporary;
     this.launch=launch || (async(exe,args)=>{
       const child=spawn(exe,args,{cwd:path.dirname(exe),detached:true,stdio:'ignore',windowsHide:false});
-      child.once('exit',code=>{if(code===1223 && this.state.phase==='installer')this.state.phase='cancelled';});
+      child.once('exit',code=>{if(code===1223 && this.state.phase==='installer'){this.state.phase='cancelled';this.downloadJob=null;}});
       await once(child,'spawn');child.unref();
     });
     this.state={phase:'idle',percent:0,downloaded:0,total:0,file:'',version:''};
@@ -88,7 +88,7 @@ export class AppUpdater {
   }
   install(version) {
     if(!this.candidate || version!==this.candidate.manifest.version)throw Error('update-not-offered');
-    return this.downloadJob ||= this.run();
+    return this.downloadJob ||= this.run().finally(()=>{if(this.state.phase==='error'||this.state.phase==='cancelled')this.downloadJob=null;});
   }
   async run() {
     let directory, verified = false, installing = false;
@@ -97,7 +97,7 @@ export class AppUpdater {
       directory=await fs.mkdtemp(path.join(this.temporary,'EFTGPS-update-'));
       const space=await fs.statfs(directory);
       if(space.bavail*space.bsize<manifest.size+256*1024**2) throw Error('disk-space');
-      Object.assign(this.state,{phase:'downloading',version:manifest.version,total:manifest.size,kind:manifest.kind||'full'});
+      Object.assign(this.state,{phase:'downloading',version:manifest.version,total:manifest.size,kind:manifest.kind||'full',downloaded:0,percent:0,error:null,packageVerified:false,packageSaved:false});
       const zip=path.join(directory,'update.zip');const whole=crypto.createHash('sha256');
       const output=await fs.open(zip,'wx');const abort=new AbortController();
       const offsets=[];let offset=0;for(const part of manifest.parts){offsets.push(offset);offset+=part.size;}
@@ -106,22 +106,28 @@ export class AppUpdater {
         while(cursor<manifest.parts.length) {
           const index=cursor++,part=manifest.parts[index];let size=0;
           this.state.file=part.name;
-          const response=await request(releaseAsset(release,part.name).browser_download_url,this.fetcher,AbortSignal.any([abort.signal,AbortSignal.timeout(30*60*1000)]));
-          const hash=crypto.createHash('sha256');
+          const inactive=new AbortController();let timeout,timedOut=false;
+          const touch=()=>{clearTimeout(timeout);timeout=setTimeout(()=>{timedOut=true;inactive.abort();},this.inactivityTimeoutMs);};touch();
+          try{
+          const response=await request(releaseAsset(release,part.name).browser_download_url,this.fetcher,AbortSignal.any([abort.signal,inactive.signal,AbortSignal.timeout(30*60*1000)]));
+          touch();const hash=crypto.createHash('sha256');
           for await(const chunk of response.body) {
+            clearTimeout(timeout);
             if(size+chunk.length>part.size) throw Error('download-size');
             hash.update(chunk);if(manifest.parts.length===1)whole.update(chunk);
             let written=0;while(written<chunk.length){const result=await output.write(chunk,written,chunk.length-written,offsets[index]+size+written);if(!result.bytesWritten)throw Error('disk-write');written+=result.bytesWritten;}
             size+=chunk.length;this.state.downloaded+=chunk.length;
             this.state.percent=Math.min(99,Math.floor(this.state.downloaded/manifest.size*100));
             this.state.elapsedSeconds=Math.floor((Date.now()-started)/1000);
+            touch();
           }
           if(size!==part.size || hash.digest('hex')!==part.sha256) throw Error('checksum');
+          }catch(error){if(timedOut)throw Error('download-timeout');throw error;}finally{clearTimeout(timeout);}
         }
       };
       const workers=Array.from({length:Math.min(3,manifest.parts.length)},()=>download().catch(error=>{abort.abort();throw error;}));
       try {
-        const results=await Promise.allSettled(workers);const failure=results.find(r=>r.status==='rejected');if(failure)throw failure.reason;
+        const results=await Promise.allSettled(workers);const failure=results.find(r=>r.status==='rejected'&&r.reason?.message==='download-timeout')||results.find(r=>r.status==='rejected');if(failure)throw failure.reason;
         this.state.phase='verifying';
       } finally {
         await output.close();
@@ -142,7 +148,7 @@ export class AppUpdater {
         ? error.code==='ENOENT' ? 'installer-missing'
         : ['EACCES','EPERM'].includes(error.code) ? 'installer-access'
         : 'installer-start'
-        : ['checksum','disk-space','download-size'].includes(error.message)?error.message:'unavailable';
+        : ['checksum','disk-space','download-size','download-timeout'].includes(error.message)?error.message:'unavailable';
       if(verified) {
         this.state.packageSaved=true;
         // Keep the verified download for analysis/recovery; never restore or bypass a blocked helper.
