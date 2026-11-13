@@ -122,5 +122,16 @@
       "1.10.0"
     ],
     "notesFile": "v1.11.1.md"
+  },
+  {
+    "version": "1.11.2",
+    "commit": "67b717206a305249991e07f1ba3bcf1eddcfe5bb",
+    "tag": "v1.11.2",
+    "deltaBases": [
+      "1.11.1",
+      "1.11.0",
+      "1.10.1"
+    ],
+    "notesFile": "v1.11.2.md"
   }
 ]
