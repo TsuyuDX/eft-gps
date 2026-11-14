@@ -1,3 +1,4 @@
+import { readLocal, writeLocal, localEntries } from "./storage.js";
 const allowed = (key) =>
   key === "eftgps-map-colour-v1" ||
   key === "eftgps-graphics-v1" ||
@@ -9,14 +10,12 @@ const allowed = (key) =>
   /^map-filters-v2-(regular|pve)-[a-z0-9-]+$/.test(key);
 let pending = Promise.resolve();
 export function readWindowSetting(key) {
-  return localStorage.getItem(key);
+  return readLocal(key);
 }
 function snapshot() {
   const values = {};
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (allowed(key)) values[key] = localStorage.getItem(key);
-  }
+  for (const [key, value] of localEntries())
+    if (allowed(key) && typeof value === "string") values[key] = value;
   return { version: 1, values };
 }
 function persist() {
@@ -35,7 +34,7 @@ function persist() {
 }
 export function writeWindowSetting(key, value) {
   if (!allowed(key)) throw Error("Неизвестная настройка");
-  localStorage.setItem(key, value);
+  writeLocal(key, value);
   persist();
 }
 export async function loadWindowSettings() {
@@ -46,7 +45,7 @@ export async function loadWindowSettings() {
     if (saved?.version === 1 && saved.values) {
       for (const [key, value] of Object.entries(saved.values))
         if (allowed(key) && typeof value === "string")
-          localStorage.setItem(key, value);
+          writeLocal(key, value);
     } else if (Object.keys(snapshot().values).length) persist();
   } catch {
     /* Local settings remain available if an older service is running. */

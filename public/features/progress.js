@@ -167,8 +167,9 @@ export function renderModifiers(root) {
   }
   draw();
 }
-export async function renderSettings(root) {
+export async function renderSettings(root, {signal} = {}) {
   const quality = await json("quest-content-report.json").catch(() => null);
+  if (signal?.aborted) return;
   const qualitySummary = Object.entries(quality?.summary || {})
     .map(
       ([mode, value]) =>

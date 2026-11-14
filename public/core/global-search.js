@@ -107,7 +107,8 @@ export function buildSearchIndex(data, aliases = {}) {
       (x) => "#/" + x.path.replaceAll(":mode", mode),
     );
   }
-  add("Событие", data.information, [], x=>"#/intel/"+x.id);
+  for (const [kind,label] of [["event","Событие"],["season","Сезон"],["promo","Промокод"]])
+    add(label, (data.information || []).filter(x=>x.type===kind), [], x=>"#/intel/"+x.id);
   add(
     "Новость",
     data.news,
@@ -120,9 +121,10 @@ export function searchEntries(index, query, perCategory = 8) {
   const q = normalizeQuestSearch(query),
     tokens = q.split(" ").filter(Boolean);
   if (!tokens.length) return [];
+  const identifier = /^[\p{L}\p{N}]+[-_][\p{L}\p{N}]+$/u.test(String(query).trim());
   const counts = new Map();
   return index
-    .filter((x) => tokens.every((token) => x.text.includes(token)))
+    .filter((x) => identifier ? x.text.includes(q) : tokens.every((token) => x.text.includes(token)))
     .map((x) => ({
       ...x,
       score: Math.min(
@@ -141,7 +143,8 @@ export function searchEntries(index, query, perCategory = 8) {
 }
 let cached, signature;
 export async function globalIndex(news = []) {
-  const key = [db.mode, language(), db.items, db.quests, db.articles, gameInfo()];
+  const newsRevision = news.map(x=>[x.slug,x.title,x.summary].join("\n")).join("\n\n");
+  const key = [db.mode, language(), db.items, db.quests, db.articles, db.maps, db.lookup, gameInfo(), newsRevision];
   if (!signature || key.some((v, i) => v !== signature[i])) {
     signature = key;
     const snapshot = { ...db };
@@ -171,6 +174,13 @@ export async function globalIndex(news = []) {
 }
 export function bindGlobalSearch(field, box, news = []) {
   let generation = 0;
+  box.hidden = true;
+  field.setAttribute("aria-controls", box.id || (box.id = "search-results"));
+  field.setAttribute("aria-expanded", "false");
+  const visibility = (visible) => {
+    box.hidden = !visible;
+    field.setAttribute("aria-expanded", String(visible));
+  };
   field.setAttribute(
     "placeholder",
     textPair("Предметы, задания, карты и справочник","Search items, quests, maps and guides"),
@@ -178,12 +188,12 @@ export function bindGlobalSearch(field, box, news = []) {
   field.oninput = async () => {
     const own = ++generation,
       query = field.value;
-    box.hidden = !query.trim();
+    visibility(Boolean(query.trim()));
     if (box.hidden) return;
     box.textContent = textPair("Поиск…","Searching…");
     try {
       const results = searchEntries(await globalIndex(news), query);
-      if (own !== generation) return;
+      if (own !== generation || field.value !== query || !field.isConnected) return;
       const labels = {
         Предмет: "Item",
         Задание: "Quest",
@@ -194,6 +204,7 @@ export function bindGlobalSearch(field, box, news = []) {
         Событие: "Event",
         Сезон: "Season",
         Новость: "News",
+        Промокод: "Promo code",
       };
       box.innerHTML =
         results
@@ -211,7 +222,8 @@ export function bindGlobalSearch(field, box, news = []) {
   };
   field.onkeydown = (e) => {
     if (e.key === "Escape") {
-      box.hidden = true;
+      generation++;
+      visibility(false);
       return;
     }
     if (e.key === "Enter") {
@@ -224,6 +236,14 @@ export function bindGlobalSearch(field, box, news = []) {
     }
   };
   box.onkeydown = (e) => {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      e.stopPropagation();
+      generation++;
+      visibility(false);
+      field.focus();
+      return;
+    }
     const links = [...box.querySelectorAll("a")],
       i = links.indexOf(document.activeElement);
     if (["ArrowDown", "ArrowUp"].includes(e.key)) {

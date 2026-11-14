@@ -1,4 +1,5 @@
 import {bindMapColour} from "../core/map-colour.js";
+import {canonicalQuestLayer} from "../core/map-data-quality.js";
 import { overlayMode } from "../core/overlay-mode.js";
 import { isSecretThemeActive } from "../core/secret-theme.js";
 import { markerFacts, markerPresentation } from "./map-presentation.js";
@@ -76,7 +77,8 @@ export function mapMarkers(m, {includeInvalid=false}={}) {
               description: route.name,
             });
     } else if (group === "quests") {
-      for (const q of m.questLayers || [])
+      for (const rawLayer of m.questLayers || []) {
+        const q = canonicalQuestLayer(rawLayer);
         for (const v of [
           ...(q.itemMarkers || []).map((v) => ({ ...v, questItem: true })),
           ...(q.objectiveMarkers || []),
@@ -90,6 +92,7 @@ export function mapMarkers(m, {includeInvalid=false}={}) {
             quest: q.questData,
             description: v.objDescription,
           });
+      }
     } else
       for (const v of (group === "artillery" ? m.artillery?.zones : m[group]) ||
         []) {
@@ -115,10 +118,12 @@ export function mapMarkers(m, {includeInvalid=false}={}) {
   }
   return includeInvalid ? a : a.filter((x) => x.position && Number.isFinite(x.position.x) && Number.isFinite(x.position.z));
 }
-export async function renderMap(root, slug) {
-  const { map: m } = await json(
+export async function renderMap(root, slug, {signal} = {}) {
+  const { map: sourceMap } = await json(
     (db.mode === "pve" ? "pve/" : "") + "maps/" + slug + ".json",
   );
+  if (signal?.aborted) return;
+  const m = {...sourceMap, routeSlug:slug};
   let zoom = 1,
     tx = 0,
     ty = 0,
@@ -159,6 +164,7 @@ export async function renderMap(root, slug) {
   const questMetadata = await json(db.mode + "/quest-search.json").catch(
     () => ({}),
   );
+  if (signal?.aborted) return;
   for (const marker of markers)
     if (marker.quest)
       marker.quest = {

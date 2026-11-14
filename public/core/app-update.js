@@ -10,11 +10,25 @@ export function startAppUpdates() {
   panel.hidden = true;
   panel.dataset.noTranslate = "";
   panel.innerHTML =
-    '<div class="app-update-copy" role="status" aria-live="polite"></div><div class="row wrap"><button data-update-install></button><button class="app-update-dismiss"></button></div><details data-update-notes><summary></summary><pre style="white-space:pre-wrap;max-height:200px;overflow:auto"></pre></details><progress max="100" value="0"></progress>';
+    '<div class="app-update-copy" role="status" aria-live="polite"></div><div class="row wrap"><button data-update-install></button><button data-update-cancel hidden></button><button class="app-update-dismiss"></button></div><details data-update-notes><summary></summary><pre style="white-space:pre-wrap;max-height:200px;overflow:auto"></pre></details><progress max="100" value="0"></progress>';
   document.body.append(panel);
   const install = panel.querySelector("[data-update-install]"),
     later = panel.querySelector(".app-update-dismiss"),
     notes = panel.querySelector("details");
+  const cancel = panel.querySelector("[data-update-cancel]");
+  let timer, polling = false, localFailures = 0;
+  const schedule = (delay = 750) => { clearTimeout(timer); timer = setTimeout(poll, delay); };
+  cancel.onclick = async () => {
+    cancel.disabled = true;
+    try {
+      const response = await fetch("/api/app-update/cancel", {method:"POST", signal:AbortSignal.timeout(10000)});
+      if (!response.ok) throw Error();
+      dismissed = false;
+      schedule();
+    } catch {
+      cancel.disabled = false;
+    }
+  };
   let dismissed = false,
     offered = "";
   later.textContent = L("Позже", "Later");
@@ -24,9 +38,11 @@ export function startAppUpdates() {
   };
   install.textContent = L("Обновить", "Update");
   install.onclick = async () => {
+    dismissed = false;
     install.disabled = true;
     try {
       const response = await fetch("/api/app-update/install", {
+        signal: AbortSignal.timeout(10000),
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ version: offered }),
@@ -44,12 +60,21 @@ export function startAppUpdates() {
     }
   };
   async function poll() {
+    if (polling) return;
+    polling = true;
     try {
       const response = await fetch("/api/app-update/state", {
         cache: "no-store",
+        signal: AbortSignal.timeout(10000),
       });
-      if (!response.ok) return;
+      if (!response.ok) throw Error("local-updater-unavailable");
       const state = await response.json();
+      localFailures = 0;
+      cancel.hidden = !["downloading", "verifying"].includes(state.phase);
+      cancel.disabled = false;
+      cancel.textContent = L("Отменить загрузку", "Cancel download");
+      later.textContent = ["downloading", "verifying"].includes(state.phase) ? L("Скрыть", "Hide") : L("Позже", "Later");
+      panel.querySelector("progress").setAttribute("aria-label", L("Загрузка обновления", "Update download"));
       if (state.phase === "current") return;
       if (!["idle", "checking"].includes(state.phase)) {
         panel.hidden = dismissed;
@@ -131,10 +156,12 @@ export function startAppUpdates() {
         )
           return;
       }
-      setTimeout(poll, 750);
+      schedule();
     } catch {
-      /* Offline mode must not interrupt the app. */
-    }
+      // Retry the local status request, never the GitHub release check or installation.
+      // Keep retries bounded if an older local service does not support this endpoint.
+      if (++localFailures <= 3) schedule(3000);
+    } finally { polling = false; }
   }
   window.addEventListener("language-changed", () => {
     install.textContent = L("Обновить", "Update");

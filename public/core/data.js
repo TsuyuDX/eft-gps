@@ -15,6 +15,7 @@ export const db = {
   manifest: {},
 };
 const cache = new Map();
+let modeRequest = 0;
 export function clearEventContentCache() {
   for (const key of cache.keys())
     if (/quests?\/|quests\.json|quest-search\.json|event__halloween/.test(key))
@@ -66,21 +67,21 @@ export async function init(mode = "regular") {
   return true;
 }
 export async function loadMode(mode, locale = language()) {
-  const [items, quests] = await Promise.all([
+  if (!["regular", "pve"].includes(mode)) throw Error("Invalid mode");
+  const request = ++modeRequest;
+  const [items, quests, tracker] = await Promise.all([
     json(mode + "/items.json", locale),
     json(mode + "/quests.json", locale),
+    mode === "pve"
+      ? json("pve/tracker.json", locale).catch(() => json("tracker.json", locale))
+      : json("tracker.json", locale),
   ]);
-  if (locale !== language()) return;
+  if (locale !== language() || request !== modeRequest) return false;
   db.items = items;
   db.quests = quests;
   db.mode = mode;
-  if (mode === "pve") {
-    try {
-      db.tracker = await json("pve/tracker.json", locale);
-    } catch {
-      db.tracker = await json("tracker.json", locale);
-    }
-  } else db.tracker = await json("tracker.json", locale);
+  db.tracker = tracker;
+  return true;
 }
 export function asset(u) {
   const value = Object.hasOwn(db.assets, u) ? db.assets[u] : u;

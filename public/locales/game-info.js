@@ -245,3 +245,15 @@ export const game_info = {
     en: "View the current season",
   },
 };
+
+// Ссылки на проверенные источники, версия 1.12.0.
+Object.assign(game_info, {
+  "Активность сверена со справочником": {
+    "ru": "Активность сверена со справочником",
+    "en": "Activity checked against reference"
+  },
+  "Источник текущего статуса": {
+    "ru": "Источник текущего статуса",
+    "en": "Current status source"
+  }
+});

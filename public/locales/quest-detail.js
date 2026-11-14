@@ -10,3 +10,15 @@ export const quest_detail = {
   // Где: public/features/quest-detail.js
   "Найти в рейде · ": { ru: "Найти в рейде · ", en: "Find in raid · " },
 };
+
+// Ссылки на проверенные источники, версия 1.12.0.
+Object.assign(quest_detail, {
+  "Источник прохождения: справочник TarkovHead": {
+    "ru": "Источник прохождения: справочник TarkovHead",
+    "en": "Walkthrough source: TarkovHead reference"
+  },
+  "Сверено": {
+    "ru": "Сверено",
+    "en": "Checked"
+  }
+});

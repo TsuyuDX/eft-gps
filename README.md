@@ -192,15 +192,15 @@ Support is optional; the application is free. Discord — coming soon.
 Игровые материалы принадлежат Battlestate Games. Независимый фанатский проект.  
 Game materials belong to Battlestate Games. An independent fan project.
 
-## Возможности версии 1.10.0 / Version 1.10.0
+## Возможности версии 1.12.0 / Version 1.12.0
 
 - **Поиск / Search:** кнопка «Поиск» или Ctrl+K доступны из любого раздела. Ищите предметы, задания, карты, торговцев, боссов, убежище, события, сезоны и новости по частям русских или английских названий. / Use Search or Ctrl+K from any page, with partial Russian or English names across all reference categories.
 - **Списки / Lists:** при возврате из карточки сохраняются фильтры, сортировка, страница и прокрутка предметов и заданий в текущем сеансе. / Returning from item or quest details preserves list filters, sorting, page and scroll during the session.
 - **GPS:** «Включить GPS» / «Отключить GPS» сразу запускают или останавливают чтение скриншотов. Автосъёмка управляется отдельно. / Enable GPS and Disable GPS immediately control screenshot tracking; automatic capture is a separate control.
-- **Overlay Beta:** Настройки → Экспериментальное. По умолчанию выключен; выбор сохраняется. Alt+M показывает карту, панель позволяет выбрать другое сочетание. Нужен оконный режим без рамки. / Settings → Experimental. Off by default; your choice is saved. Alt+M shows the map; choose another hotkey in its panel. Requires borderless windowed mode.
+- **Overlay Beta:** Настройки → Overlay. Встроен в основное приложение, по умолчанию выключен. Большая или компактная карта, размер, прозрачность, положение и горячая клавиша настраиваются в одном разделе. Нужен оконный режим без рамки. / Settings → Overlay. Built into the main application and off by default. Configure a large or compact map, size, opacity, position and hotkey in one place. Requires borderless windowed mode. [Подробнее / Details](OVERLAY-TEST.md).
 - **Достоверность карт / Map accuracy:** координаты сверены со справочником, но не подтверждены в текущем игровом патче. Опасные зоны и несовпадающие категории имеют предупреждения. / Reference comparisons do not establish current in-game accuracy. Hazards and mismatched categories carry explicit notices. See [map audit](MAP-AUDIT.md).
 
-Статус разработки и ограничения проверки: [отчёт](USABILITY-REPORT.md). / Development status and verification limits: [report](USABILITY-REPORT.md).
+Текущие проверки: [отчёт](QUALITY-REPORT.md), [источники подтверждений](VERIFICATION.md). / Current checks: [report](QUALITY-REPORT.md), [verification sources](VERIFICATION.md).
 
 Внизу окна отображается состояние соединения: зелёная точка **«Онлайн»**, красная **«Оффлайн»**. Карты и сохранённые данные доступны и без интернета. / The footer shows a green **Online** or red **Offline** indicator; saved maps and data remain available without internet.
 

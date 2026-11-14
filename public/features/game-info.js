@@ -26,10 +26,11 @@ export function modeChip(mode) {
 function badge(item) {
   const state = recordState(item);
   if(item.type==="event" && state==="unconfirmed")return `<span class="badge">${tr("Активность не подтверждена","Activity unconfirmed")}</span>`;
+  if(item.type==="event" && state==="active" && item.activityVerified==="reviewed")return `<span class="badge info-verification">${tr("Активность сверена со справочником", "Activity checked against reference")}</span>`;
   return `<span class="badge info-verification">${state === "archived" ? tr("Архив", "Archived") : item.type === "promo" ? (item.activationVerified ? tr("Активация проверена", "Redemption verified") : tr("Не проверен", "Unverified")) : item.verified === "official" ? tr("Официальный источник", "Official source") : item.verified === "reviewed" ? tr("Проверено редактором", "Reviewed") : tr("Требует проверки", "Needs review")}</span>`;
 }
 function source(item) {
-  return `<p class="muted small">${tr("Проверка записи", "Record checked")}: ${date(item.checkedAt)} · <a href="${esc(item.source)}" target="_blank" rel="noopener noreferrer">${tr("Первоисточник", "Source")} ↗</a></p>`;
+  return `<p class="muted small">${tr("Проверка записи", "Record checked")}: ${date(item.checkedAt)} · <a href="${esc(item.source)}" target="_blank" rel="noopener noreferrer">${tr("Первоисточник", "Source")} ↗</a>${item.activitySource && item.activitySource!==item.source ? ` · <a href="${esc(item.activitySource)}" target="_blank" rel="noopener noreferrer">${tr("Источник текущего статуса", "Current status source")} ↗</a>` : ""}</p>`;
 }
 function card(item) {
   const state = recordState(item);
@@ -38,15 +39,7 @@ function card(item) {
 export function renderHomeInformation(root) {
   const draw = () => {
     const data = gameInfo(),
-      seasons = data.records
-        .filter(
-          (x) =>
-            x.type === "season" &&
-            x.verified !== "unverified" &&
-            recordState(x) !== "archived",
-        )
-        .sort((a, b) => (b.startsAt || "").localeCompare(a.startsAt || "")),
-      season = seasons[0],
+      season = activeSeason(data.records),
       events = data.records.filter(
         (x) => x.type === "event" && recordState(x) === "active",
       ),
@@ -93,7 +86,8 @@ export function renderInformation(root, id) {
       const button = root.querySelector("#info-refresh");
       button.disabled = true;
       try {
-        await fetch("/api/game-info/check", { method: "POST", signal });
+        const response = await fetch("/api/game-info/check", { method: "POST", signal });
+        if (!response.ok) throw Error("check-unavailable");
         await refreshGameInfo();
       } catch {
         toast(

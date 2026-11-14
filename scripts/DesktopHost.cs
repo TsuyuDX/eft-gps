@@ -10,14 +10,20 @@ using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
 using System.Reflection;
-[assembly: AssemblyVersion("1.7.0.0")]
-[assembly: AssemblyFileVersion("1.7.0.0")]
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Web.Script.Serialization;
+[assembly: AssemblyVersion("1.12.0.0")]
+[assembly: AssemblyFileVersion("1.12.0.0")]
 
 class DesktopHost : Form {
     readonly string root, origin;
     readonly WebView2 web = new WebView2();
     Panel serviceError, nativeLoading;
     bool maintenance;
+    readonly System.Windows.Forms.Timer overlaySync=new System.Windows.Forms.Timer {Interval=1500};
+    OverlayHost raidOverlay;
+    bool syncingOverlay,desktopClosing;
     [DllImport("dwmapi.dll")] static extern int DwmSetWindowAttribute(IntPtr window, int attribute, ref int value, int size);
     [DllImport("user32.dll")] static extern bool SetForegroundWindow(IntPtr window);
     [DllImport("user32.dll")] static extern bool ShowWindow(IntPtr window, int command);
@@ -66,6 +72,7 @@ class DesktopHost : Form {
         nativeLoading.Controls.Add(loadingBox);NativeText.Apply(nativeLoading);
         nativeLoading.Resize+=delegate {if(nativeLoading!=null)loadingBox.Location=new Point(Math.Max(0,(nativeLoading.ClientSize.Width-loadingBox.Width)/2),Math.Max(0,(nativeLoading.ClientSize.Height-loadingBox.Height)/2));};
         Controls.Add(nativeLoading);nativeLoading.BringToFront();
+        overlaySync.Tick+=async delegate {await SyncOverlay();};
         Shown += async delegate {
             try {
                 int dark = 1, black = 0, white = 0x00FFFFFF;
@@ -129,6 +136,8 @@ class DesktopHost : Form {
                     try { command = e.TryGetWebMessageAsString(); } catch { return; }
                     if (command == "secret-brand-on") { SetSecretBrand(true); return; }
                     if (command == "secret-brand-off") { SetSecretBrand(false); return; }
+                    if (command == "overlay-refresh") { SyncOverlaySoon(); return; }
+                    if (command == "overlay-toggle") { ToggleOverlaySoon(); return; }
                     if (command == "open-folder") { Process.Start(new ProcessStartInfo("explorer.exe", "\"" + root + "\"") { UseShellExecute = false }); return; }
                     if (command == "reload-interface") { web.Reload(); return; }
                     if (command == "update-data") StartMaintenance("--data", null);
@@ -144,6 +153,8 @@ class DesktopHost : Form {
                     if (!e.IsSuccess) ShowServiceError();
                 };
                 core.Navigate(origin + "/");
+                overlaySync.Start();
+                await SyncOverlay();
             } catch (Exception e) {
                 Directory.CreateDirectory(Path.Combine(root, "userdata"));
                 File.WriteAllText(Path.Combine(root, "userdata", "desktop-error.log"), e.ToString());
@@ -151,8 +162,35 @@ class DesktopHost : Form {
                 Close();
             }
         };
-        FormClosing += delegate { if (!maintenance) {StopAutoCapture();StopLocalService();} };
+        FormClosing += delegate { desktopClosing=true;overlaySync.Stop();if(raidOverlay!=null){raidOverlay.Close();raidOverlay.Dispose();raidOverlay=null;}if (!maintenance) {StopAutoCapture();StopLocalService();} };
+        FormClosed+=delegate {overlaySync.Dispose();};
     }
+    string InstanceKey(){using(var sha=System.Security.Cryptography.SHA256.Create())return BitConverter.ToString(sha.ComputeHash(Encoding.UTF8.GetBytes(Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar).ToLowerInvariant()))).Replace("-","").ToLowerInvariant();}
+    Task<string> OverlayRequest(string endpoint,string body=null){
+        return Task.Run(delegate {
+            var request=(HttpWebRequest)WebRequest.Create(origin+endpoint);request.Timeout=2500;request.ReadWriteTimeout=2500;
+            if(body!=null){request.Method="POST";request.ContentType="application/json";request.Headers["Origin"]=origin;request.Headers["X-EFTGPS-Instance"]=InstanceKey();byte[] bytes=Encoding.UTF8.GetBytes(body);request.ContentLength=bytes.Length;using(var stream=request.GetRequestStream())stream.Write(bytes,0,bytes.Length);}
+            using(var response=request.GetResponse())using(var reader=new StreamReader(response.GetResponseStream(),Encoding.UTF8))return reader.ReadToEnd();
+        });
+    }
+    async Task SyncOverlay(){
+        if(syncingOverlay||desktopClosing)return;syncingOverlay=true;
+        try {
+            var json=new JavaScriptSerializer();var state=json.Deserialize<Dictionary<string,object>>(await OverlayRequest("/api/overlay"));if(desktopClosing)return;
+            bool enabled=state.ContainsKey("enabled")&&Convert.ToBoolean(state["enabled"]);
+            overlaySync.Interval=enabled?1500:5000;
+            if(enabled){
+                if(raidOverlay==null||raidOverlay.IsDisposed){raidOverlay=new OverlayHost(root,origin,true,true);raidOverlay.Show();}
+                if(state.ContainsKey("settings"))await raidOverlay.ApplySettings((Dictionary<string,object>)state["settings"]);
+            } else if(raidOverlay!=null){raidOverlay.Close();raidOverlay.Dispose();raidOverlay=null;}
+            if(desktopClosing)return;
+            var runtime=raidOverlay!=null?raidOverlay.RuntimeState():new Dictionary<string,object>{{"running",false},{"visible",false},{"hotkeyRegistered",false},{"error",""}};
+            await OverlayRequest("/api/overlay/runtime",json.Serialize(runtime));
+        }catch {if(raidOverlay!=null){raidOverlay.Close();raidOverlay.Dispose();raidOverlay=null;}}
+        finally{syncingOverlay=false;}
+    }
+    async void SyncOverlaySoon(){await SyncOverlay();}
+    async void ToggleOverlaySoon(){if(raidOverlay!=null&&!raidOverlay.IsDisposed){try{await raidOverlay.ToggleMap();}catch{}}await SyncOverlay();}
     void HideNativeLoading() {
         if(nativeLoading!=null) {var old=nativeLoading;nativeLoading=null;Controls.Remove(old);old.Dispose();}
         web.Visible=true;

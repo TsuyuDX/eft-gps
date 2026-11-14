@@ -5,6 +5,7 @@ import {
   t,
 } from "./localization.js";
 import { gpsRequest } from "./gps-client.js";
+import {overlayMode} from "./overlay-mode.js";
 const overlay = () => document.querySelector("#boot-screen");
 function paintSteps(steps) {
   const list = document.querySelector("#boot-checks");
@@ -101,7 +102,7 @@ export async function finishStartup(result) {
   const warnings = (result?.warnings || []).filter((x) =>
     ["gps", "screenshots"].includes(x.id),
   );
-  if (warnings.length) {
+  if (warnings.length && !overlayMode) {
     document.querySelector("#boot-stage").textContent = t("Проверка завершена");
     document.querySelector("#boot-warning").hidden = false;
     const detail = document.querySelector("#boot-warning-detail");

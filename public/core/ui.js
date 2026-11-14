@@ -25,8 +25,14 @@ export function toast(message) {
   toast.timer = setTimeout(() => e.classList.remove("show"), 3000);
 }
 export function modal(content) {
-  document.querySelector("#modal-content").innerHTML = content;
   const dialog = document.querySelector("#modal");
+  if (dialog.open) dialog.dispatchEvent(new Event("modal-replaced"));
+  modal.titleObserver?.disconnect();
+  modal.closeController?.abort();
+  const controller = modal.closeController = new AbortController();
+  const previousFocus = dialog.open ? modal.previousFocus : document.activeElement;
+  modal.previousFocus = previousFocus;
+  document.querySelector("#modal-content").innerHTML = content;
   const close = dialog.querySelector(".close");
   if (close) close.innerHTML = uiIcon("close", 22);
   if (!dialog.open) dialog.showModal();
@@ -43,17 +49,18 @@ export function modal(content) {
       if (chromeTitle.textContent !== title) chromeTitle.textContent = title;
     };
     updateTitle();
-    modal.titleObserver?.disconnect();
     modal.titleObserver = new MutationObserver(updateTitle);
     modal.titleObserver.observe(contentRoot, {
       childList: true,
       subtree: true,
       characterData: true,
     });
-    dialog.addEventListener("close", () => modal.titleObserver?.disconnect(), {
-      once: true,
-    });
   }
+  dialog.addEventListener("close", () => {
+    modal.titleObserver?.disconnect();
+    controller.abort();
+    if (previousFocus?.isConnected && !previousFocus.closest?.("[hidden]")) previousFocus.focus?.();
+  }, {once:true, signal:controller.signal});
 }
 export function confirmAction(title, message, actionLabel) {
   modal(
@@ -62,7 +69,13 @@ export function confirmAction(title, message, actionLabel) {
   const dialog = document.querySelector("#modal");
   return new Promise((resolve) => {
     let accepted = false;
-    dialog.addEventListener("close", () => resolve(accepted), { once: true });
+    const finish = () => {
+      dialog.removeEventListener("close", finish);
+      dialog.removeEventListener("modal-replaced", finish);
+      resolve(accepted);
+    };
+    dialog.addEventListener("close", finish, { once: true });
+    dialog.addEventListener("modal-replaced", finish, { once: true });
     dialog.querySelector("#confirm-action").onclick = () => {
       accepted = true;
       dialog.close();

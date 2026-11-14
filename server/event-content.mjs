@@ -80,6 +80,8 @@ export function sanitizeEventQuest(raw, expected) {
     throw Error("invalid-event-quest");
   const guideText = (value) => {
     let result = clean(value);
+    // The official BSG reward announcement uses this achievement name.
+    if(expected === "halloween-blind-the-enemy")result=result.replaceAll("Raise the Shields!","Shields Up!");
     // Keep the documented room-105 erratum from returning through a live sync.
     if (
       expected === "halloween-unexpected-help" &&
@@ -290,6 +292,22 @@ export class EventContentService {
     }
   }
   async load() {
+    // A clean offline installation receives the reviewed snapshot too.
+    // A newer user cache takes precedence; a broken cache cannot erase the snapshot.
+    try {
+      const seedFile = path.join(this.root, "public/data/event-content.json");
+      const stat = await fs.lstat(seedFile);
+      if (!stat.isFile() || stat.isSymbolicLink() || stat.size > 12 * 1024 ** 2)
+        throw Error("invalid-event-snapshot");
+      const seed = JSON.parse(await fs.readFile(seedFile, "utf8"));
+      if (seed.format !== 1 || !seed.quests?.ru || !seed.quests?.en || !/^[a-f0-9]{64}$/.test(seed.revision))
+        throw Error("invalid-event-snapshot");
+      for (const locale of ["ru", "en"])
+        for (const [slug, q] of Object.entries(seed.quests[locale]))
+          if (!slugOK(slug) || q.normalizedName !== slug) throw Error("invalid-event-snapshot");
+      this.bundle = seed;
+      this.state = {phase: "cached", checkedAt: seed.checkedAt, lastSuccess: seed.checkedAt};
+    } catch { /* The existing cache also supports installations predating snapshots. */ }
     try {
       await this.safeDirectory();
       const p = path.join(this.directory, "bundle.json"),
@@ -308,11 +326,15 @@ export class EventContentService {
         for (const [slug, q] of Object.entries(b.quests[locale]))
           if (!slugOK(slug) || q.normalizedName !== slug)
             throw Error("invalid-cache");
-      this.bundle = b;
-      this.state.lastSuccess = b.checkedAt;
+      if (!this.bundle || Date.parse(b.checkedAt) >= Date.parse(this.bundle.checkedAt)) {
+        const quests = {ru:{...this.bundle?.quests.ru,...b.quests.ru},en:{...this.bundle?.quests.en,...b.quests.en}};
+        this.bundle = {...b,quests,media:{...this.bundle?.media,...b.media},revision:crypto.createHash("sha256").update(JSON.stringify(quests)).digest("hex")};
+        this.state.lastSuccess = b.checkedAt;
+      }
       this.state.phase = "cached";
+      this.state.checkedAt = this.bundle.checkedAt;
     } catch (e) {
-      if (e.code !== "ENOENT") this.state.phase = "cached-unavailable";
+      if (e.code !== "ENOENT" && !this.bundle) this.state.phase = "cached-unavailable";
     }
   }
   async response(url, limit) {
@@ -470,6 +492,8 @@ export class EventContentService {
           )
             continue;
           const q = sanitizeEventQuest(raw, slug);
+          q.liveSource = `${ORIGIN}/${locale}/quest/regular/${slug}`;
+          q.checkedAt = new Date(now).toISOString();
           await localizeObject(q);
           quests[locale][slug] = q;
         }

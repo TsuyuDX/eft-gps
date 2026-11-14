@@ -7,6 +7,7 @@ snapshot-backup-*/
 update-staging/
 /dist/
 /coverage/
+/outputs/
 .env
 .env.*
 !.env.example

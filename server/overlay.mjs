@@ -1,95 +1,43 @@
-import path from "node:path";
-import { spawn } from "node:child_process";
-import { once } from "node:events";
+import { normalizeOverlaySettings, validOverlaySettings } from "../public/core/overlay-settings.js";
+
+// The native desktop window owns Overlay. This coordinator never starts a process.
 export class OverlayManager {
-  constructor(
-    root,
-    port,
-    { spawnProcess = spawn, platform = process.platform } = {},
-  ) {
-    this.root = root;
-    this.port = port;
-    this.spawnProcess = spawnProcess;
+  constructor(root, port, {platform = process.platform, clock = Date.now} = {}) {
     this.platform = platform;
+    this.clock = clock;
     this.enabled = false;
-    this.child = null;
-    this.error = "";
-    this.transition = Promise.resolve();
+    this.settings = normalizeOverlaySettings(null);
+    this.runtime = null;
   }
   state() {
+    const attached = !!this.runtime && this.clock() - this.runtime.at < 10000;
     return {
-      enabled: this.enabled,
-      running: !!this.child && this.child.exitCode === null,
-      error: this.error,
+      enabled: this.enabled, attached,
+      running: this.enabled && attached && this.runtime.running,
+      visible: this.enabled && attached && this.runtime.visible,
+      error: attached ? this.runtime.error : "",
+      hotkeyRegistered: this.enabled && attached && this.runtime.hotkeyRegistered,
+      settings: {...this.settings}, integrated: true,
     };
   }
-  setEnabled(enabled) {
-    this.transition = this.transition
-      .catch(() => {})
-      .then(async () => {
-        if (!enabled) {
-          this.enabled = false;
-          await this.stop();
-          return this.state();
-        }
-        if (this.child && this.child.exitCode === null) {
-          this.enabled = true;
-          return this.state();
-        }
-        if (this.platform !== "win32") throw Error("overlay-windows-only");
-        this.error = "";
-        const child = this.spawnProcess(
-          path.join(this.root, "runtime", "EFTGPSOverlay.exe"),
-          ["--app-port", String(this.port)],
-          { cwd: this.root, stdio: "ignore", windowsHide: false },
-        );
-        this.child = child;
-        this.enabled = true;
-        child.once("error", () => {
-          if (this.child === child) {
-            this.error = "overlay-start-failed";
-            this.enabled = false;
-            this.child = null;
-          }
-        });
-        child.once("exit", (code) => {
-          if (this.child === child) {
-            this.child = null;
-            if (this.enabled)
-              this.error = code ? "overlay-exited" : "overlay-closed";
-          }
-        });
-        try {
-          await once(child, "spawn");
-          child.unref?.();
-        } catch {
-          this.enabled = false;
-          this.child = null;
-          throw Error("overlay-start-failed");
-        }
-        return this.state();
-      });
-    return this.transition;
+  async setEnabled(enabled, settings) {
+    if (typeof enabled !== "boolean") throw Error("invalid-overlay-state");
+    if (enabled && this.platform !== "win32") throw Error("overlay-windows-only");
+    if (settings !== undefined) {
+      if (!validOverlaySettings(settings)) throw Error("invalid-overlay-settings");
+      this.settings = normalizeOverlaySettings(settings);
+    }
+    this.enabled = enabled;
+    return this.state();
   }
-  async stop() {
-    const child = this.child;
-    if (!child) return;
-    // Integrated host observes enabled=false and closes its own windows gracefully.
-    await new Promise((resolve) => {
-      const timer = setTimeout(() => {
-        if (child.exitCode === null) child.kill();
-        resolve();
-      }, 3500);
-      child.once("exit", () => {
-        clearTimeout(timer);
-        resolve();
-      });
-    });
-    if (this.child === child) this.child = null;
+  report(value) {
+    if (!value || typeof value !== "object" ||
+        Object.keys(value).some(key => !["running", "visible", "error", "hotkeyRegistered"].includes(key)) ||
+        !["running", "visible", "hotkeyRegistered"].every(key => typeof value[key] === "boolean") ||
+        !["", "hotkey-in-use", "map-unavailable", "overlay-start-failed"].includes(value.error))
+      throw Error("invalid-overlay-runtime");
+    this.runtime = {...value, at:this.clock()};
+    return this.state();
   }
-  dispose() {
-    this.enabled = false;
-    if (this.child && this.child.exitCode === null) this.child.kill();
-    this.child = null;
-  }
+  dispose() { this.enabled = false; this.runtime = null; }
 }

@@ -38,6 +38,7 @@ const plain = (html) =>
 const short = (text) => text.split(/\s+/).slice(0, 20).join(" ");
 export function discoverPublication({ title, body, url, date, publisher, imageRemote }, now) {
   if (!title || !body || !Number.isFinite(Date.parse(date))) return [];
+  if(Date.parse(date)>Date.parse(now)+5*60*1000)return [];
   const text = plain(body);
   if(text.replace(/#[A-Za-z0-9_]+/g,"").trim().length<20)return [];
   if(url.startsWith("https://t.me/") && !/#EscapefromTarkov|Kord Breach|infected|Halloween/i.test(text))return [];
@@ -175,8 +176,8 @@ export function applyLifecycleEvidence(records,publications,now){
  const result=records.map(x=>({...x}));
  for(const post of publications.filter(p=>p.url?.startsWith("https://t.me/escapefromtarkovEN/") && Number.isFinite(Date.parse(p.date))).sort((a,b)=>Date.parse(a.date)-Date.parse(b.date))){
   const body=plain(post.body),halloween=result.find(x=>x.id==="halloween-2026");
-  if(halloween && /(?:participate in the Halloween event|Halloween event (?:is|remains) (?:live|active|ongoing))/i.test(body)){
-   halloween.active=true;halloween.endedConfirmed=false;halloween.confirmationExpiresAt=new Date(Date.parse(post.date)+48*3600000).toISOString();halloween.activitySource=post.url;halloween.checkedAt=now;
+  if(halloween && !halloween.endedConfirmed && /(?:participate in the Halloween event|Halloween event (?:is|remains) (?:live|active|ongoing))/i.test(body)){
+   halloween.active=true;halloween.confirmationExpiresAt=new Date(Date.parse(post.date)+48*3600000).toISOString();halloween.activitySource=post.url;halloween.activityVerified="official";halloween.checkedAt=now;
   }
   if(halloween && /Halloween event (?:has )?(?:ended|concluded|is over)/i.test(body)){
    halloween.active=false;halloween.endedConfirmed=true;halloween.activitySource=post.url;halloween.checkedAt=now;
@@ -185,6 +186,15 @@ export function applyLifecycleEvidence(records,publications,now){
   if(match && season && Number(match[1])>=1 && Number(match[1])<=31){season.endsOn=post.date.slice(0,4)+"-12-"+match[1].padStart(2,"0");season.endsAt=null;season.endTimeConfirmed=false;season.activitySource=post.url;season.checkedAt=now;}
  }
  return result;
+}
+export function referenceEventActivity(html){
+ const {document}=parseHTML(html),heading=document.querySelector("main h1,main h2");
+ if(!heading)return "unknown";
+ const title=heading.cloneNode(true);title.querySelectorAll(".badge").forEach(node=>node.remove());
+ if(title.textContent.trim()!=="Halloween 2026")return "unknown";
+ const status=heading.querySelector(".badge")?.textContent.trim();
+ const period=heading.parentElement.querySelector("time")?.textContent||"";
+ return status==="Active" && /present/i.test(period)?"active":"unknown";
 }
 export async function collectGameInfo(
   seed,
@@ -225,7 +235,21 @@ export async function collectGameInfo(
     }
     source.checkedAt = now;
   }
-  const evidenceBase={...base,records:applyLifecycleEvidence(base.records,publications,now)};
+  const lifecycle=applyLifecycleEvidence(base.records,publications,now);
+  const reference=sources.find(x=>x.id==="event-reference");
+  if(reference){
+    try{
+      const status=referenceEventActivity(await boundedText(reference.url,fetcher));
+      reference.status=status==="active"?"connected":"review-only";reference.checkedAt=now;
+      if(status==="active")successes++;
+      const event=lifecycle.find(x=>x.id==="halloween-2026");
+      if(status==="active" && event && !event.endedConfirmed){
+        event.active=true;event.activitySource=reference.url;event.activityVerified="reviewed";event.checkedAt=now;
+        event.confirmationExpiresAt=new Date(Date.parse(now)+24*3600000).toISOString();
+      }
+    }catch{reference.status="unavailable";reference.checkedAt=now;}
+  }
+  const evidenceBase={...base,records:lifecycle};
   return mergeGameInfo(evidenceBase, {
     version: 1,
     generatedAt: now,

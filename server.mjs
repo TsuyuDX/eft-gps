@@ -16,10 +16,12 @@ import { GpsService } from "./server/gps.mjs";
 import { spawn } from "node:child_process";
 import crypto from "node:crypto";
 import { validWindowSettings } from "./server/window-settings.mjs";
+import { ProfileStore } from "./server/profile-store.mjs";
 const root = path.dirname(fileURLToPath(import.meta.url));
 const publicRoot = path.join(root, "public"),
   userRoot = path.join(root, "userdata");
 const port = Number(process.env.PORT || 38471);
+const profileStore = new ProfileStore(userRoot);
 const instance = crypto
   .createHash("sha256")
   .update(path.resolve(root).toLowerCase())
@@ -185,6 +187,15 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(202);
       return res.end();
     }
+    if (url.pathname === "/api/app-update/cancel" && req.method === "POST") {
+      if (req.headers.origin !== `http://${req.headers.host}`) {
+        res.writeHead(403);
+        return res.end();
+      }
+      const cancelled = appUpdater.cancel?.() === true;
+      res.writeHead(cancelled ? 202 : 409);
+      return res.end();
+    }
     if (url.pathname === "/api/app-update/install" && req.method === "POST") {
       if(req.headers.origin!==`http://${req.headers.host}`){res.writeHead(403);return res.end();}
       let body="";for await(const chunk of req){body+=chunk.toString();if(body.length>1024){res.writeHead(413);res.end();req.destroy();return;}}
@@ -198,8 +209,14 @@ const server = http.createServer(async (req, res) => {
       if(req.method !== "POST"){res.writeHead(405);return res.end("{}");}
       if(req.headers.origin !== `http://${req.headers.host}`){res.writeHead(403);return res.end("{}");}
       let body="";for await(const chunk of req){body+=chunk.toString();if(body.length>1024){res.writeHead(413);res.end();req.destroy();return;}}
-      const data=JSON.parse(body);if(typeof data?.enabled!=="boolean" || Object.keys(data).length!==1){res.writeHead(400);return res.end("{}");}
-      try{return res.end(JSON.stringify(await overlayManager.setEnabled(data.enabled)));}catch(error){res.writeHead(503);return res.end(JSON.stringify({error:error.message}));}
+      const data=JSON.parse(body);if(typeof data?.enabled!=="boolean" || Object.keys(data).some(key=>!["enabled","settings"].includes(key))){res.writeHead(400);return res.end("{}");}
+      try{return res.end(JSON.stringify(await overlayManager.setEnabled(data.enabled,data.settings)));}catch(error){res.writeHead(400);return res.end(JSON.stringify({error:error.message}));}
+    }
+    if(url.pathname === "/api/overlay/runtime" && req.method === "POST") {
+      if(req.headers.origin !== `http://${req.headers.host}` || req.headers["x-eftgps-instance"] !== instance){res.writeHead(403);return res.end();}
+      let body="";for await(const chunk of req){body+=chunk.toString();if(body.length>1024){res.writeHead(413);res.end();req.destroy();return;}}
+      try {res.setHeader("Content-Type","application/json");return res.end(JSON.stringify(overlayManager.report(JSON.parse(body))));}
+      catch {res.writeHead(400);return res.end();}
     }
     if (url.pathname === "/api/startup" && req.method === "GET") {
       res.setHeader("Content-Type", "application/json");
@@ -342,11 +359,12 @@ const server = http.createServer(async (req, res) => {
       return res.end();
     }
     if (url.pathname === "/api/profile") {
-      const file = path.join(userRoot, "profile.json");
       if (req.method === "GET") {
         res.setHeader("Cache-Control", "no-store");
         res.setHeader("Content-Type", "application/json");
-        return res.end(fs.existsSync(file) ? fs.readFileSync(file) : "null");
+        const saved = profileStore.read();
+        if (profileStore.recovered) res.setHeader("X-EFTGPS-Profile-Recovered", "1");
+        return res.end(JSON.stringify(saved));
       }
       if (req.method === "PUT") {
         if (req.headers.origin !== `http://${req.headers.host}`) {
@@ -370,10 +388,7 @@ const server = http.createServer(async (req, res) => {
           res.writeHead(400);
           return res.end("Invalid profile");
         }
-        fs.mkdirSync(userRoot, { recursive: true });
-        if (fs.existsSync(file)) fs.copyFileSync(file, file + ".bak");
-        fs.writeFileSync(file + ".tmp", JSON.stringify(p, null, 2));
-        fs.renameSync(file + ".tmp", file);
+        profileStore.write(p);
         res.writeHead(204);
         return res.end();
       }

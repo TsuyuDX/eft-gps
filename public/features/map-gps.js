@@ -2,8 +2,10 @@ import { isSecretThemeActive } from "../core/secret-theme.js";
 import { getMarkerStyle } from "../core/marker-style.js";
 import { gpsPointerSvg } from "./map-presentation.js";
 import { gpsState } from "../core/gps-client.js";
-import { floorFor } from "../core/gps-format.js";
+import { floorFor, fixAgeLabel } from "../core/gps-format.js";
+import { localeCode, textPair as L } from "../core/localization.js";
 import { projectPoint } from "../core/domain.js";
+import {overlayMode,overlayFollow} from "../core/overlay-mode.js";
 export function bindMapGps(root, map, { setFloor, center }) {
   const canvas = root.querySelector("#map-canvas"),
     dot = document.createElement("div"),
@@ -53,7 +55,7 @@ export function bindMapGps(root, map, { setFloor, center }) {
       return;
     }
     const fix = s.fix;
-    if (!fix || fix.map !== map.normalizedName) {
+    if (!fix || fix.map !== (map.routeSlug || map.normalizedName)) {
       dot.hidden = true;
       label.textContent = "⌖ GPS: ожидание позиции";
       return;
@@ -81,11 +83,12 @@ export function bindMapGps(root, map, { setFloor, center }) {
           180) /
         Math.PI;
     dot.querySelector(".gps-arrow").style.transform = `rotate(${angle}deg)`;
-    dot.title = `Моя позиция · ${age} сек. назад · высота ${fix.position.y.toFixed(1)}`;
-    label.textContent = `⌖ Я · ${age} сек. назад · Y ${fix.position.y.toFixed(1)}${stale ? " · устарела" : ""}`;
+    const ageLabel = fixAgeLabel(fix.updatedAt,localeCode());
+    dot.title = `${L("Моя позиция","My position")} · ${ageLabel} · ${L("высота","height")} ${fix.position.y.toFixed(1)}`;
+    label.textContent = `⌖ ${L("Я","Me")} · ${ageLabel} · Y ${fix.position.y.toFixed(1)}${stale ? L(" · устарела"," · stale") : ""}`;
     if (fix.updatedAt !== lastFix) {
       if (s.config.autoFloor) setFloor(floorFor(fix.position, map));
-      if (s.config.follow) center(p);
+      if (overlayMode ? overlayFollow : s.config.follow) center(p);
       lastFix = fix.updatedAt;
     }
   }

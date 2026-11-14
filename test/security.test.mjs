@@ -29,6 +29,10 @@ test('reference links and assets reject executable protocols and attribute injec
 test('live server blocks foreign origins, rebinding, static junction escapes and invalid profile writes',async t=>{
  const directory=await fs.mkdtemp(path.join(process.cwd(),'work/security-server-'));
  let child; t.after(async()=>{if(child && child.exitCode===null){const exited=once(child,'exit');child.kill('SIGKILL');await exited;}await fs.rm(directory,{recursive:true,force:true});});
+ await fs.mkdir(path.join(directory,'server'),{recursive:true});
+ await fs.copyFile('server/profile-store.mjs',path.join(directory,'server/profile-store.mjs'));
+ await fs.mkdir(path.join(directory,'public/core'),{recursive:true});
+ await fs.copyFile('public/core/overlay-settings.js',path.join(directory,'public/core/overlay-settings.js'));
  for(const file of ['server.mjs','server/connectivity.mjs','server/app-update.mjs','server/overlay.mjs','server/event-content.mjs','server/startup.mjs','server/gps.mjs','server/screenshot-cleanup.mjs','server/window-settings.mjs','server/graphics-gallery.mjs','server/game-info.mjs','server/diagnostics.mjs','public/core/game-info-model.js','public/core/news-artwork.js','public/core/map-colour-model.js','public/data/game-info.json','public/core/graphics-model.js','public/core/gps-format.js','public/core/profile-schema.js']){
    await fs.mkdir(path.dirname(path.join(directory,file)),{recursive:true});await fs.copyFile(file,path.join(directory,file));
  }
@@ -53,8 +57,11 @@ test('live server blocks foreign origins, rebinding, static junction escapes and
  assert.deepEqual(await fetch(origin+'/api/graphics-gallery').then(r=>r.json()),[]);
  assert.equal((await fetch(origin+'/api/graphics-gallery/../../server.mjs')).status,404);
  assert.equal((await fetch(origin+'/api/app-update/install',{method:'POST',headers:{Origin:'https://evil.test'},body:'{}'})).status,403);
+ assert.equal((await fetch(origin+'/api/app-update/cancel',{method:'POST',headers:{Origin:'https://evil.test'}})).status,403);
+ assert.equal((await fetch(origin+'/api/app-update/cancel',{method:'POST',headers})).status,409);
  assert.equal((await fetch(origin+'/api/overlay',{method:'POST',headers,body:JSON.stringify({enabled:false,extra:true})})).status,400);
  assert.equal((await fetch(origin+'/api/overlay')).status,200);
+ assert.equal((await fetch(origin+'/api/overlay/runtime',{method:'POST',headers,body:'{}'})).status,403);
  assert.equal((await fetch(origin+'/api/connectivity',{headers:{Origin:'https://evil.test'}})).status,403);
  assert.equal((await fetch(origin+'/api/app-update/start',{method:'POST',headers})).status,202);
  assert.deepEqual(await fetch(origin+'/api/app-update/state').then(r=>r.json()),{phase:'current',preview:true});
@@ -63,6 +70,12 @@ test('live server blocks foreign origins, rebinding, static junction escapes and
  assert.equal((await fetch(origin+'/api/profile',{method:'PUT',headers,body:JSON.stringify(invalid)})).status,400);
  assert.equal((await fetch(origin+'/api/profile',{method:'PUT',headers,body:JSON.stringify(profile())})).status,204);
  assert.deepEqual(await fetch(origin+'/api/profile').then(r=>r.json()),profile());
+ const saved=profile();saved.modes.regular.notes='saved progress';
+ assert.equal((await fetch(origin+'/api/profile',{method:'PUT',headers,body:JSON.stringify(saved)})).status,204);
+ await fs.writeFile(path.join(directory,'userdata/profile.json'),'{corrupt');
+ const recovered=await fetch(origin+'/api/profile');
+ assert.equal(recovered.headers.get('X-EFTGPS-Profile-Recovered'),'1');
+ assert.deepEqual(await recovered.json(),profile());
  assert.equal((await fetch(origin+'/api/gps/settings',{method:'POST',headers,body:JSON.stringify({screenshotsPath:'//unavailable.invalid/share'})})).status,400);
  const shots=path.join(directory,'Скриншоты');await fs.mkdir(shots);const body=Buffer.from(JSON.stringify({screenshotsPath:shots,enabled:false}));const split=body.indexOf(Buffer.from('Скриншоты'))+1;
  const configured=await new Promise((resolve,reject)=>{const request=http.request(origin+'/api/gps/settings',{method:'POST',headers},response=>{const chunks=[];response.on('data',b=>chunks.push(b));response.on('end',()=>resolve({status:response.statusCode,data:JSON.parse(Buffer.concat(chunks))}));});request.on('error',reject);request.write(body.subarray(0,split));setTimeout(()=>request.end(body.subarray(split)),10);});

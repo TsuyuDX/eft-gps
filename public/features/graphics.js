@@ -124,6 +124,11 @@ export async function renderGraphics(root) {
     $("#graphics-compare").hidden = true;
     $("#graphics-empty").hidden = false;
     if (!item) {
+      if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
+      $("#graphics-before").removeAttribute("src");
+      $("#graphics-after").removeAttribute("src");
+      $("#graphics-image-title").textContent = tr("Предпросмотр", "Preview");
+      drawGallery();
       status("");
       return;
     }

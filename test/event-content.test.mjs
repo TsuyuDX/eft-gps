@@ -70,6 +70,21 @@ const png = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLbtAAAAABJRU5ErkJggg==",
   "base64",
 );
+test("clean offline installs load bundled guides and a corrupt user cache cannot erase them", async t=>{
+  const root=await directory(t),q=sanitizeEventQuest(fixture(),slug);
+  const data={format:1,revision:"c".repeat(64),checkedAt:"2026-11-14T00:00:00Z",quests:{ru:{[slug]:q},en:{[slug]:q}},media:{}};
+  await fs.mkdir(path.join(root,"public/data"),{recursive:true});
+  await fs.mkdir(path.join(root,"userdata/event-content"),{recursive:true});
+  await fs.writeFile(path.join(root,"public/data/event-content.json"),JSON.stringify(data));
+  await fs.writeFile(path.join(root,"userdata/event-content/bundle.json"),"{broken");
+  const service=new EventContentService(root,{fetch:async()=>{throw Error("offline");}});
+  await service.ready;
+  assert.equal(service.bundle.revision,data.revision);
+  assert.equal(service.state.phase,"cached");
+  await service.check();
+  assert.equal(service.state.phase,"offline");
+  assert.equal(service.payload().data.quests.ru[slug].normalizedName,slug);
+});
 async function directory(t) {
   await fs.mkdir("work", { recursive: true });
   const root = await fs.mkdtemp(path.resolve("work/event-content-test-"));

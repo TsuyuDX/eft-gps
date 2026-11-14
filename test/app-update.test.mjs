@@ -31,6 +31,28 @@ async function fixture(t) {
 }
 async function applyOffered(updater){await updater.start();if(updater.state.phase==='available')await updater.install(updater.state.version);}
 
+test('cancelling an update aborts the transfer, removes partial data and allows a clean retry',async t=>{
+  const f=await fixture(t);let transferStarted,block=true;
+  const started=new Promise(resolve=>{transferStarted=resolve;});
+  const fetcher=async(url,options)=>{
+    if(block&&url.includes('.zip.part')){
+      transferStarted();
+      return new Promise((resolve,reject)=>{
+        options.signal.addEventListener('abort',()=>reject(options.signal.reason),{once:true});
+        if(options.signal.aborted)reject(options.signal.reason);
+      });
+    }
+    return f.fetcher(url,options);
+  };
+  const updater=new AppUpdater(f.root,'1.7.0',{...f,fetcher,temporary:f.directory});
+  await updater.start();assert.equal(updater.cancel(),false);
+  const downloading=updater.install('1.8.0');await started;
+  assert.equal(updater.cancel(),true);await downloading;
+  assert.equal(updater.state.phase,'cancelled');assert.equal(f.launches.length,0);
+  assert.deepEqual((await fs.readdir(f.directory)).filter(n=>n.startsWith('EFTGPS-update-')),[]);
+  block=false;await updater.install('1.8.0');assert.equal(updater.state.phase,'installer');assert.equal(f.launches.length,1);
+});
+
 test('semantic version comparison excludes old versions, prereleases and malformed versions',()=>{
   assert.equal(newerVersion('v1.10.0','1.9.0'),true);
   for(const v of ['v1.7.0','1.6.9','1.8.0-beta','1.07.1','../../2.0.0']) assert.equal(newerVersion(v,'1.7.0'),false);

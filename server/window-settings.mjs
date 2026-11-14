@@ -1,5 +1,6 @@
 import {validMapColour} from "../public/core/map-colour-model.js";
 import { validGraphics } from "../public/core/graphics-model.js";
+import { validOverlayPreference } from "../public/core/overlay-settings.js";
 export function validWindowSettings(value) {
   if (
     !value ||
@@ -34,8 +35,7 @@ export function validWindowSettings(value) {
               (key !== "eftgps-map-colour-v1" || validMapColour(data)) &&
               (key !== "eftgps-graphics-v1" || validGraphics(data)) &&
               (key !== "tarkov-overlay-v1" ||
-                (typeof data.enabled === "boolean" &&
-                  Object.keys(data).length === 1)) &&
+                validOverlayPreference(data)) &&
               (key !== "tarkov-map-markers-v1" ||
                 (["new", "classic"].includes(data.style) &&
                   Object.keys(data).length === 1))

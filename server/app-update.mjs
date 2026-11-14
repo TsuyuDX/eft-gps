@@ -90,8 +90,16 @@ export class AppUpdater {
     if(!this.candidate || version!==this.candidate.manifest.version)throw Error('update-not-offered');
     return this.downloadJob ||= this.run().finally(()=>{if(this.state.phase==='error'||this.state.phase==='cancelled')this.downloadJob=null;});
   }
+  cancel() {
+    if (!["downloading", "verifying"].includes(this.state.phase)) return false;
+    this.cancelRequested = true;
+    this.controller?.abort();
+    return true;
+  }
   async run() {
     let directory, verified = false, installing = false;
+    this.cancelRequested = false;
+    const abort = this.controller = new AbortController();
     try {
       const {release,manifest}=this.candidate;
       directory=await fs.mkdtemp(path.join(this.temporary,'EFTGPS-update-'));
@@ -99,7 +107,8 @@ export class AppUpdater {
       if(space.bavail*space.bsize<manifest.size+256*1024**2) throw Error('disk-space');
       Object.assign(this.state,{phase:'downloading',version:manifest.version,total:manifest.size,kind:manifest.kind||'full',downloaded:0,percent:0,error:null,packageVerified:false,packageSaved:false});
       const zip=path.join(directory,'update.zip');const whole=crypto.createHash('sha256');
-      const output=await fs.open(zip,'wx');const abort=new AbortController();
+      const output=await fs.open(zip,'wx');
+      let writes = Promise.resolve();
       const offsets=[];let offset=0;for(const part of manifest.parts){offsets.push(offset);offset+=part.size;}
       let cursor=0;const started=Date.now();
       const download=async()=>{
@@ -115,7 +124,13 @@ export class AppUpdater {
             clearTimeout(timeout);
             if(size+chunk.length>part.size) throw Error('download-size');
             hash.update(chunk);if(manifest.parts.length===1)whole.update(chunk);
-            let written=0;while(written<chunk.length){const result=await output.write(chunk,written,chunk.length-written,offsets[index]+size+written);if(!result.bytesWritten)throw Error('disk-write');written+=result.bytesWritten;}
+            const position = offsets[index] + size;
+            const writing = writes.then(async () => {
+              abort.signal.throwIfAborted();
+              let written=0;while(written<chunk.length){const result=await output.write(chunk,written,chunk.length-written,position+written);if(!result.bytesWritten)throw Error('disk-write');written+=result.bytesWritten;}
+            });
+            writes = writing.catch(() => {});
+            await writing;
             size+=chunk.length;this.state.downloaded+=chunk.length;
             this.state.percent=Math.min(99,Math.floor(this.state.downloaded/manifest.size*100));
             this.state.elapsedSeconds=Math.floor((Date.now()-started)/1000);
@@ -130,10 +145,13 @@ export class AppUpdater {
         const results=await Promise.allSettled(workers);const failure=results.find(r=>r.status==='rejected'&&r.reason?.message==='download-timeout')||results.find(r=>r.status==='rejected');if(failure)throw failure.reason;
         this.state.phase='verifying';
       } finally {
+        await writes;
         await output.close();
       }
-      if(manifest.parts.length>1) for await(const chunk of createReadStream(zip))whole.update(chunk);
+      abort.signal.throwIfAborted();
+      if(manifest.parts.length>1) for await(const chunk of createReadStream(zip,{signal:abort.signal}))whole.update(chunk);
       if(whole.digest('hex')!==manifest.sha256) throw Error('checksum');
+      abort.signal.throwIfAborted();
       verified = true;
       Object.assign(this.state,{percent:100,file:'',packageVerified:true});
       installing = true;
@@ -143,7 +161,7 @@ export class AppUpdater {
       await this.launch(helper,['--update',this.root,zip,manifest.sha256,manifest.version]);
       Object.assign(this.state,{phase:'installer',percent:100,file:''});
     } catch(error) {
-      this.state.phase='error';
+      this.state.phase=this.cancelRequested && !installing ? 'cancelled' : 'error';
       this.state.error=installing
         ? error.code==='ENOENT' ? 'installer-missing'
         : ['EACCES','EPERM'].includes(error.code) ? 'installer-access'
@@ -154,6 +172,8 @@ export class AppUpdater {
         // Keep the verified download for analysis/recovery; never restore or bypass a blocked helper.
         await fs.writeFile(path.join(directory,'verified-update.json'),JSON.stringify({version:this.state.version,baseVersion:this.version,package:'update.zip',verified:true})).catch(()=>{});
       } else if(directory) await fs.rm(directory,{recursive:true,force:true}).catch(()=>{});
+    } finally {
+      if (this.controller === abort) this.controller = null;
     }
   }
 }

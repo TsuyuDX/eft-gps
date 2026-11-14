@@ -9,3 +9,5 @@
 .raid-overlay .gps-map-status {font:13px 'Segoe UI',sans-serif!important;background:#080b0ce6!important;color:#f4df9c!important;border-color:#c5ad66!important}
 .raid-overlay .map-marker-label {text-shadow:0 1px 3px #000,0 0 6px #000}
 .raid-overlay dialog {display:none!important}
+.raid-overlay.overlay-hide-labels .map-destination-label{display:none!important}
+.raid-overlay .map-caption{display:none!important}

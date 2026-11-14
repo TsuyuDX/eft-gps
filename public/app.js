@@ -74,6 +74,7 @@ applyPreferences();
 const app = document.querySelector("#app"),
   navigation = document.querySelector("#navigation");
 let routeVersion = 0;
+let routeController = null;
 const viewCache = new ViewCache();
 window.addEventListener("game-info-updated",()=>{
  refreshGameNews();
@@ -114,14 +115,21 @@ function home() {
   bindGlobalSearch(app.querySelector("#global-search"), app.querySelector("#global-results"), newsEntries);
 }
 async function route() {
+  routeController?.abort();
+  routeController = new AbortController();
+  const signal = routeController.signal;
   if (activeView) viewCache.save(activeView.key, app, {cache: activeView.catalog});
   activeView = null;
   window.dispatchEvent(new Event("view-changing"));
   const version = ++routeVersion;
-  const path = decodeURIComponent(location.hash.slice(2).split("?")[0]).replace(
+  let path;
+  try { path = decodeURIComponent(location.hash.slice(2).split("?")[0]).replace(
     /\/$/,
     "",
-  );
+  ); } catch {
+    app.innerHTML = errorView(new Error(textPair("Некорректная ссылка. Откройте нужный раздел через меню.", "Invalid link. Open the section using the menu.")));
+    return;
+  }
   const [section, modeOrSlug, slug] = path.split("/");
   document.querySelector("#modal").close();
   navigation.classList.remove("expanded");
@@ -134,7 +142,8 @@ async function route() {
   app.innerHTML = '<div class="empty">Загрузка…</div>';
   try {
     if (["regular", "pve"].includes(modeOrSlug) && modeOrSlug !== db.mode) {
-      await loadMode(modeOrSlug);
+      const loaded = await loadMode(modeOrSlug);
+      if (!loaded || signal.aborted) return;
       setMode(modeOrSlug, {persist: !overlayMode});
       document.querySelector("#mode").value = db.mode;
       drawModeEmblem();
@@ -146,16 +155,16 @@ async function route() {
     if (restored) {refreshCatalog(app);refreshQuestList(app);}
     else switch (section) {
       case "item":
-        slug ? await renderItem(app, slug) : renderCatalog(app);
+        slug ? await renderItem(app, slug, {signal}) : renderCatalog(app);
         break;
       case "quest":
-        slug ? await renderQuest(app, slug) : await renderQuests(app);
+        slug ? await renderQuest(app, slug, {signal}) : await renderQuests(app, {signal});
         break;
       case "map":
-        slug ? await renderMap(app, slug) : renderMaps(app);
+        slug ? await renderMap(app, slug, {signal}) : renderMaps(app);
         break;
       case "hideout":
-        slug ? await renderArticle(app, path) : renderHideout(app);
+        slug ? await renderArticle(app, path, {signal}) : renderHideout(app);
         break;
       case "items-tracker":
         renderTracker(app);
@@ -164,7 +173,7 @@ async function route() {
         renderModifiers(app);
         break;
       case "settings":
-        await renderSettings(app);
+        await renderSettings(app, {signal});
         break;
       case "intel":
         renderInformation(app, modeOrSlug);
@@ -176,7 +185,7 @@ async function route() {
         await renderGraphics(app);
         break;
       case "gps":
-        await renderGps(app);
+        await renderGps(app, {signal});
         break;
       case "news":
         renderNews(app, slug || modeOrSlug);
@@ -185,13 +194,13 @@ async function route() {
         renderArticleList(app,"event");
         break;
       case "event":
-        if(modeOrSlug)await renderArticle(app,path);else renderInformation(app);
+        if(modeOrSlug)await renderArticle(app,path,{signal});else renderInformation(app);
         break;
       case "boss":
       case "trader":
       case "season":
         slug || (modeOrSlug && !["regular", "pve"].includes(modeOrSlug))
-          ? await renderArticle(app, path)
+          ? await renderArticle(app, path, {signal})
           : renderArticleList(app, section);
         break;
       default:
@@ -233,6 +242,10 @@ window.addEventListener("save-failed", () =>
     "Не удалось записать файл. Прогресс остаётся в окне; сохраните резервную копию.",
   ),
 );
+window.addEventListener("settings-save-failed", () => toast(textPair(
+  "Не удалось записать настройки на диск. Они действуют в этом окне; проверьте доступ к папке приложения.",
+  "Could not save settings to disk. They still apply in this window; check access to the application folder.",
+)));
 try {
   const startupResult = await prepareStartup();
   document.querySelector("#boot-stage").textContent =
@@ -248,8 +261,10 @@ try {
   renderSnapshotDate();
   nav();
   document.querySelector("#mode").onchange = async (e) => {
-    await loadMode(e.target.value);
-    setMode(e.target.value, {persist: !overlayMode});
+    const requested = e.target.value;
+    try {
+    if (!await loadMode(requested)) return;
+    setMode(requested, {persist: !overlayMode});
     nav();
     const hash = location.hash.replace(
       /\/(regular|pve)(\/|$)/,
@@ -257,10 +272,16 @@ try {
     );
     if (hash !== location.hash) location.hash = hash;
     else route();
+    } catch {
+      e.target.value = db.mode;
+      drawModeEmblem();
+      toast(textPair("Не удалось переключить режим. Текущие данные сохранены.", "Could not switch mode. Your current data is preserved."));
+    }
   };
   window.addEventListener("hashchange", route);
   await route();
   await finishStartup(startupResult);
+  if (loadState.recovered) toast(textPair("Прогресс восстановлен из резервной копии. Сохраните отдельный экспорт в разделе «Данные».", "Progress was recovered from backup. Export a separate copy from Data and backups."));
   startGpsClient(() => db.mode);
   if (!overlayMode) { maybeShowTour(); startAppUpdates(); startConnectivityStatus(); void initializeOverlay(); }
   if(!overlayMode) startGameInfo();
@@ -304,7 +325,7 @@ window.addEventListener("language-changed", async () => {
   }
 });
 document.addEventListener("keydown", (e) => {
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+  if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.repeat && (e.code === "KeyK" || e.key.toLowerCase() === "k")) {
     e.preventDefault();
     openGlobalSearch(newsEntries);
   }

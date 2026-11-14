@@ -10,15 +10,17 @@ using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
 
-// Standalone window overlay: no game hooks, memory access, injected DLLs or input simulation.
+// The desktop host reuses this renderer in-process. The standalone entry point is for developer tests only.
 public sealed class RaidMapWindow : Form {
     public readonly PictureBox Canvas=new PictureBox {Dock=DockStyle.Fill,SizeMode=PictureBoxSizeMode.Zoom,BackColor=Color.FromArgb(8,11,12)};
     protected override bool ShowWithoutActivation {get{return true;}}
     protected override CreateParams CreateParams {get{var p=base.CreateParams;p.ExStyle|=0x00000020|0x08000000|0x00080000|0x00000080;return p;}}
     public RaidMapWindow() {
         Text="EFT GPS · Карта поверх игры";FormBorderStyle=FormBorderStyle.None;ShowInTaskbar=false;TopMost=true;
-        BackColor=Color.FromArgb(8,11,12);Opacity=0.78;Controls.Add(Canvas);
+        BackColor=Color.FromArgb(121,112,83);Padding=new Padding(1);Opacity=0.78;Controls.Add(Canvas);
+        var caption=new Label {Name="caption",Dock=DockStyle.Top,Height=30,Padding=new Padding(12,0,12,0),BackColor=Color.FromArgb(15,17,15),ForeColor=Color.FromArgb(216,206,172),Font=new Font("Segoe UI",9),TextAlign=ContentAlignment.MiddleLeft};Controls.Add(caption);caption.BringToFront();
     }
+    public void SetCaption(string title,string hotkey){Controls["caption"].Text="⌖  "+title+"    ·    "+hotkey;}
     protected override void WndProc(ref Message m) {
         if(m.Msg==0x0084){m.Result=new IntPtr(-1);return;}
         if(m.Msg==0x0021){m.Result=new IntPtr(3);return;}
@@ -42,6 +44,11 @@ public sealed class OverlayHost : Form {
     readonly List<string> ids=new List<string>();
     readonly string root,origin;
     readonly bool integrated;
+    readonly bool embedded;
+    bool applyingSettings,pendingShow,resourcesDisposed;DateTime pendingSince;int overlaySize=78;string overlayPosition="center",settingsSignature="",failure="";
+    bool autoMap=true,follow,labels=true;
+    protected override bool ShowWithoutActivation {get{return embedded;}}
+    public Dictionary<string,object> RuntimeState(){return new Dictionary<string,object>{{"running",ready&&!closing},{"visible",overlay.Visible&&!closing},{"hotkeyRegistered",registered&&!closing},{"error",!String.IsNullOrEmpty(failure)?failure:ready&&!registered?"hotkey-in-use":""}};}
     bool ready,capturing,closing,registered,pinging;int navigation;
     [STAThread] public static void Main(string[] args) {
         Application.EnableVisualStyles();Application.SetCompatibleTextRenderingDefault(false);
@@ -52,8 +59,8 @@ public sealed class OverlayHost : Form {
             Application.Run(new OverlayHost(root,"http://127.0.0.1:"+port,args[0]=="--app-port"));
         }
     }
-    OverlayHost(string appRoot,string localOrigin,bool appIntegrated) {
-        root=appRoot;origin=localOrigin;integrated=appIntegrated;NativeText.English=NativeText.Preferred(root);Text=integrated?"EFT GPS · Overlay Beta":"EFT GPS · Тест оверлея";
+    public OverlayHost(string appRoot,string localOrigin,bool appIntegrated,bool appEmbedded=false) {
+        root=appRoot;origin=localOrigin;integrated=appIntegrated;embedded=appEmbedded;NativeText.English=NativeText.Preferred(root);Text=integrated?"EFT GPS · Overlay Beta":"EFT GPS · Тест оверлея";
         if(integrated)heartbeat.Interval=1500;
         BackColor=Color.FromArgb(14,15,14);ForeColor=Color.FromArgb(232,224,202);Font=new Font("Segoe UI",10);
         Size=new Size(1160,800);MinimumSize=new Size(860,650);StartPosition=FormStartPosition.CenterScreen;
@@ -67,6 +74,7 @@ public sealed class OverlayHost : Form {
         status.SetBounds(18,89,1080,25);
         panel.Controls.Add(new Label {Text="Карта пропускает мышь в игру. Настройки — здесь. Для игры нужен оконный режим без рамки. Закройте это окно, чтобы выключить оверлей.",Bounds=new Rectangle(18,120,1080,30),ForeColor=Color.FromArgb(158,159,147),Font=new Font("Segoe UI",9)});
         panel.Controls.AddRange(new Control[]{map,mode,shortcut,opacity,toggle,status});Controls.Add(web);Controls.Add(panel);
+        if(embedded){panel.Visible=false;ShowInTaskbar=false;FormBorderStyle=FormBorderStyle.None;StartPosition=FormStartPosition.Manual;Location=new Point(-32000,-32000);Opacity=0.01;}
         string initialMode="regular";
         try{var profile=new JavaScriptSerializer().Deserialize<Dictionary<string,object>>(File.ReadAllText(Path.Combine(root,"userdata","profile.json")));initialMode=Convert.ToString(profile["mode"]);}catch{}
         mode.Items.AddRange(new object[]{"PVP","PVE"});mode.SelectedIndex=initialMode=="pve"?1:0;
@@ -74,19 +82,52 @@ public sealed class OverlayHost : Form {
         var maps=new JavaScriptSerializer().Deserialize<List<Dictionary<string,object>>>(File.ReadAllText(Path.Combine(root,"public","data",NativeText.English?"en/maps.json":"maps.json")));
         foreach(var item in maps){ids.Add(Convert.ToString(item.ContainsKey("routeSlug")?item["routeSlug"]:item["normalizedName"]));map.Items.Add(Convert.ToString(item["name"]));}
         map.SelectedIndex=Math.Max(0,ids.IndexOf("factory"));
-        map.SelectedIndexChanged+=async delegate {await NavigateMap();};mode.SelectedIndexChanged+=async delegate {await NavigateMap();};
-        shortcut.SelectedIndexChanged+=delegate {BindShortcut();};
+        map.SelectedIndexChanged+=async delegate {if(!applyingSettings)await NavigateMap();};mode.SelectedIndexChanged+=async delegate {if(!applyingSettings)await NavigateMap();};
+        shortcut.SelectedIndexChanged+=delegate {if(!applyingSettings)BindShortcut();};
         opacity.ValueChanged+=delegate {overlay.Opacity=opacity.Value/100d;};
         toggle.Click+=async delegate {await ToggleMap();};
-        frames.Tick+=async delegate {if(overlay.Visible)await CaptureMap();};
+        frames.Tick+=async delegate {
+            if(pendingShow && DateTime.UtcNow-pendingSince>TimeSpan.FromSeconds(30)){pendingShow=false;frames.Stop();failure="map-unavailable";UpdateToggleLabel();return;}
+            if(overlay.Visible||pendingShow){if(await CaptureMap() && pendingShow && !closing){pendingShow=false;PlaceOverlay();overlay.Show();UpdateToggleLabel();}}
+        };
         heartbeat.Tick+=async delegate {if(pinging)return;pinging=true;try{using(var client=new WebClient()) {
                 if(integrated){var state=new JavaScriptSerializer().Deserialize<Dictionary<string,object>>(await client.DownloadStringTaskAsync(origin+"/api/overlay"));if(!Convert.ToBoolean(state["enabled"])){Close();return;}}
                 await client.DownloadStringTaskAsync(origin+"/api/health");
             }}catch{if(integrated)Close();}finally{pinging=false;}};
-        Shown+=async delegate {BindShortcut();await InitializeWeb();heartbeat.Start();};
+        Shown+=async delegate {BindShortcut();await InitializeWeb();if(!embedded)heartbeat.Start();};
         NativeText.Apply(this);
         FormClosing+=delegate {closing=true;frames.Stop();heartbeat.Stop();if(registered)UnregisterHotKey(Handle,1);overlay.Close();};
-        FormClosed+=delegate {frames.Dispose();heartbeat.Dispose();overlay.Dispose();};
+    }
+    protected override void Dispose(bool disposing){
+        if(disposing&&!resourcesDisposed){resourcesDisposed=true;closing=true;frames.Stop();heartbeat.Stop();if(registered&&IsHandleCreated){UnregisterHotKey(Handle,1);registered=false;}overlay.Dispose();frames.Dispose();heartbeat.Dispose();}
+        base.Dispose(disposing);
+    }
+    static int SettingInt(Dictionary<string,object> settings,string key,int value,int low,int high){object raw;int parsed;if(settings.TryGetValue(key,out raw)&&Int32.TryParse(Convert.ToString(raw),out parsed))return Math.Max(low,Math.Min(high,parsed));return value;}
+    static bool SettingBool(Dictionary<string,object> settings,string key,bool value){object raw;return settings.TryGetValue(key,out raw)&&raw is bool?(bool)raw:value;}
+    public async Task ApplySettings(Dictionary<string,object> settings){
+        if(closing)return;string signature=new JavaScriptSerializer().Serialize(settings);if(signature==settingsSignature)return;settingsSignature=signature;
+        string oldNavigation=map.SelectedIndex+"/"+mode.SelectedIndex+"/"+autoMap+"/"+follow+"/"+labels;int oldShortcut=shortcut.SelectedIndex;
+        applyingSettings=true;
+        try{
+            object raw;
+            if(settings.TryGetValue("map",out raw)){int index=ids.IndexOf(Convert.ToString(raw));if(index>=0)map.SelectedIndex=index;}
+            if(settings.TryGetValue("mode",out raw))mode.SelectedIndex=Convert.ToString(raw)=="pve"?1:0;
+            if(settings.TryGetValue("hotkey",out raw)){int index=shortcut.Items.IndexOf(Convert.ToString(raw));if(index>=0)shortcut.SelectedIndex=index;}
+            opacity.Value=SettingInt(settings,"opacity",78,35,95);overlaySize=SettingInt(settings,"size",78,25,95);frames.Interval=SettingInt(settings,"refreshMs",1000,500,2000);
+            if(settings.TryGetValue("position",out raw)){string position=Convert.ToString(raw);if(Array.IndexOf(new[]{"center","top-left","top-right","bottom-left","bottom-right"},position)>=0)overlayPosition=position;}
+            autoMap=SettingBool(settings,"autoMap",true);follow=SettingBool(settings,"follow",false);labels=SettingBool(settings,"labels",true);
+        }finally{applyingSettings=false;}
+        if(IsHandleCreated && shortcut.SelectedIndex!=oldShortcut)BindShortcut();
+        if(overlay.Visible)PlaceOverlay();
+        if(oldNavigation!=map.SelectedIndex+"/"+mode.SelectedIndex+"/"+autoMap+"/"+follow+"/"+labels)await NavigateMap();
+    }
+    void PlaceOverlay(){
+        Rectangle screen=(Screen.PrimaryScreen??Screen.FromControl(this)).Bounds;
+        int width=Math.Max(240,(int)(screen.Width*overlaySize/100d)),height=Math.Max(160,(int)(screen.Height*overlaySize/100d));
+        int x=screen.Left+(screen.Width-width)/2,y=screen.Top+(screen.Height-height)/2;
+        if(overlayPosition.EndsWith("left"))x=screen.Left+20;else if(overlayPosition.EndsWith("right"))x=screen.Right-width-20;
+        if(overlayPosition.StartsWith("top"))y=screen.Top+20;else if(overlayPosition.StartsWith("bottom"))y=screen.Bottom-height-20;
+        overlay.Bounds=new Rectangle(x,y,width,height);overlay.SetCaption(map.Text,shortcut.Text);
     }
     void SetStatus(string text){status.Text=NativeText.T(text);}
     void BindShortcut() {
@@ -109,21 +150,23 @@ public sealed class OverlayHost : Form {
             core.NewWindowRequested+=delegate(object sender,CoreWebView2NewWindowRequestedEventArgs e){e.Handled=true;};
             core.DownloadStarting+=delegate(object sender,CoreWebView2DownloadStartingEventArgs e){e.Cancel=true;};
             core.NavigationStarting+=delegate(object sender,CoreWebView2NavigationStartingEventArgs e){Uri uri;if(!Uri.TryCreate(e.Uri,UriKind.Absolute,out uri)||uri.GetLeftPart(UriPartial.Authority)!=origin){e.Cancel=true;}};
-            core.NavigationCompleted+=delegate(object sender,CoreWebView2NavigationCompletedEventArgs e){ready=e.IsSuccess;toggle.Enabled=ready;SetStatus(ready?"Карта готова. Нажмите "+shortcut.Text+" — управление останется в игре.":"Карта недоступна. Перезапустите тестовый оверлей.");};
+            core.NavigationCompleted+=delegate(object sender,CoreWebView2NavigationCompletedEventArgs e){if(closing)return;ready=e.IsSuccess;failure=ready?"":"map-unavailable";toggle.Enabled=ready;SetStatus(ready?"Карта готова. Нажмите "+shortcut.Text+" — управление останется в игре.":"Карта недоступна. Перезапустите оверлей в настройках.");};
             await NavigateMap();
-        } catch(Exception e){SetStatus("Не удалось открыть карту: "+e.Message);}
+        } catch(Exception e){failure="overlay-start-failed";SetStatus("Не удалось открыть карту: "+e.Message);}
     }
     async Task NavigateMap() {
         if(web.CoreWebView2==null || map.SelectedIndex<0 || closing)return;
-        overlay.Hide();frames.Stop();ready=false;toggle.Enabled=false;navigation++;
+        bool wasVisible=overlay.Visible||pendingShow;overlay.Hide();frames.Stop();ready=false;failure="";toggle.Enabled=false;navigation++;pendingShow=wasVisible;pendingSince=DateTime.UtcNow;
         UpdateToggleLabel();
-        web.CoreWebView2.Navigate(origin+"/?overlay=1&map="+ids[map.SelectedIndex]+"&mode="+mode.SelectedIndex+"#/map/"+(mode.SelectedIndex==1?"pve":"regular")+"/"+ids[map.SelectedIndex]);
+        web.CoreWebView2.Navigate(origin+"/?overlay=1&autoMap="+(autoMap?"1":"0")+"&follow="+(follow?"1":"0")+"&labels="+(labels?"1":"0")+"&map="+ids[map.SelectedIndex]+"&mode="+mode.SelectedIndex+"#/map/"+(mode.SelectedIndex==1?"pve":"regular")+"/"+ids[map.SelectedIndex]);
+        if(pendingShow)frames.Start();
         await Task.FromResult(0);
     }
     async Task<bool> CaptureMap() {
         if(!ready||capturing||closing)return false;capturing=true;int generation=navigation;
         try {
             string loaded=await web.CoreWebView2.ExecuteScriptAsync("Boolean(document.querySelector('#map-image')?.complete && document.querySelector('#map-image')?.naturalWidth && !document.body.classList.contains('booting'))");
+            if(closing || generation!=navigation)return false;
             if(loaded!="true"){SetStatus("Подготовка карты…");return false;}
             using(var stream=new MemoryStream()) {
                 await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png,stream);
@@ -134,13 +177,13 @@ public sealed class OverlayHost : Form {
         } catch(Exception e){if(!closing)SetStatus("Не удалось обновить вид карты: "+e.Message);return false;}
         finally{capturing=false;}
     }
-    async Task ToggleMap() {
-        if(overlay.Visible){overlay.Hide();frames.Stop();UpdateToggleLabel();return;}
-        if(!await CaptureMap())return;
+    public async Task ToggleMap() {
         if(closing)return;
-        Rectangle screen=Screen.FromControl(this).Bounds;
-        int width=(int)(screen.Width*0.78),height=(int)(screen.Height*0.78);
-        overlay.Bounds=new Rectangle(screen.Left+(screen.Width-width)/2,screen.Top+(screen.Height-height)/2,width,height);
+        if(overlay.Visible||pendingShow){pendingShow=false;overlay.Hide();frames.Stop();UpdateToggleLabel();return;}
+        failure="";
+        if(!await CaptureMap()){if(!closing){pendingShow=true;pendingSince=DateTime.UtcNow;frames.Start();}return;}
+        if(closing)return;
+        PlaceOverlay();
         overlay.Show();frames.Start();UpdateToggleLabel();
     }
     async void HandleShortcut(){try{await ToggleMap();}catch(Exception e){if(!closing)SetStatus(e.Message);}}

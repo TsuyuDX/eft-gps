@@ -1,4 +1,10 @@
 // Pure format and geometry helpers shared by the local service and UI.
+export function fixAgeLabel(updatedAt, locale = "ru-RU", now = Date.now()) {
+  if (!Number.isFinite(updatedAt)) return "—";
+  const seconds = Math.max(0, Math.floor((now-updatedAt)/1000));
+  const [unit, divisor] = seconds >= 86400 ? ["day",86400] : seconds >= 3600 ? ["hour",3600] : seconds >= 60 ? ["minute",60] : ["second",1];
+  return new Intl.RelativeTimeFormat(locale,{numeric:"always",style:"short"}).format(-Math.floor(seconds/divisor),unit);
+}
 const number = "[-+]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][-+]?\\d+)?";
 const triple = `(${number})\\s*,\\s*(${number})\\s*,\\s*(${number})`;
 const pattern = new RegExp(

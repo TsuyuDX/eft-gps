@@ -15,7 +15,7 @@ Copy-Item -LiteralPath "$taskSdk\LICENSE.txt" -Destination runtime\WEBVIEW2-LICE
     }
 }
 $taskCompiler = 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe'
-& $taskCompiler /nologo /target:winexe /platform:x64 /reference:System.Windows.Forms.dll /reference:System.Web.Extensions.dll /reference:System.Drawing.dll /reference:runtime\Microsoft.Web.WebView2.Core.dll /reference:runtime\Microsoft.Web.WebView2.WinForms.dll /win32icon:public\icons\app.ico /out:runtime\TarkovDesktopHost.exe /resource:scripts\native.en.json,native.en.json /resource:scripts\native.ru.json,native.ru.json scripts\NativeText.cs scripts\DesktopHost.cs
+& $taskCompiler /nologo /target:winexe /main:DesktopHost /platform:x64 /reference:System.Windows.Forms.dll /reference:System.Web.Extensions.dll /reference:System.Drawing.dll /reference:runtime\Microsoft.Web.WebView2.Core.dll /reference:runtime\Microsoft.Web.WebView2.WinForms.dll /win32icon:public\icons\app.ico /out:runtime\TarkovDesktopHost.exe /resource:scripts\native.en.json,native.en.json /resource:scripts\native.ru.json,native.ru.json scripts\NativeText.cs scripts\DesktopHost.cs scripts\OverlayHost.cs
 if ($LASTEXITCODE -ne 0) { throw 'Не удалось собрать оболочку.' }
 & $taskCompiler /nologo /target:winexe /reference:System.Windows.Forms.dll /reference:System.Web.Extensions.dll /win32icon:public\icons\app.ico '/out:Tarkov Offline.exe' /resource:scripts\native.en.json,native.en.json /resource:scripts\native.ru.json,native.ru.json scripts\NativeText.cs scripts\Launcher.cs
 if ($LASTEXITCODE -ne 0) { throw 'Не удалось собрать запускатель.' }
@@ -26,5 +26,4 @@ Copy-Item -LiteralPath "Tarkov Offline.exe" -Destination "Tarkov GPS.exe" -Force
 
 Copy-Item -LiteralPath "Tarkov Offline.exe" -Destination "EFT GPS.exe" -Force
 
-& $taskCompiler /nologo /target:winexe /platform:x64 /reference:System.Windows.Forms.dll /reference:System.Web.Extensions.dll /reference:System.Drawing.dll /reference:runtime\Microsoft.Web.WebView2.Core.dll /reference:runtime\Microsoft.Web.WebView2.WinForms.dll /win32icon:public\icons\app.ico /out:runtime\EFTGPSOverlay.exe /resource:scripts\native.en.json,native.en.json /resource:scripts\native.ru.json,native.ru.json scripts\NativeText.cs scripts\OverlayHost.cs
-if ($LASTEXITCODE -ne 0) { throw 'Не удалось собрать Overlay Beta.' }
+# Overlay is compiled into TarkovDesktopHost.exe; there is no separate application to launch.

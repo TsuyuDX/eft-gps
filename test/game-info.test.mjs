@@ -19,6 +19,7 @@ import {
   applyLifecycleEvidence,
   youtubePublications,
   YOUTUBE_CHANNEL,
+  referenceEventActivity,
 } from "../scripts/collect-game-info.mjs";
 import { GameInfoService, INFO_FEED_URL } from "../server/game-info.mjs";
 import {
@@ -321,6 +322,7 @@ test("only explicit official lifecycle messages confirm activity or completion a
  const post=(body,date="2026-11-12T10:00:00Z")=>({body,date,url:"https://t.me/escapefromtarkovEN/9999"});
  const active=applyLifecycleEvidence(base,[post("Participate in the Halloween event in #EscapefromTarkov")],iso);assert.equal(recordState(active[0],now),"active");assert.equal(recordState(active[0],now+3*86400000),"unconfirmed");
  const ended=applyLifecycleEvidence(active,[post("The Halloween event has ended.")],iso);assert.equal(recordState(ended[0],now),"archived");
+ assert.equal(recordState(applyLifecycleEvidence(ended,[post("Participate in the Halloween event in #EscapefromTarkov")],iso)[0],now),"archived");
  const season=applyLifecycleEvidence(base,[post("The Kord Breach season will conclude on December 7.")],iso)[1];assert.equal(season.endsOn,"2026-12-07");assert.equal(seasonRemaining(season,now),null);
  const drops=applyLifecycleEvidence(base,[post("Halloween celebrations continue - Twitch Drops")],iso);assert.equal(drops[0].active,false);
 });
@@ -342,4 +344,12 @@ test("manual information refresh accelerates the hourly poll until its result is
   phase="checking";await refreshGameInfo();assert.equal([...scheduled.values()][0].delay,1500);
   const followup=[...scheduled.values()][0];scheduled.clear();phase="current";await followup.fn();assert.equal([...scheduled.values()][0].delay,INFO_INTERVAL);assert.equal(calls,3);
  }finally{Object.assign(globalThis,saved);}
+});
+
+test('event activity requires the exact reference page title and its explicit current status',()=>{
+ assert.equal(referenceEventActivity('<main><h2>Halloween 2026<div class="badge">Active</div></h2></main><time>October 29, 2026 — present</time>'),'unknown');
+ assert.equal(referenceEventActivity('<main><div><h2>Halloween 2026<div class="badge">Active</div></h2><time>October 29, 2026 — present</time></div></main>'),'active');
+ assert.equal(referenceEventActivity('<main><div><h2>Halloween 2025<div class="badge">Active</div></h2><time>present</time></div></main>'),'unknown');
+ assert.equal(referenceEventActivity('<main><div><h2>Halloween 2026<div class="badge">Ended</div></h2><time>October 29 — November 9</time></div></main>'),'unknown');
+ assert.equal(referenceEventActivity('<nav>Live Event: Halloween 2026 Active</nav><main>Archived article</main>'),'unknown');
 });

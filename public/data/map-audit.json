@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-11T22:00:53.001Z",
+  "checkedAt": "2026-11-14T00:51:29.178Z",
   "gameVersion": "1.3.x — exact current build not independently confirmed",
   "method": "Structural validation plus comparison with the current TarkovHead map API. A reference match is not in-game verification.",
   "maps": [
@@ -17,7 +17,7 @@
         "switches": 1,
         "stationaryWeapons": 4,
         "transits": 4,
-        "quests": 167,
+        "quests": 171,
         "seasonalDocuments": 30
       },
       "invalid": [],
@@ -29,7 +29,7 @@
       "verification": "reference-match-not-game-verified",
       "hazardReferenceMatch": true,
       "referenceHazards": 7,
-      "markerReferenceMatch": false,
+      "markerReferenceMatch": true,
       "categoryReference": {
         "lootLoose": {
           "local": 310,
@@ -92,10 +92,10 @@
           "labelsMatch": true
         },
         "quests": {
-          "local": 167,
-          "current": 174,
-          "coordinatesMatch": false,
-          "labelsMatch": false
+          "local": 171,
+          "current": 171,
+          "coordinatesMatch": true,
+          "labelsMatch": true
         },
         "seasonalDocuments": {
           "local": 30,
@@ -115,7 +115,7 @@
         "lootContainers": 167,
         "locks": 4,
         "transits": 3,
-        "quests": 53,
+        "quests": 55,
         "seasonalDocuments": 30
       },
       "invalid": [],
@@ -127,7 +127,7 @@
       "verification": "reference-match-not-game-verified",
       "hazardReferenceMatch": true,
       "referenceHazards": 0,
-      "markerReferenceMatch": false,
+      "markerReferenceMatch": true,
       "categoryReference": {
         "lootLoose": {
           "local": 81,
@@ -166,10 +166,10 @@
           "labelsMatch": true
         },
         "quests": {
-          "local": 53,
+          "local": 55,
           "current": 55,
-          "coordinatesMatch": false,
-          "labelsMatch": false
+          "coordinatesMatch": true,
+          "labelsMatch": true
         },
         "seasonalDocuments": {
           "local": 30,
@@ -203,7 +203,7 @@
       "verification": "reference-match-not-game-verified",
       "hazardReferenceMatch": true,
       "referenceHazards": 9,
-      "markerReferenceMatch": false,
+      "markerReferenceMatch": true,
       "categoryReference": {
         "lootLoose": {
           "local": 262,
@@ -291,7 +291,7 @@
       "verification": "reference-match-not-game-verified",
       "hazardReferenceMatch": true,
       "referenceHazards": 9,
-      "markerReferenceMatch": false,
+      "markerReferenceMatch": true,
       "categoryReference": {
         "lootLoose": {
           "local": 184,
@@ -523,7 +523,7 @@
         "switches": 2,
         "stationaryWeapons": 8,
         "transits": 4,
-        "quests": 65,
+        "quests": 70,
         "seasonalDocuments": 31
       },
       "invalid": [],
@@ -535,7 +535,7 @@
       "verification": "reference-match-not-game-verified",
       "hazardReferenceMatch": true,
       "referenceHazards": 116,
-      "markerReferenceMatch": false,
+      "markerReferenceMatch": true,
       "categoryReference": {
         "lootLoose": {
           "local": 844,
@@ -592,10 +592,10 @@
           "labelsMatch": true
         },
         "quests": {
-          "local": 65,
+          "local": 70,
           "current": 70,
-          "coordinatesMatch": false,
-          "labelsMatch": false
+          "coordinatesMatch": true,
+          "labelsMatch": true
         },
         "seasonalDocuments": {
           "local": 31,
@@ -615,7 +615,7 @@
         "lootContainers": 167,
         "locks": 4,
         "transits": 3,
-        "quests": 48,
+        "quests": 50,
         "seasonalDocuments": 30
       },
       "invalid": [],
@@ -627,7 +627,7 @@
       "verification": "reference-match-not-game-verified",
       "hazardReferenceMatch": true,
       "referenceHazards": 0,
-      "markerReferenceMatch": false,
+      "markerReferenceMatch": true,
       "categoryReference": {
         "lootLoose": {
           "local": 98,
@@ -666,10 +666,10 @@
           "labelsMatch": true
         },
         "quests": {
-          "local": 48,
+          "local": 50,
           "current": 50,
-          "coordinatesMatch": false,
-          "labelsMatch": false
+          "coordinatesMatch": true,
+          "labelsMatch": true
         },
         "seasonalDocuments": {
           "local": 30,
@@ -693,7 +693,7 @@
         "switches": 3,
         "stationaryWeapons": 8,
         "transits": 3,
-        "quests": 73,
+        "quests": 76,
         "seasonalDocuments": 31
       },
       "invalid": [],
@@ -705,7 +705,7 @@
       "verification": "reference-match-not-game-verified",
       "hazardReferenceMatch": true,
       "referenceHazards": 6,
-      "markerReferenceMatch": false,
+      "markerReferenceMatch": true,
       "categoryReference": {
         "lootLoose": {
           "local": 467,
@@ -768,10 +768,10 @@
           "labelsMatch": true
         },
         "quests": {
-          "local": 73,
+          "local": 76,
           "current": 76,
-          "coordinatesMatch": false,
-          "labelsMatch": false
+          "coordinatesMatch": true,
+          "labelsMatch": true
         },
         "seasonalDocuments": {
           "local": 31,
@@ -794,7 +794,7 @@
         "artillery": 2,
         "stationaryWeapons": 4,
         "transits": 4,
-        "quests": 132,
+        "quests": 135,
         "seasonalDocuments": 31
       },
       "invalid": [],
@@ -806,7 +806,7 @@
       "verification": "reference-match-not-game-verified",
       "hazardReferenceMatch": true,
       "referenceHazards": 32,
-      "markerReferenceMatch": false,
+      "markerReferenceMatch": true,
       "categoryReference": {
         "lootLoose": {
           "local": 444,
@@ -863,10 +863,10 @@
           "labelsMatch": true
         },
         "quests": {
-          "local": 132,
+          "local": 135,
           "current": 135,
-          "coordinatesMatch": false,
-          "labelsMatch": false
+          "coordinatesMatch": true,
+          "labelsMatch": true
         },
         "seasonalDocuments": {
           "local": 31,
@@ -901,7 +901,7 @@
       "verification": "reference-match-not-game-verified",
       "hazardReferenceMatch": true,
       "referenceHazards": 56,
-      "markerReferenceMatch": false,
+      "markerReferenceMatch": true,
       "categoryReference": {
         "lootLoose": {
           "local": 948,
@@ -1042,7 +1042,7 @@
         "locks": 17,
         "switches": 15,
         "transits": 1,
-        "quests": 42,
+        "quests": 45,
         "seasonalDocuments": 36
       },
       "invalid": [],
@@ -1054,7 +1054,7 @@
       "verification": "reference-match-not-game-verified",
       "hazardReferenceMatch": true,
       "referenceHazards": 0,
-      "markerReferenceMatch": false,
+      "markerReferenceMatch": true,
       "categoryReference": {
         "lootLoose": {
           "local": 362,
@@ -1099,10 +1099,10 @@
           "labelsMatch": true
         },
         "quests": {
-          "local": 42,
+          "local": 45,
           "current": 45,
-          "coordinatesMatch": false,
-          "labelsMatch": false
+          "coordinatesMatch": true,
+          "labelsMatch": true
         },
         "seasonalDocuments": {
           "local": 36,
@@ -1207,7 +1207,7 @@
         "artillery": 2,
         "stationaryWeapons": 2,
         "transits": 4,
-        "quests": 103,
+        "quests": 105,
         "seasonalDocuments": 30
       },
       "invalid": [],
@@ -1219,7 +1219,7 @@
       "verification": "reference-match-not-game-verified",
       "hazardReferenceMatch": true,
       "referenceHazards": 66,
-      "markerReferenceMatch": false,
+      "markerReferenceMatch": true,
       "categoryReference": {
         "lootLoose": {
           "local": 300,
@@ -1282,10 +1282,10 @@
           "labelsMatch": true
         },
         "quests": {
-          "local": 103,
+          "local": 105,
           "current": 105,
-          "coordinatesMatch": false,
-          "labelsMatch": false
+          "coordinatesMatch": true,
+          "labelsMatch": true
         },
         "seasonalDocuments": {
           "local": 30,
@@ -1309,7 +1309,7 @@
         "switches": 1,
         "stationaryWeapons": 4,
         "transits": 4,
-        "quests": 167,
+        "quests": 171,
         "seasonalDocuments": 30
       },
       "invalid": [],
@@ -1321,7 +1321,7 @@
       "verification": "reference-match-not-game-verified",
       "hazardReferenceMatch": true,
       "referenceHazards": 7,
-      "markerReferenceMatch": false,
+      "markerReferenceMatch": true,
       "categoryReference": {
         "lootLoose": {
           "local": 310,
@@ -1384,10 +1384,10 @@
           "labelsMatch": true
         },
         "quests": {
-          "local": 167,
-          "current": 174,
-          "coordinatesMatch": false,
-          "labelsMatch": false
+          "local": 171,
+          "current": 171,
+          "coordinatesMatch": true,
+          "labelsMatch": true
         },
         "seasonalDocuments": {
           "local": 30,
@@ -1407,7 +1407,7 @@
         "lootContainers": 167,
         "locks": 4,
         "transits": 3,
-        "quests": 53,
+        "quests": 55,
         "seasonalDocuments": 30
       },
       "invalid": [],
@@ -1419,7 +1419,7 @@
       "verification": "reference-match-not-game-verified",
       "hazardReferenceMatch": true,
       "referenceHazards": 0,
-      "markerReferenceMatch": false,
+      "markerReferenceMatch": true,
       "categoryReference": {
         "lootLoose": {
           "local": 81,
@@ -1458,10 +1458,10 @@
           "labelsMatch": true
         },
         "quests": {
-          "local": 53,
+          "local": 55,
           "current": 55,
-          "coordinatesMatch": false,
-          "labelsMatch": false
+          "coordinatesMatch": true,
+          "labelsMatch": true
         },
         "seasonalDocuments": {
           "local": 30,
@@ -1583,7 +1583,7 @@
       "verification": "reference-match-not-game-verified",
       "hazardReferenceMatch": true,
       "referenceHazards": 9,
-      "markerReferenceMatch": false,
+      "markerReferenceMatch": true,
       "categoryReference": {
         "lootLoose": {
           "local": 184,
@@ -1815,7 +1815,7 @@
         "switches": 2,
         "stationaryWeapons": 8,
         "transits": 4,
-        "quests": 67,
+        "quests": 72,
         "seasonalDocuments": 31
       },
       "invalid": [],
@@ -1827,7 +1827,7 @@
       "verification": "reference-match-not-game-verified",
       "hazardReferenceMatch": true,
       "referenceHazards": 116,
-      "markerReferenceMatch": false,
+      "markerReferenceMatch": true,
       "categoryReference": {
         "lootLoose": {
           "local": 844,
@@ -1884,10 +1884,10 @@
           "labelsMatch": true
         },
         "quests": {
-          "local": 67,
+          "local": 72,
           "current": 72,
-          "coordinatesMatch": false,
-          "labelsMatch": false
+          "coordinatesMatch": true,
+          "labelsMatch": true
         },
         "seasonalDocuments": {
           "local": 31,
@@ -1985,7 +1985,7 @@
         "switches": 3,
         "stationaryWeapons": 8,
         "transits": 3,
-        "quests": 73,
+        "quests": 76,
         "seasonalDocuments": 31
       },
       "invalid": [],
@@ -1997,7 +1997,7 @@
       "verification": "reference-match-not-game-verified",
       "hazardReferenceMatch": true,
       "referenceHazards": 6,
-      "markerReferenceMatch": false,
+      "markerReferenceMatch": true,
       "categoryReference": {
         "lootLoose": {
           "local": 467,
@@ -2060,10 +2060,10 @@
           "labelsMatch": true
         },
         "quests": {
-          "local": 73,
+          "local": 76,
           "current": 76,
-          "coordinatesMatch": false,
-          "labelsMatch": false
+          "coordinatesMatch": true,
+          "labelsMatch": true
         },
         "seasonalDocuments": {
           "local": 31,
@@ -2086,7 +2086,7 @@
         "artillery": 2,
         "stationaryWeapons": 4,
         "transits": 4,
-        "quests": 132,
+        "quests": 135,
         "seasonalDocuments": 31
       },
       "invalid": [],
@@ -2098,7 +2098,7 @@
       "verification": "reference-match-not-game-verified",
       "hazardReferenceMatch": true,
       "referenceHazards": 32,
-      "markerReferenceMatch": false,
+      "markerReferenceMatch": true,
       "categoryReference": {
         "lootLoose": {
           "local": 444,
@@ -2155,10 +2155,10 @@
           "labelsMatch": true
         },
         "quests": {
-          "local": 132,
+          "local": 135,
           "current": 135,
-          "coordinatesMatch": false,
-          "labelsMatch": false
+          "coordinatesMatch": true,
+          "labelsMatch": true
         },
         "seasonalDocuments": {
           "local": 31,
@@ -2193,7 +2193,7 @@
       "verification": "reference-match-not-game-verified",
       "hazardReferenceMatch": true,
       "referenceHazards": 56,
-      "markerReferenceMatch": false,
+      "markerReferenceMatch": true,
       "categoryReference": {
         "lootLoose": {
           "local": 948,
@@ -2334,7 +2334,7 @@
         "locks": 17,
         "switches": 15,
         "transits": 1,
-        "quests": 42,
+        "quests": 45,
         "seasonalDocuments": 36
       },
       "invalid": [],
@@ -2346,7 +2346,7 @@
       "verification": "reference-match-not-game-verified",
       "hazardReferenceMatch": true,
       "referenceHazards": 0,
-      "markerReferenceMatch": false,
+      "markerReferenceMatch": true,
       "categoryReference": {
         "lootLoose": {
           "local": 362,
@@ -2391,10 +2391,10 @@
           "labelsMatch": true
         },
         "quests": {
-          "local": 42,
+          "local": 45,
           "current": 45,
-          "coordinatesMatch": false,
-          "labelsMatch": false
+          "coordinatesMatch": true,
+          "labelsMatch": true
         },
         "seasonalDocuments": {
           "local": 36,
@@ -2499,7 +2499,7 @@
         "artillery": 2,
         "stationaryWeapons": 2,
         "transits": 4,
-        "quests": 103,
+        "quests": 105,
         "seasonalDocuments": 30
       },
       "invalid": [],
@@ -2511,7 +2511,7 @@
       "verification": "reference-match-not-game-verified",
       "hazardReferenceMatch": true,
       "referenceHazards": 66,
-      "markerReferenceMatch": false,
+      "markerReferenceMatch": true,
       "categoryReference": {
         "lootLoose": {
           "local": 300,
@@ -2574,10 +2574,10 @@
           "labelsMatch": true
         },
         "quests": {
-          "local": 103,
+          "local": 105,
           "current": 105,
-          "coordinatesMatch": false,
-          "labelsMatch": false
+          "coordinatesMatch": true,
+          "labelsMatch": true
         },
         "seasonalDocuments": {
           "local": 30,
@@ -2589,7 +2589,7 @@
     }
   ],
   "totals": {
-    "markers": 34933,
+    "markers": 34979,
     "invalid": 0,
     "missingIcons": 0,
     "missingNames": 0,

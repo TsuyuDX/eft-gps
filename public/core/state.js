@@ -1,4 +1,5 @@
 import { validProfile } from "./profile-schema.js";
+import { readLocal, writeLocal } from "./storage.js";
 const blank = () => ({
   quests: {},
   objectives: {},
@@ -22,14 +23,17 @@ export function validate(p) {
 export async function loadState() {
   try {
     const r = await fetch("/api/profile");
+    if (!r.ok) throw Error("Profile unavailable");
     const p = await r.json();
+    if (r.headers?.get("X-EFTGPS-Profile-Recovered") === "1")
+      loadState.recovered = true;
     if (p) state = validate(p);
     else {
-      const s = localStorage.getItem("tarkov-offline-v1");
+      const s = readLocal("tarkov-offline-v1");
       if (s) state = validate(JSON.parse(s));
     }
   } catch (e) {
-    const s = localStorage.getItem("tarkov-offline-v1");
+    const s = readLocal("tarkov-offline-v1");
     if (s)
       try {
         state = validate(JSON.parse(s));
@@ -40,7 +44,7 @@ export async function loadState() {
 export const current = () => state.modes[state.mode];
 export const profile = () => state;
 export function save() {
-  localStorage.setItem("tarkov-offline-v1", JSON.stringify(state));
+  writeLocal("tarkov-offline-v1", JSON.stringify(state));
   const body = JSON.stringify(state);
   pending = pending
     .catch(() => {})
@@ -56,6 +60,7 @@ export function save() {
   window.dispatchEvent(new Event("profile-updated"));
 }
 export function setMode(mode, { persist = true } = {}) {
+  if (!["regular", "pve"].includes(mode)) throw Error("Invalid mode");
   state.mode = mode;
   if (persist) save();
 }
@@ -64,7 +69,7 @@ export function replaceState(p) {
   save();
 }
 export function inventory(id, value) {
-  current().inventory[id] = Math.max(0, Math.floor(Number(value) || 0));
+  current().inventory[id] = safeCount(value);
   save();
 }
 export function toggleFavorite(id) {
@@ -82,8 +87,14 @@ export function toggleObjective(id) {
   save();
 }
 export function setHideout(id, level) {
-  current().hideout[id] = Math.max(0, Math.floor(Number(level) || 0));
+  current().hideout[id] = safeCount(level);
   save();
+}
+function safeCount(value) {
+  const count = Number(value);
+  return Number.isFinite(count)
+    ? Math.max(0, Math.min(Number.MAX_SAFE_INTEGER, Math.floor(count)))
+    : 0;
 }
 export function exportProfile() {
   const a = document.createElement("a");

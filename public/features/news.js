@@ -6,6 +6,16 @@ import { localeCode } from "../core/localization.js";
 import { esc, heading } from "../core/ui.js";
 export const newsEntries = [
   {
+    slug: "eft-gps-1-12", image: "/assets/news/app-maps.png", kind: "Приложение", date: "2026-11-14", label: "1.12.0",
+    title: "EFT GPS 1.12: встроенный Overlay и надёжное сохранение",
+    summary: "Карта поверх игры настраивается внутри приложения. Исправлены поиск, сохранение профиля и отмена загрузки обновлений.",
+    paragraphs: [
+      "Откройте Настройки → Overlay. Выберите большую или компактную карту, положение, размер, прозрачность и горячую клавишу. Функция Beta выключена по умолчанию; отдельное приложение больше не требуется. Используйте оконный режим игры без рамки.",
+      "Добавлено восстановление повреждённого профиля из резервной копии. Исправлены быстрые переходы между разделами, смена режима, повторяющиеся новости и отображение времени GPS. Скачивание обновления можно отменить и повторить; установка остаётся вашим выбором.",
+      "Проверены автоматизированные тесты, установщик, загрузчик и окно Overlay. Совместимость с настоящим рейдом и античитом отдельно не подтверждена. Добавлены 18 сезонных заданий на русском и английском с офлайн-иллюстрациями. Точки заданий сверены со справочником, дубли камер исправлены."
+    ]
+  },
+  {
     slug:"eft-gps-1-11",image:"/assets/news/app-overview.png",kind:"Приложение",date:"2026-11-12",label:"1.11.0",
     title:"EFT GPS 1.11: события, промокоды и цветокоррекция",
     summary:"Официальные новости, проверка наград, сезон и инструменты подбора изображения в одном приложении.",
@@ -145,9 +155,19 @@ export const newsEntries = [
   },
 ];
 const bundledNewsEntries=[...newsEntries];
+// The same official announcement may arrive through Steam and Telegram.
+export function dedupeNews(entries) {
+  const seen = new Set();
+  return entries.filter(entry => {
+    const title=String(entry.title||"").normalize("NFKC").toLowerCase().replace(/^the\s+/,"").replace(/[^\p{L}\p{N}]+/gu," ").trim();
+    const key=[entry.kind,String(entry.date).slice(0,10),title].join("|");
+    if(!title || seen.has(key))return false;
+    seen.add(key);return true;
+  });
+}
 export function refreshGameNews(){
  const live=gameInfo().records.filter(x=>x.type==="news"&&x.verified==="official"&&x.publishedAt).map(x=>({slug:x.id,image:gameArtwork(x),kind:"Игра",date:x.publishedAt.slice(0,10),label:textPair("Официально","Official"),title:x.title[language()]||x.title.en,summary:x.description[language()]||x.description.en,paragraphs:[textPair("Сохранён язык первоисточника. Это краткое превью публикации; полный текст доступен по ссылке. Активность событий и активация промокодов проверяются отдельно.","Source language is preserved. This is a short publication preview; read the original for full details. Event activity and code redemption are checked separately.")],source:x.source,artworkFromSource:!!x.imageRemote,live:true}));
- newsEntries.splice(0,newsEntries.length,...[...live,...bundledNewsEntries].sort((a,b)=>b.date.localeCompare(a.date)));
+ newsEntries.splice(0,newsEntries.length,...dedupeNews([...live,...bundledNewsEntries].sort((a,b)=>b.date.localeCompare(a.date))));
 }
 export function newsPreview(entry) {
   const source = (/^\/assets\/news\/[a-zA-Z0-9.-]+$/.test(entry.image || "") || /^\/api\/game-info\/image\/[a-z0-9-]{1,100}$/.test(entry.image||""))

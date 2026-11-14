@@ -24,6 +24,11 @@ jobs:
         run: |
           & .\test\setup-transfer.ps1
           if ($LASTEXITCODE -ne 0) { throw 'Native downloader checks failed.' }
+      - name: Test embedded Overlay ownership and settings
+        shell: pwsh
+        run: |
+          & .\test\overlay.ps1 -EmbeddedOnly
+          if ($LASTEXITCODE -ne 0) { throw 'Embedded Overlay checks failed.' }
       - name: Build and publish saved application versions sequentially
         shell: pwsh
         env:

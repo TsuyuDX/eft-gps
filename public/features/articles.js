@@ -71,14 +71,15 @@ export function renderArticleList(root, type) {
   };
   search.oninput();
 }
-export async function renderArticle(root, path) {
+export async function renderArticle(root, path, {signal} = {}) {
   const sourcePath = path.replace("/pve/", "/regular/");
   const a = await json(
       "articles/" + sourcePath.replaceAll("/", "__") + ".json",
     ),
     type = path.split("/")[0],
     slug = path.split("/").at(-1);
-  if (type === "trader") return renderTrader(root, slug, a.title);
+  if (signal?.aborted) return;
+  if (type === "trader") return renderTrader(root, slug, a.title, {signal});
   let prefix =
     type === "event" && slug === "halloween-2026-6"
       ? eventSyncMarkup()
@@ -225,7 +226,7 @@ export async function renderArticle(root, path) {
   }
 }
 
-async function renderTrader(root, slug, title) {
+async function renderTrader(root, slug, title, {signal} = {}) {
   const controller = new AbortController();
   window.addEventListener("view-changing", () => controller.abort(), {
     once: true,
@@ -234,7 +235,7 @@ async function renderTrader(root, slug, title) {
     json("traders/" + slug + ".json").catch(() => ({ items: [], levels: [] })),
     json("trader-access.json", "ru").catch(() => ({ modes: {} })),
   ]);
-  if (controller.signal.aborted) return;
+  if (controller.signal.aborted || signal?.aborted) return;
   const trader = db.lookup.traders?.[slug] || {},
     levels = data.levels?.length ? data.levels : trader.levels || [];
   const relations = access.modes?.[db.mode]?.[slug] || {

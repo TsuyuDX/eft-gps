@@ -1,4 +1,5 @@
 import {officialArtworkUrl} from "./news-artwork.js";
+export const HALLOWEEN_PRESS_RELEASE="https://www.gamespress.com/Escape-from-Tarkov-Celebrates-Halloween-Infected-Enemies-in-Raids-and-";
 export const INFO_INTERVAL = 60 * 60 * 1000;
 const hosts = new Set([
   "t.me",
@@ -18,10 +19,12 @@ const hosts = new Set([
   "mrsouer.com",
   "www.tarkovhead.com",
   "tarkov.dev",
+  "www.gamespress.com",
 ]);
 export function infoSource(value) {
   try {
     const u = new URL(value);
+    if(u.hostname==="www.gamespress.com" && u.href!==HALLOWEEN_PRESS_RELEASE)return null;
     return u.protocol === "https:" &&
       !u.username &&
       !u.password &&
@@ -35,6 +38,7 @@ export function infoSource(value) {
   }
 }
 export function officialInfoSource(value,publisher) {
+  if (!infoSource(value)) return false;
   try {
     const u = new URL(value);
     return (
@@ -82,6 +86,7 @@ export function sanitizeGameInfo(input) {
     seen = new Set();
   for (const item of input.records) {
     if (
+      !item || typeof item !== "object" ||
       !/^[a-z0-9-]{1,100}$/.test(item.id) ||
       seen.has(item.id) ||
       !["news", "event", "season", "promo"].includes(item.type) ||
@@ -125,6 +130,7 @@ export function sanitizeGameInfo(input) {
       active: item.active === true,
       endedConfirmed:item.endedConfirmed===true && verified!=="unverified",
       activitySource:infoSource(item.activitySource),
+      activityVerified: item.activityVerified === "reviewed" ? "reviewed" : officialInfoSource(item.activitySource) ? "official" : "unverified",
       confirmationExpiresAt: date(item.confirmationExpiresAt),
       guide:
         typeof item.guide === "string" &&
@@ -134,7 +140,7 @@ export function sanitizeGameInfo(input) {
       rewards: Array.isArray(item.rewards)
         ? item.rewards
             .slice(0, 20)
-            .filter((x) => infoSource(x.source))
+            .filter((x) => x && typeof x === "object" && infoSource(x.source))
             .map((x) => ({
               title: localized(x.title),
               description: localized(x.description),
@@ -171,7 +177,7 @@ export function sanitizeGameInfo(input) {
     sources: Array.isArray(input.sources)
       ? input.sources
           .slice(0, 30)
-          .filter((s) => infoSource(s.url))
+          .filter((s) => s && typeof s === "object" && infoSource(s.url))
           .map((s) => ({
             id: text(s.id, 80),
             name: text(s.name, 100),

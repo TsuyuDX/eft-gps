@@ -1,15 +1,18 @@
 import {uiIcon} from "./icons.js";
 import {t} from "./localization.js";
+import {overlayMode,overlayAutoMap} from "./overlay-mode.js";
 export let gpsState = null;
 let timer = null,
+  pending = null,
   previousMap = null,
   previousFix = null;
 export async function gpsRequest(url, value) {
   const response = await fetch(
     "/api/gps/" + url,
     value === undefined
-      ? {}
+      ? { signal: AbortSignal.timeout(10000) }
       : {
+          signal: AbortSignal.timeout(10000),
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(value),
@@ -21,13 +24,15 @@ export async function gpsRequest(url, value) {
   return data;
 }
 export async function pollGps() {
-  try {
+  if (pending) return pending;
+  pending = (async () => { try {
     gpsState = await gpsRequest("state");
     window.dispatchEvent(new CustomEvent("gps-update", { detail: gpsState }));
     return gpsState;
   } catch {
     return null;
-  }
+  } })().finally(() => { pending = null; });
+  return pending;
 }
 export function startGpsClient(getMode) {
   if (timer) return;
@@ -48,7 +53,7 @@ export function startGpsClient(getMode) {
     }
     if (
       s.config.enabled &&
-      s.config.autoMap &&
+      (overlayMode ? overlayAutoMap : s.config.autoMap) &&
       s.fix &&
       Date.now() - s.fix.updatedAt < 60000 &&
       s.fix.updatedAt !== previousFix

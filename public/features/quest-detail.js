@@ -9,9 +9,15 @@ import {
   bindGuideImages,
 } from "./quest-guide.js";
 import { renderQuestPlan } from "./quest-plan.js";
+import {textPair, localeCode} from "../core/localization.js";
 let previewVersion = 0,
   boundDialog = null;
 const arr = (v) => (Array.isArray(v) ? v : []);
+function sourceNote(q) {
+  if (!/^https:\/\/www\.tarkovhead\.com\/(ru|en)\/quest\/regular\/halloween-[a-z0-9-]+$/.test(q.liveSource || "")) return "";
+  const checked = Number.isFinite(Date.parse(q.checkedAt)) ? new Date(q.checkedAt).toLocaleDateString(localeCode()) : "";
+  return `<p class="muted small quest-guide-source" data-no-translate><a href="${esc(q.liveSource)}">${textPair("Источник прохождения: справочник TarkovHead", "Walkthrough source: TarkovHead reference")}</a>${checked ? ` · ${textPair("Сверено", "Checked")} ${esc(checked)}` : ""}</p>`;
+}
 function itemCard(item, count = 1, mode = db.mode) {
   if (!item) return "";
   const known = item.normalizedName
@@ -108,9 +114,9 @@ export function renderQuestCard(
   const slug = q.normalizedName,
     images = questImages(q),
     guide = guideAvailable(q)
-      ? renderGuide(q.guideCms?.root?.children?.length ? q.guideCms : q.guide)
+      ? renderGuide(q.guideCms?.root?.children?.length ? q.guideCms : q.guide) + sourceNote(q)
       : renderQuestPlan(q, mode);
-  root.innerHTML = `<div class="quest-card-view"><header class="quest-card-header">${img(q.iconLink || q.trader?.imageLink || q.taskImageLink, q.name, "quest-title-icon")}<div><span class="eyebrow">${esc(q.trader?.name || "Сюжетное задание")} · ${mode === "pve" ? "PVE" : "PVP"}</span><h${compact ? "2" : "1"}>${esc(q.name)}</h${compact ? "2" : "1"}><div class="row wrap"><span class="badge">Уровень ${q.minPlayerLevel || 0}</span><span class="badge">${q.experience || 0} опыта</span>${q.kappaRequired ? '<span class="badge">Каппа</span>' : ""}${q.lightkeeperRequired ? '<span class="badge">Смотритель</span>' : ""}${q.isEventQuest ? '<a class="badge event-badge" href="#/event/halloween-2026-6">Хэллоуин 2026 · временное задание</a>' : ""}${q.restartable ? '<span class="badge">Повторяемое</span>' : ""}</div></div><button class="primary" data-complete-quest>${current().quests[slug] ? "✓ Завершено" : "Отметить выполненным"}</button></header>${context?.marker ? `<div class="quest-context"><span class="eyebrow">Выбранная точка · ${esc(context.mapName || "Карта")}</span><strong>${esc(context.marker?.title || q.name)}</strong>${context.marker?.description ? `<div>${renderGuide(context.marker.description)}</div>` : ""}</div>` : ""}<div class="quest-tabs" role="tablist" aria-label="Разделы задания">${[
+  root.innerHTML = `<div class="quest-card-view"><header class="quest-card-header">${img(q.iconLink || q.trader?.imageLink || q.taskImageLink, q.name, "quest-title-icon")}<div><span class="eyebrow">${esc(q.trader?.name || "Сюжетное задание")} · ${mode === "pve" ? "PVE" : "PVP"}</span><h${compact ? "2" : "1"}>${esc(q.name)}</h${compact ? "2" : "1"}><div class="row wrap"><span class="badge">Уровень ${q.minPlayerLevel || 0}</span>${q.experience > 0 ? `<span class="badge">${esc(q.experience)} опыта</span>` : ""}${q.kappaRequired ? '<span class="badge">Каппа</span>' : ""}${q.lightkeeperRequired ? '<span class="badge">Смотритель</span>' : ""}${q.isEventQuest ? '<a class="badge event-badge" href="#/event/halloween-2026-6">Хэллоуин 2026 · временное задание</a>' : ""}${q.restartable ? '<span class="badge">Повторяемое</span>' : ""}</div></div><button class="primary" data-complete-quest>${current().quests[slug] ? "✓ Завершено" : "Отметить выполненным"}</button></header>${context?.marker ? `<div class="quest-context"><span class="eyebrow">Выбранная точка · ${esc(context.mapName || "Карта")}</span><strong>${esc(context.marker?.title || q.name)}</strong>${context.marker?.description ? `<div>${renderGuide(context.marker.description)}</div>` : ""}</div>` : ""}<div class="quest-tabs" role="tablist" aria-label="Разделы задания">${[
     ["guide", "Прохождение"],
     ["objectives", "Цели"],
     ["requirements", "Требования и награды"],

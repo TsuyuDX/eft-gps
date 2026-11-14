@@ -6,8 +6,9 @@ import {
 } from "../core/quest-search.js";
 import { current, toggleQuest } from "../core/state.js";
 import { esc, img, heading, pagination, bindPages } from "../core/ui.js";
-export async function renderQuests(root) {
+export async function renderQuests(root, {signal} = {}) {
   const metadata = await json(db.mode + "/quest-search.json").catch(() => ({}));
+  if (signal?.aborted) return;
   const searchTexts = new Map(
     db.quests.map((q) => [
       q.normalizedName,
@@ -85,7 +86,8 @@ export async function renderQuests(root) {
   draw();
 }
 export function refreshQuestList(root){root.querySelector("#quest-results")?.refreshQuestList?.();}
-export async function renderQuest(root, slug) {
+export async function renderQuest(root, slug, {signal} = {}) {
   const q = await detail("quests", slug);
+  if (signal?.aborted) return;
   renderQuestCard(root, q);
 }

@@ -1,7 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { parseHTML } from "linkedom";
-import { EventEmitter } from "node:events";
 import {
   buildSearchIndex,
   searchEntries,
@@ -109,46 +108,22 @@ test("returning to a cached list preserves the actual input nodes, handlers, fil
   assert.deepEqual(cache.position("ru:pve:items"), { top: 1250, left: 8 });
   assert.equal(cache.restore("en:pve:items", root), false);
 });
-test("overlay is off without a process and only its own process is started and stopped on explicit selection", async () => {
-  let calls = 0,
-    child;
-  const manager = new OverlayManager("C:/fixture", 38479, {
-    platform: "win32",
-    spawnProcess: (exe, args) => {
-      calls++;
-      assert.ok(exe.endsWith("EFTGPSOverlay.exe"));
-      assert.deepEqual(args, ["--app-port", "38479"]);
-      child = new EventEmitter();
-      child.exitCode = null;
-      child.unref = () => {};
-      child.kill = () => {
-        child.exitCode = 0;
-        child.emit("exit", 0);
-      };
-      setImmediate(() => child.emit("spawn"));
-      return child;
-    },
-  });
-  assert.deepEqual(manager.state(), {
-    enabled: false,
-    running: false,
-    error: "",
-  });
-  await manager.setEnabled(false);
-  assert.equal(calls, 0);
-  await Promise.all([manager.setEnabled(true), manager.setEnabled(true)]);
-  assert.equal(calls, 1);
-  assert.equal(manager.state().running, true);
-  const stopped = manager.setEnabled(false);
-  await new Promise(setImmediate);
-  assert.equal(manager.state().enabled, false);
-  child.kill();
-  await stopped;
-  assert.equal(manager.state().running, false);
-  await manager.setEnabled(true);
-  assert.equal(calls, 2);
-  manager.dispose();
-  assert.equal(manager.state().running, false);
+test("integrated Overlay never starts a process and reports only a live desktop-owned renderer", async () => {
+  let calls=0,now=1000;
+  const manager=new OverlayManager("C:/fixture",38479,{platform:"win32",clock:()=>now,spawnProcess:()=>{calls++;}});
+  assert.equal(manager.state().enabled,false);assert.equal(manager.state().running,false);
+  await manager.setEnabled(true,{size:34,position:"bottom-right"});
+  assert.equal(manager.state().running,false);assert.equal(manager.state().integrated,true);
+  manager.report({running:true,visible:true,error:"",hotkeyRegistered:true});
+  assert.equal(manager.state().running,true);assert.equal(manager.state().settings.size,34);
+  now+=10001;assert.equal(manager.state().running,false);assert.equal(manager.state().attached,false);
+  manager.report({running:true,visible:false,error:"hotkey-in-use",hotkeyRegistered:false});
+  assert.equal(manager.state().error,"hotkey-in-use");
+  await manager.setEnabled(false);assert.equal(manager.state().running,false);
+  assert.equal(manager.state().visible,false);assert.equal(calls,0);
+  assert.throws(()=>manager.report({running:true,path:"evil.exe"}));
+  await assert.rejects(manager.setEnabled(true,{size:1000}),/invalid-overlay-settings/);
+  manager.dispose();assert.equal(manager.state().attached,false);
 });
 test("overlay settings persist through the existing settings schema and reject arbitrary launch parameters", () => {
   const setting = (data) => ({
@@ -157,10 +132,14 @@ test("overlay settings persist through the existing settings schema and reject a
   });
   assert.equal(validWindowSettings(setting({ enabled: true })), true);
   assert.equal(validWindowSettings(setting({ enabled: false })), true);
+  assert.equal(validWindowSettings(setting({enabled:true,settings:{hotkey:"F8",opacity:65,size:34,position:"bottom-right",follow:true}})),true);
   for (const data of [
     { enabled: "true" },
     { enabled: true, path: "evil.exe" },
     { enabled: true, args: [] },
+    { enabled: true, settings: { hotkey: "Alt+F4" } },
+    { enabled: true, settings: { opacity: Infinity } },
+    { enabled: true, settings: { path: "evil.exe" } },
   ])
     assert.equal(validWindowSettings(setting(data)), false);
 });

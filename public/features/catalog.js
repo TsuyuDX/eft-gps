@@ -115,8 +115,10 @@ const propLabels = {
 function recipe(r) {
   return `<div class="recipe"><div>${esc(r.trader?.name || db.lookup.hideout?.[r.station?.normalizedName]?.name || r.station?.name || "Убежище")} · уровень ${r.level || r.station?.level || 1}${r.duration ? ` · ${esc(r.duration)}` : ""}</div><div class="row wrap">${(r.requiredItems || []).map((e) => `<a href="#/item/${db.mode}/${e.item?.normalizedName}">${esc(e.item?.shortName || e.item?.name)} × ${e.count}</a>`).join(" + ")} <b>→</b> ${(r.rewardItems || []).map((e) => `<a href="#/item/${db.mode}/${e.item?.normalizedName}">${esc(e.item?.shortName || e.item?.name)} × ${e.count}</a>`).join(" + ")}</div>${r.taskUnlock ? `<a href="#/quest/${db.mode}/${r.taskUnlock.normalizedName}">Открывается заданием: ${esc(r.taskUnlock.name)}</a>` : ""}</div>`;
 }
-export async function renderItem(root, slug) {
-  const x = await detail("items", slug),
+export async function renderItem(root, slug, {signal} = {}) {
+  const x = await detail("items", slug);
+  if (signal?.aborted) return;
+  const
     live = itemBySlug(slug),
     trades = live?.trades || x.trades;
   root.innerHTML =

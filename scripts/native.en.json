@@ -244,5 +244,6 @@
   "Пакет проверен. Открываем установщик…": "Package verified. Opening setup…",
   "Установка не завершена. Пакет сохранён — можно повторить установку без новой загрузки.": "Setup did not finish. The package is kept so you can retry without downloading again.",
   "Загрузка остановлена. Загруженные блоки сохранены для продолжения.": "Download stopped. Downloaded blocks are kept so you can resume.",
-  "Проверка состава пакета": "Checking package contents"
+  "Проверка состава пакета": "Checking package contents",
+  "Карта недоступна. Перезапустите оверлей в настройках.": "Map unavailable. Restart Overlay in Settings."
 }

@@ -104,7 +104,7 @@ for (const mode of ["regular", "pve"])
           group: x.group,
           position: x.position,
           title: x.title || x.name,
-        }));
+        })).sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b)));
       summary.markerReferenceMatch =
         digest(positions(map)) === digest(positions(remote));
       summary.categoryReference = {};

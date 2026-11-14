@@ -4,8 +4,11 @@ import { gpsPointerSvg } from "./map-presentation.js";
 import { db } from "../core/data.js";
 import { gpsRequest, pollGps, gpsState } from "../core/gps-client.js";
 import { heading, esc, toast } from "../core/ui.js";
-export async function renderGps(root) {
+import { fixAgeLabel } from "../core/gps-format.js";
+import { localeCode } from "../core/localization.js";
+export async function renderGps(root, {signal} = {}) {
   const initial = await pollGps();
+  if (signal?.aborted) return;
   if (!initial) {
     root.innerHTML =
       heading("GPS") +
@@ -38,12 +41,10 @@ export async function renderGps(root) {
     once: true,
   });
   function update(s) {
+    if (signal?.aborted || !root.querySelector("#gps-status")) return;
     lastState=s;enabledField.checked=s.config.enabled;toggle.textContent=s.config.enabled?"Отключить GPS":"Включить GPS";toggle.setAttribute("aria-pressed",String(s.config.enabled));
     const box = root.querySelector("#gps-status");
     if (!box) return;
-    const age = s.fix
-      ? Math.max(0, Math.floor((Date.now() - s.fix.updatedAt) / 1000))
-      : null;
     const status =
       {
         off: "Выключена",
@@ -52,7 +53,7 @@ export async function renderGps(root) {
         capturing: "Клавиша отправляется в игру",
         "input-blocked": "Windows не приняла нажатие",
       }[s.captureStatus] || s.captureStatus;
-    box.innerHTML = `<dl class="gps-readout"><div><dt>GPS</dt><dd>${s.config.enabled ? "Включён" : "Выключен"}</dd></div><div><dt>Папка скриншотов</dt><dd>${s.folderExists ? "Найдена" : "Не найдена"}</dd></div><div><dt>Состояние рейда</dt><dd>${{ unknown: "Не определено", active: "В рейде", loading: "Загрузка", ended: "Рейд завершён" }[s.raid] || s.raid}</dd></div><div><dt>Автосъёмка</dt><dd>${esc(status)}</dd></div><div><dt>Очистка GPS-скриншотов</dt><dd>${s.config.deleteAutoScreenshots ? "Включена" : "Выключена"}</dd></div><div><dt>Удалено за запуск</dt><dd>${s.cleanup?.deleted || 0} · ${((s.cleanup?.bytes || 0) / 1024 / 1024).toFixed(1)} МБ</dd></div><div><dt>Последняя позиция</dt><dd>${s.fix ? `${age} сек. назад` : "Ещё не получена"}</dd></div>${s.fix ? `<div><dt>Координаты X / Y / Z</dt><dd>${s.fix.position.x.toFixed(2)} / ${s.fix.position.y.toFixed(2)} / ${s.fix.position.z.toFixed(2)}</dd></div><div><dt>Направление</dt><dd>${Math.round(s.fix.rotation)}°</dd></div>` : ""}</dl>${s.cleanup?.error ? `<p class="notice">${esc(s.cleanup.error)}</p>` : ""}${s.message ? `<p class="notice">${esc(s.message)}</p>` : ""}${s.auto && !s.fix ? '<p class="notice">Пока нет координат. Проверьте клавишу скриншота и путь к папке: отправка нажатия сама по себе не подтверждает сохранение файла игрой.</p>' : ""}`;
+    box.innerHTML = `<dl class="gps-readout"><div><dt>GPS</dt><dd>${s.config.enabled ? "Включён" : "Выключен"}</dd></div><div><dt>Папка скриншотов</dt><dd>${s.folderExists ? "Найдена" : "Не найдена"}</dd></div><div><dt>Состояние рейда</dt><dd>${{ unknown: "Не определено", active: "В рейде", loading: "Загрузка", ended: "Рейд завершён" }[s.raid] || s.raid}</dd></div><div><dt>Автосъёмка</dt><dd>${esc(status)}</dd></div><div><dt>Очистка GPS-скриншотов</dt><dd>${s.config.deleteAutoScreenshots ? "Включена" : "Выключена"}</dd></div><div><dt>Удалено за запуск</dt><dd>${s.cleanup?.deleted || 0} · ${((s.cleanup?.bytes || 0) / 1024 / 1024).toFixed(1)} МБ</dd></div><div><dt>Последняя позиция</dt><dd>${s.fix ? fixAgeLabel(s.fix.updatedAt, localeCode()) : "Ещё не получена"}</dd></div>${s.fix ? `<div><dt>Координаты X / Y / Z</dt><dd>${s.fix.position.x.toFixed(2)} / ${s.fix.position.y.toFixed(2)} / ${s.fix.position.z.toFixed(2)}</dd></div><div><dt>Направление</dt><dd>${Math.round(s.fix.rotation)}°</dd></div>` : ""}</dl>${s.cleanup?.error ? `<p class="notice">${esc(s.cleanup.error)}</p>` : ""}${s.message ? `<p class="notice">${esc(s.message)}</p>` : ""}${s.auto && !s.fix ? '<p class="notice">Пока нет координат. Проверьте клавишу скриншота и путь к папке: отправка нажатия сама по себе не подтверждает сохранение файла игрой.</p>' : ""}`;
     root.querySelector("#gps-start").disabled =
       s.auto || !s.config.enabled || !s.folderExists || !s.helperExists;
     root.querySelector("#gps-stop").disabled = !s.auto;
