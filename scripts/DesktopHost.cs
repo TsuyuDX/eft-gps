@@ -13,8 +13,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
-[assembly: AssemblyVersion("1.12.0.0")]
-[assembly: AssemblyFileVersion("1.12.0.0")]
+[assembly: AssemblyVersion("1.13.0.0")]
+[assembly: AssemblyFileVersion("1.13.0.0")]
 
 class DesktopHost : Form {
     readonly string root, origin;
@@ -63,12 +63,12 @@ class DesktopHost : Form {
         web.DefaultBackgroundColor = Color.Black;
         Controls.Add(web);
         web.Visible=false;
-        nativeLoading=new Panel {Dock=DockStyle.Fill,BackColor=Color.FromArgb(5,5,4)};
-        var loadingBox=new Panel {Size=new Size(520,180),BackColor=Color.FromArgb(12,12,10)};
+        nativeLoading=new Panel {Dock=DockStyle.Fill,BackColor=Color.FromArgb(12,18,16)};
+        var loadingBox=new Panel {Size=new Size(520,180),BackColor=Color.FromArgb(18,28,24)};
         loadingBox.Controls.Add(new PictureBox {Image=new Bitmap(Path.Combine(root,"public","icons","app-192.png")),SizeMode=PictureBoxSizeMode.Zoom,Bounds=new Rectangle(28,28,64,64)});
-        loadingBox.Controls.Add(new Label {Text="T_S_U_Y_U EFT GPS",Font=new Font("Segoe UI",23),ForeColor=Color.FromArgb(210,199,167),Bounds=new Rectangle(112,28,380,46)});
+        loadingBox.Controls.Add(new Label {Text="T_S_U_Y_U EFT GPS",Font=new Font("Segoe UI",23),ForeColor=Color.FromArgb(229,238,232),Bounds=new Rectangle(112,28,380,46)});
         loadingBox.Controls.Add(new Label {Text="Подготовка окна приложения…",Font=new Font("Segoe UI",10),ForeColor=Color.FromArgb(151,147,132),Bounds=new Rectangle(112,82,380,30)});
-        loadingBox.Controls.Add(new Panel {BackColor=Color.FromArgb(185,171,130),Bounds=new Rectangle(30,144,460,2)});
+        loadingBox.Controls.Add(new Panel {BackColor=Color.FromArgb(117,214,157),Bounds=new Rectangle(30,144,460,2)});
         nativeLoading.Controls.Add(loadingBox);NativeText.Apply(nativeLoading);
         nativeLoading.Resize+=delegate {if(nativeLoading!=null)loadingBox.Location=new Point(Math.Max(0,(nativeLoading.ClientSize.Width-loadingBox.Width)/2),Math.Max(0,(nativeLoading.ClientSize.Height-loadingBox.Height)/2));};
         Controls.Add(nativeLoading);nativeLoading.BringToFront();

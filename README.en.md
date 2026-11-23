@@ -25,3 +25,11 @@ Screenshot-based image tuning: [Graphics and colour correction](GRAPHICS.md#engl
 
 
 Events, seasons, promo codes and sources: [how information updates work](GAME-INFORMATION.md#english).
+
+## Development branch 1.13: maps and offline content
+
+The dark green workspace adapts to small windows. Open **Settings → Training** for an interactive tour. **Map style** switches between a diagram and an attributed overhead game render where available; these are not satellite photographs. Verified overhead views are not available for Lighthouse, Streets and Terminal yet.
+
+Maps, markers, summary lists and screenshot GPS remain bundled. Detailed cards and additional images are downloaded on demand and cached with SHA-256 validation. Before going offline, open **Settings → Data → Download everything for offline use** and wait for completion. Existing cached files are reused and remain available after network failures.
+
+Interchange (`shopping_mall`), Reserve and event scene aliases have been fixed. Actual coordinate filenames and log associations were checked on six maps, not every in-raid position. The graphics preview includes gameplay captures from six locations; import your own PNG/JPEG for the others. Preview values are not NVIDIA/PostFX scales.

@@ -1,0 +1,62 @@
+[
+    {
+        "id":  "sample-customs",
+        "width":  1600,
+        "source":  "Own gameplay capture",
+        "readonly":  true,
+        "url":  "/assets/graphics-previews/customs.jpg",
+        "height":  900,
+        "kind":  "game-screenshot",
+        "location":  "Таможня"
+    },
+    {
+        "id":  "sample-interchange",
+        "width":  1600,
+        "source":  "Own gameplay capture",
+        "readonly":  true,
+        "url":  "/assets/graphics-previews/interchange.jpg",
+        "height":  900,
+        "kind":  "game-screenshot",
+        "location":  "Развязка"
+    },
+    {
+        "id":  "sample-lighthouse",
+        "width":  1600,
+        "source":  "Own gameplay capture",
+        "readonly":  true,
+        "url":  "/assets/graphics-previews/lighthouse.jpg",
+        "height":  900,
+        "kind":  "game-screenshot",
+        "location":  "Маяк"
+    },
+    {
+        "id":  "sample-shoreline",
+        "width":  1600,
+        "source":  "Own gameplay capture",
+        "readonly":  true,
+        "url":  "/assets/graphics-previews/shoreline.jpg",
+        "height":  900,
+        "kind":  "game-screenshot",
+        "location":  "Берег"
+    },
+    {
+        "id":  "sample-the-lab",
+        "width":  1600,
+        "source":  "Own gameplay capture",
+        "readonly":  true,
+        "url":  "/assets/graphics-previews/the-lab.jpg",
+        "height":  900,
+        "kind":  "game-screenshot",
+        "location":  "Лаборатория"
+    },
+    {
+        "id":  "sample-woods",
+        "width":  1600,
+        "source":  "Own gameplay capture",
+        "readonly":  true,
+        "url":  "/assets/graphics-previews/woods.jpg",
+        "height":  900,
+        "kind":  "game-screenshot",
+        "location":  "Лес"
+    }
+]

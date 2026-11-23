@@ -1,0 +1,44 @@
+/* Shared Windows workspace. The session-only cartographic theme overrides this palette. */
+#app:not(:has(>.map-workspace)){background-image:linear-gradient(#75d69d08 1px,transparent 1px),linear-gradient(90deg,#75d69d08 1px,transparent 1px);background-size:10px 10px;background-position:0 0}
+.secret-maps-theme #app{background-image:none!important}
+:root{--bg:#0c1210;--panel:#121c18;--line:#2b3c33;--muted:#9caf9f;--text:#e5eee8;--accent:#75d69d;--blue:#86c8ed;--radius:10px}
+body{font:15px/1.55 "Segoe UI Variable Text","Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text)}
+body>header{max-width:none;margin:0;padding:14px 22px 10px;background:var(--panel);border-bottom:1px solid var(--line)}
+.topline{gap:24px;min-width:0;align-items:center}.brand{flex:0 0 auto}.brand strong{font-size:19px;letter-spacing:.2px}.brand small{color:var(--muted);font-size:9px;letter-spacing:2px}.brand img{width:44px;height:44px}
+#navigation{min-width:0;flex:1;display:flex;justify-content:flex-end;gap:3px;flex-wrap:wrap;padding:5px 0}
+#navigation a{border-radius:7px;padding:7px 9px;font-size:13px;white-space:nowrap;color:var(--muted)}
+#navigation a:hover,#navigation a.active{color:var(--text);background:#75d69d13;border-color:var(--line)}
+.statusline{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin-top:9px;padding:0;border:0}.statusline>.row{flex-wrap:wrap;gap:7px}.status-metrics{min-width:0}
+#app,#app.wide{max-width:none;width:100%;padding:20px 22px 24px;min-width:0;min-height:0;scroll-padding:20px;align-self:stretch}
+#app>.page-title:first-child,#app>section>.page-title:first-child{margin-top:0}.page-title{gap:16px}.page-title h1{font-size:28px;line-height:1.2}
+body>footer{max-width:none;margin:0;padding:9px 22px;background:var(--panel);border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+button,.button,input,select,textarea{font:inherit;color:var(--text);border-radius:7px;border-color:var(--line);background:#17241d}
+button,.button,select{min-height:38px;padding:8px 12px;line-height:1.25}button,.button{display:inline-flex;align-items:center;justify-content:center;gap:7px;vertical-align:middle}
+button:hover,.button:hover,select:hover{background:#20382a;border-color:#527760;color:var(--text)}
+button.primary,.button.primary,button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#102017}
+input[type=range],input[type=checkbox]{accent-color:var(--accent)}input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+.card,.panel,.settings-card,.preference-group,.news-card,.graphics-preview-panel,.graphics-controls{background:var(--panel);border-color:var(--line);border-radius:var(--radius)}
+.card:hover{border-color:#527760;box-shadow:0 4px 20px #0002}.card-body{padding:18px;min-width:0}.card h2{font-size:20px;line-height:1.3}.card-grid{gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));align-items:stretch}
+.maps-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,265px),1fr));gap:18px}.map-card{display:flex;flex-direction:column;min-width:0}.map-card>img{width:100%;height:auto;aspect-ratio:16/10;object-fit:contain;background:#0d1714;padding:8px}.map-card .card-body{flex:1}.map-card .small{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;min-height:0;line-height:1.6}.map-card h2{margin:0 0 12px}
+.badge,.gps-map-status,.map-caption{border-radius:5px;border-color:var(--line);color:var(--text);background:#17241de8}
+.map-layout{border-color:var(--line);border-radius:10px}.map-controls,.map-quest-side,.map-panel-heading{background:var(--panel);border-color:var(--line)}
+.map-workspace{min-width:0}.map-top{flex-wrap:wrap}.map-searchbar{flex-wrap:wrap;gap:10px}.map-unified-search{min-width:200px;flex:1 1 350px}.map-top>.row{min-width:0;gap:8px}.map-top select{max-width:100%}
+.map-panel-heading>button,.zoom-controls>button,.modal-chrome .close{display:grid;place-items:center;padding:0;line-height:1;flex-shrink:0;background:#17241d;border-color:var(--line);color:var(--text)}
+.modal-chrome{background:#17241d;border-color:var(--line)}.modal-chrome>span{color:var(--text)}#modal{background:var(--panel);border-color:var(--line)}
+.toolbar,.row,.detail-grid,.graphics-layout{min-width:0}.toolbar>*{min-width:0}.detail-grid>*,.graphics-layout>*{min-width:0}img{max-width:100%}table{max-width:100%}
+.status-metrics #raid-time,.status-metrics #snapshot-date{color:var(--muted);border-color:var(--line)}
+*{scrollbar-color:#3b5947 transparent}::-webkit-scrollbar-track,::-webkit-scrollbar-corner{background:transparent}::-webkit-scrollbar-thumb{background:#3b5947;border:2px solid var(--bg);border-radius:8px}::-webkit-scrollbar-thumb:hover{background:#578068}
+.ui-icon{flex-shrink:0;vertical-align:middle}.nav-icon{width:17px;height:17px;display:inline-flex;margin-right:6px;vertical-align:middle}
+@media(max-width:1350px){.topline{align-items:flex-start;gap:14px}#navigation{justify-content:flex-start}.brand strong{font-size:17px}.statusline{font-size:12px}}
+@media(max-width:900px){body>header{padding:10px 12px}.topline{flex-wrap:wrap}#navigation{flex-basis:100%;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding:4px 0 7px}#navigation a{flex-shrink:0}.statusline>.row:last-child{gap:5px}#app,#app.wide{padding:14px 12px 18px}.status-metrics #snapshot-date{display:none}#menu{display:none}body>footer{padding:7px 12px}.map-top h1{font-size:22px}.map-top>.row:last-child{flex:1 1 100%}.map-top select{flex:1}.map-layout{grid-template-columns:minmax(0,1fr)}.map-controls,.map-quest-side{max-width:min(300px,75vw)}}
+@media(max-height:700px){body>header{padding-top:8px;padding-bottom:6px}.brand img{width:32px;height:32px}.brand small{display:none}.statusline{margin-top:5px}#navigation a{padding:5px 7px}.statusline button,.statusline .button{min-height:32px;padding:5px 9px}#app{padding-top:12px}}
+@media(prefers-reduced-motion:no-preference){button,.button,.card{transition:background-color .15s,border-color .15s,box-shadow .15s}}
+.interactive-tour{position:fixed;inset:0;z-index:20000;pointer-events:none}.tour-spotlight{position:fixed;border:2px solid var(--accent);border-radius:9px;box-shadow:0 0 0 9999px #0009;pointer-events:none}.tour-coach{position:fixed;width:min(390px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto;padding:22px;border:1px solid var(--accent);border-radius:12px;background:var(--panel);box-shadow:0 12px 60px #000a;pointer-events:auto}.tour-coach h2{font-size:21px;margin:8px 0}.tour-coach p{color:var(--muted)}.tour-coach small{color:var(--accent)}.training-topics{display:grid;gap:9px;margin-top:18px}
+.graphics-page{max-width:none}.graphics-shot>img{width:140px;height:78px;object-fit:cover;border-radius:5px}.graphics-shot{max-width:200px}progress[data-content-progress]{width:100%;height:9px;accent-color:var(--accent)}
+
+@media(max-width:1100px){.topline{flex-wrap:nowrap;align-items:center}#navigation{flex-basis:auto;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding:12px 0 6px}#navigation a{flex-shrink:0}.brand{max-width:240px}}
+
+@media(min-width:901px) and (max-width:1550px){.topline{align-items:center;flex-wrap:nowrap}#navigation{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding:12px 0 6px}#navigation a{flex-shrink:0}.statusline{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;margin:8px 0 0}.statusline>.row{flex-wrap:nowrap}.status-metrics{overflow-x:auto}.status-metrics>*{flex-shrink:0}}
+.graphics-page>.page-title{margin:0 0 14px}.graphics-page>.muted{margin:8px 0;font-size:12px}.graphics-gallery{min-height:0;max-height:86px;padding:4px 0 12px}.graphics-shot{display:grid;grid-template-columns:80px minmax(90px,1fr);min-width:210px;max-width:250px;font-size:12px;padding:7px;gap:2px 8px}.graphics-shot>img{grid-row:1/3;width:80px;height:45px}.graphics-shot>small{grid-column:2}
+
+@media(min-width:901px) and (max-width:1550px){.statusline{display:flex;flex-wrap:nowrap;gap:7px}.statusline>.row:last-child{margin-left:auto;flex:0 0 auto}.statusline .status-metrics{flex:0 1 auto;max-width:32vw}.statusline #season-status,.statusline #event-status{flex:0 1 auto;min-width:0;max-width:175px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}}

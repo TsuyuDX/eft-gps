@@ -30,7 +30,7 @@
   cursor: pointer;
 }
 .graphics-import:focus-within {
-  outline: 2px solid var(--accent, #c7b98e);
+  outline: 2px solid var(--accent, #8de5b1);
   outline-offset: 3px;
 }
 .graphics-gallery {
@@ -51,8 +51,8 @@
   opacity: 0.6;
 }
 .graphics-shot[aria-pressed="true"] {
-  border-color: var(--accent, #c7b98e);
-  background: #c7b98e14;
+  border-color: var(--accent, #8de5b1);
+  background: #8de5b114;
 }
 .graphics-layout {
   display: grid;
@@ -64,7 +64,7 @@
 .graphics-controls,
 .graphics-guide {
   min-width: 0;
-  border: 1px solid var(--border, #353329);
+  border: 1px solid var(--border, #29352e);
   background: var(--panel, #0c0d0b);
   border-radius: 6px;
   padding: 16px;
@@ -162,7 +162,7 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: #f1f0e9;
+  background: #e9f1ec;
   color: #242823;
   font-weight: bold;
   box-shadow: 0 2px 8px #0006;
@@ -179,7 +179,7 @@
   touch-action: pan-y;
 }
 .graphics-compare:focus-within {
-  outline: 2px solid var(--accent, #c7b98e);
+  outline: 2px solid var(--accent, #8de5b1);
   outline-offset: -2px;
 }
 .graphics-filter-defs {
@@ -205,11 +205,11 @@
 }
 .graphics-slider output {
   font-variant-numeric: tabular-nums;
-  color: var(--accent, #c7b98e);
+  color: var(--accent, #8de5b1);
 }
 .graphics-slider input {
   width: 100%;
-  accent-color: var(--accent, #c7b98e);
+  accent-color: var(--accent, #8de5b1);
   height: 20px;
   padding: 0;
   cursor: pointer;

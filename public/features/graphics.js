@@ -36,7 +36,7 @@ export async function renderGraphics(root) {
     selected = null,
     gallery = [],
     settings = loadSettings(),
-    selectedPreset = "",
+    selectedPreset = settings.preset || "",
     pending = false;
   const bind = (node, type, handler) =>
     node.addEventListener(type, handler, { signal });
@@ -49,7 +49,7 @@ export async function renderGraphics(root) {
   window.addEventListener("view-changing", cleanup, { once: true, signal });
   root.innerHTML = `<section class="graphics-page" data-no-translate>${heading(tr("Графика и цветокоррекция"), tr("Подберите изображение на своих скриншотах, затем настройте игру вручную.", "Find your preferred image using your screenshots, then adjust the game manually."))}
     <div class="graphics-top"><label>${tr("Локация", "Location")}<select id="graphics-location">${locations.map((x) => `<option value="${esc(x)}">${tr(x)}</option>`).join("")}</select></label><label class="button primary graphics-import">${tr("Добавить скриншоты", "Add screenshots")}<input id="graphics-files" type="file" accept="image/png,image/jpeg" multiple></label><span class="muted small">PNG / JPEG · ${tr("до 12 МБ · до 20 снимков", "up to 12 MB · up to 20 images")}</span></div>
-    <p class="muted small">${tr("Используйте свои исходные скриншоты без фильтров. Они хранятся только на этом компьютере и сохраняются при обновлении приложения. Оригиналы не изменяются.", "Use your own original screenshots without filters. They stay on this computer and are preserved through application updates. Originals are never changed.")}</p>
+    <p class="muted small">${tr("Игровые снимки помогают сравнить изображение. Они хранятся только на этом компьютере и сохраняются при обновлении приложения. Оригиналы не изменяются.", "Use gameplay captures to compare the image. They stay on this computer and are preserved through application updates. Originals are never changed.")}</p>
     <div id="graphics-gallery" class="graphics-gallery" aria-label="${tr("Скриншоты", "Screenshots")}"></div>
     <div class="graphics-layout"><section class="graphics-preview-panel"><div class="row wrap graphics-preview-toolbar"><strong id="graphics-image-title">${tr("Предпросмотр", "Preview")}</strong><span class="badge">${tr("Только предпросмотр", "Preview only")}</span><button id="graphics-zoom-out" aria-label="${tr("Уменьшить", "Zoom out")}">−</button><output id="graphics-zoom">100%</output><button id="graphics-zoom-in" aria-label="${tr("Увеличить", "Zoom in")}">+</button><button id="graphics-fit">${tr("По размеру окна", "Fit to window")}</button><button id="graphics-delete" hidden>${tr("Удалить снимок", "Delete image")}</button></div>
     <div class="graphics-preview-scroll"><div class="graphics-compare" id="graphics-compare" hidden><div class="graphics-scene"><img id="graphics-before" alt="${tr("Оригинальный скриншот", "Original screenshot")}" draggable="false"><div id="graphics-after-clip" class="graphics-after"><img id="graphics-after" alt="${tr("Предпросмотр цветокоррекции", "Colour correction preview")}" draggable="false"></div></div><div id="graphics-divider" class="graphics-divider"><span>‹ ›</span></div><span class="graphics-before-label">${tr("До", "Before")}</span><span class="graphics-after-label">${tr("После", "After")}</span><input id="graphics-split" type="range" min="0" max="100" value="50" aria-label="${tr("Сравнение до и после", "Before and after comparison")}"></div><div id="graphics-empty" class="empty">${tr("Добавьте скриншот выбранной локации, чтобы сравнить оригинал и цветокоррекцию.", "Add a screenshot for the selected location to compare the original and your adjustments.")}</div></div><p id="graphics-status" class="muted small" role="status" aria-live="polite"></p>
@@ -57,8 +57,11 @@ export async function renderGraphics(root) {
     <aside class="graphics-controls"><label>${tr("Пресет", "Preset")}<select id="graphics-preset"></select></label><div id="graphics-sliders">${parameters.map(([key, label, min, max, step, , unit]) => `<label class="graphics-slider"><span>${tr(label)}<output data-value="${key}"></output></span><input data-adjust="${key}" type="range" min="${min}" max="${max}" step="${step}" aria-label="${tr(label)}" data-unit="${unit}"></label>`).join("")}</div><button id="graphics-reset">${tr("Сбросить к оригиналу", "Reset to original")}</button><label>${tr("Название своего пресета", "Custom preset name")}<input id="graphics-preset-name" maxlength="60" placeholder="${tr("Мой пресет", "My preset")}"></label><div class="row wrap"><button id="graphics-save" class="primary">${tr("Сохранить новый", "Save new")}</button><button id="graphics-rename">${tr("Переименовать", "Rename")}</button><button id="graphics-remove">${tr("Удалить пресет", "Delete preset")}</button></div><p class="muted small">${tr("Сохранённые пресеты доступны на всех локациях. Встроенные пресеты — отправные точки для подбора, а не готовые настройки игры.", "Saved presets work across locations. Built-in presets are starting points for previewing, not game settings.")}</p></aside></div>
     <section class="graphics-guide"><h2>${tr("Как настроить NVIDIA и PostFX", "How to adjust NVIDIA and PostFX")}</h2><p>${tr("В игре и драйвере ничего не меняется автоматически. Предпросмотр помогает выбрать желаемый вид; одинаковые числа в разных программах не дают одинаковый результат.", "Nothing is changed automatically in the game or driver. The preview helps you choose a target look; matching numbers in different programs do not produce matching results.")}</p><ol><li>${tr("Сделайте исходный скриншот в тренировочном рейде с привычными настройками. Добавьте несколько кадров: тёмное помещение, улицу, тень и яркое небо.", "Take an original screenshot in a practice raid with your usual settings. Add several scenes: a dark interior, outdoors, shade and bright sky.")}</li><li>${tr("Выберите пресет, настройте ползунки и сравните «До / После». Проверяйте результат на разных локациях, чтобы светлые области не теряли детали.", "Choose a preset, adjust the sliders and compare Before / After. Check different locations to keep details in bright areas.")}</li><li>${tr("NVIDIA: откройте «Панель управления NVIDIA → Дисплей → Регулировка параметров цвета рабочего стола». Выберите монитор. Небольшими шагами подберите яркость, контрастность, гамму и цифровую интенсивность, ориентируясь на предпросмотр. Сначала запишите исходные значения: изменение затронет весь выбранный монитор.", "NVIDIA: open NVIDIA Control Panel → Display → Adjust desktop colour settings. Select your monitor. Adjust brightness, contrast, gamma and digital vibrance in small steps using the preview as a visual target. Record the original values first: changes affect the entire selected display.")}</li><li>${tr("Escape from Tarkov: откройте настройки игры → PostFX. Используйте доступные в вашей версии параметры яркости, цветокоррекции и резкости. Названия и набор параметров зависят от версии игры. Меняйте один параметр за раз и проверяйте в тренировочном рейде.", "Escape from Tarkov: open game settings → PostFX. Use the brightness, colour grading and sharpening controls available in your version. Names and available controls vary by game version. Change one control at a time and check in a practice raid.")}</li><li>${tr("Сделайте новый скриншот и добавьте его для сравнения. При необходимости скорректируйте значения. Проверяйте FPS, читаемость теней и отсутствие пересвета.", "Take another screenshot and add it to compare. Fine-tune as needed. Check FPS, shadow detail and blown highlights.")}</li></ol><p class="muted small">${tr("Гамма в предпросмотре использует степенную кривую. Температура и интенсивность — параметры предпросмотра; точного соответствия шкалам NVIDIA и PostFX нет. HDR, настройки монитора и освещение сцены также влияют на результат.", "Preview gamma uses a power curve. Temperature and intensity are preview controls with no exact NVIDIA or PostFX equivalent. HDR, monitor settings and scene lighting also affect the result.")}</p><details><summary>${tr("Мои значения предпросмотра", "My preview values")}</summary><pre id="graphics-values"></pre><button id="graphics-copy">${tr("Скопировать значения", "Copy values")}</button></details><p><a href="https://www.nvidia.com/content/Control-Panel-Help/vLatest/en-us/mergedProjects/nvdsp/CS_Adjust_Color_Settings_Advanced.htm" target="_blank" rel="noopener noreferrer">${tr("Справка NVIDIA: параметры цвета", "NVIDIA help: colour settings")} ↗</a></p></section></section>`;
   const $ = (s) => root.querySelector(s);
-  const persist = () =>
+  $("#graphics-location").value=settings.location||"Лес";
+  const persist = () => {
+    settings.location=$("#graphics-location").value;settings.preset=selectedPreset;
     writeWindowSetting(graphicsKey, JSON.stringify(settings));
+  };
   const status = (text) => ($("#graphics-status").textContent = text);
   function presets() {
     $("#graphics-preset").innerHTML =
@@ -120,7 +123,7 @@ export async function renderGraphics(root) {
   async function select(item) {
     const version = ++imageVersion;
     selected = item;
-    $("#graphics-delete").hidden = !item;
+    $("#graphics-delete").hidden = !item || item.readonly;
     $("#graphics-compare").hidden = true;
     $("#graphics-empty").hidden = false;
     if (!item) {
@@ -134,7 +137,7 @@ export async function renderGraphics(root) {
     }
     status(tr("Подготовка предпросмотра…", "Preparing preview…"));
     try {
-      const response = await fetch(`/api/graphics-gallery/${item.id}`, {
+      const response = await fetch(item.url || `/api/graphics-gallery/${item.id}`, {
         signal,
       });
       if (!response.ok)
@@ -167,7 +170,7 @@ export async function renderGraphics(root) {
       $("#graphics-compare").hidden = false;
       $("#graphics-empty").hidden = true;
       setZoom(1);
-      $("#graphics-image-title").textContent = tr(item.location);
+      $("#graphics-image-title").textContent = tr(item.location) + (item.readonly ? tr(" · игровой снимок", " · gameplay capture") : "");
       status(
         tr(
           "Предпросмотр уменьшен до 1920 × 1080 для быстрой работы. Исходный файл сохранён без изменений.",
@@ -187,7 +190,7 @@ export async function renderGraphics(root) {
       list
         .map(
           (x, i) =>
-            `<button class="graphics-shot" data-shot="${x.id}" aria-pressed="${selected?.id === x.id}">${tr(x.location)} · ${i + 1}<small>${x.width} × ${x.height}</small></button>`,
+            `<button class="graphics-shot" data-shot="${x.id}" aria-pressed="${selected?.id === x.id}">${x.url?`<img src="${esc(x.url)}" alt="" loading="lazy" decoding="async">`:""}${tr(x.location)} · ${i + 1}<small>${x.width} × ${x.height}</small></button>`,
         )
         .join("") ||
       `<span class="muted small">${tr("Для этой локации пока нет снимков.", "No screenshots for this location yet.")}</span>`;
@@ -196,7 +199,9 @@ export async function renderGraphics(root) {
     const response = await fetch("/api/graphics-gallery", { signal });
     if (!response.ok)
       throw Error(tr("Не удалось открыть галерею", "Could not load gallery"));
-    gallery = await response.json();
+    const own = await response.json();
+    const samples = await fetch("/data/graphics-previews.json",{signal}).then(r=>r.ok?r.json():[]).catch(()=>[]);
+    gallery = [...own,...samples];
     if (signal.aborted) return;
     drawGallery();
     await select(
@@ -210,6 +215,7 @@ export async function renderGraphics(root) {
     if (button) void select(gallery.find((x) => x.id === button.dataset.shot));
   });
   bind($("#graphics-location"), "change", () => {
+    persist();
     drawGallery();
     void select(
       gallery.find((x) => x.location === $("#graphics-location").value) || null,
@@ -262,7 +268,7 @@ export async function renderGraphics(root) {
     }
   });
   bind($("#graphics-delete"), "click", async () => {
-    if (!selected) return;
+    if (!selected || selected.readonly) return;
     const item = selected;
     if (
       !(await confirmAction(

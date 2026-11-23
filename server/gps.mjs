@@ -45,6 +45,8 @@ export class GpsService {
     this.generation = 0;
     this.startedAt = Date.now();
     this.scanCount = 0;
+    this.raidCaptureMinute = "";
+    this.recognition = { parsed: 0, rejected: 0, lastError: "" };
     this.cleanup = new ScreenshotCleanup();
   }
   start() {
@@ -61,6 +63,7 @@ export class GpsService {
   }
   settings(next) {
     const c = { ...this.config };
+    this.scanCount=0;
     for (const key of [
       "enabled",
       "autoMap",
@@ -113,6 +116,7 @@ export class GpsService {
       this.logs.clear();
       this.raid = "unknown";
       this.detectedMap = null;
+      this.raidCaptureMinute = "";
     }
     if (c.map !== this.config.map) this.fix = null;
     this.generation++;
@@ -138,6 +142,7 @@ export class GpsService {
       manualRaid: this.manualRaid,
       captureStatus: this.captureStatus,
       message: this.message,
+      recognition: this.recognition,
       cleanup: this.cleanup.state(),
       folderExists: fs.existsSync(this.config.screenshotsPath),
       logsExist: !!this.config.logsPath && fs.existsSync(this.config.logsPath),
@@ -231,7 +236,7 @@ export class GpsService {
       }
       if (this.config.deleteAutoScreenshots) await this.cleanup.flush();
       if (!this.config.enabled) return;
-      if (this.config.logsPath && ++this.scanCount % 3 === 0)
+      if (this.config.logsPath && this.scanCount++ % 3 === 0)
         await this.readLogs();
       if (
         !this.config.screenshotsPath ||
@@ -248,10 +253,20 @@ export class GpsService {
       const files = await fs.promises.readdir(this.config.screenshotsPath);
       if(!this.config.enabled || generation!==this.generation)return;
       const candidates = [];
-      for (const name of files) {
+      // Native filenames start with a sortable capture date. Bound filesystem
+      // work even when a player keeps years of screenshots in this folder.
+      for (const name of files.filter(n => /^\d{4}-\d\d-\d\d\[/.test(n) && /\.(png|jpe?g)$/i.test(n)).sort().reverse().slice(0,128)) {
         if (this.seen.has(name)) continue;
         const parsed = parseScreenshot(name);
-        if (!parsed) continue;
+        if (!parsed) {
+          if (/^\d{4}-\d\d-\d\d\[.*\.(png|jpe?g)$/i.test(name)) {
+            this.seen.set(name, 0);
+            this.recognition.rejected++;
+            this.recognition.lastError = "Имя снимка не содержит корректных координат. Используйте игровую клавишу создания скриншота.";
+          }
+          continue;
+        }
+        if(this.raidCaptureMinute && name.slice(0,17) < this.raidCaptureMinute){this.seen.set(name,0);continue;}
         const stat = await fs.promises
           .lstat(path.join(this.config.screenshotsPath, name))
           .catch(() => null);
@@ -259,9 +274,11 @@ export class GpsService {
         if (!stat?.isFile() || stat.isSymbolicLink()) continue;
         const signature = stat.mtimeMs;
         this.seen.set(name, signature);
+        this.recognition.parsed++;
         candidates.push({ name, parsed, mtime: signature });
         this.cleanup.track(session, name, stat);
       }
+      while(this.seen.size>4096)this.seen.delete(this.seen.keys().next().value);
       const latest = candidates.sort((a, b) => b.mtime - a.mtime)[0];
       if (latest && (!this.fix || latest.mtime > this.fix.updatedAt)) {
         this.fix = {
@@ -340,6 +357,8 @@ export class GpsService {
         if (event.map) {
           if (event.map !== this.detectedMap) this.fix = null;
           this.detectedMap = event.map;
+          const time=line.match(/^(\d{4}-\d\d-\d\d) (\d\d):(\d\d)/);
+          if(time)this.raidCaptureMinute=`${time[1]}[${time[2]}-${time[3]}]`;
         }
         if (event.raid) {
           this.raid = event.raid;

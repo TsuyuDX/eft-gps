@@ -18,15 +18,16 @@ function snapshot() {
     if (allowed(key) && typeof value === "string") values[key] = value;
   return { version: 1, values };
 }
-function persist() {
-  const body = JSON.stringify(snapshot());
+function persist(changes) {
+  const body = JSON.stringify(changes ? {version:1,values:changes} : snapshot());
   pending = pending
     .catch(() => {})
     .then(async () => {
       const response = await fetch("/api/window-settings", {
-        method: "PUT",
+        method: changes ? "PATCH" : "PUT",
         headers: { "Content-Type": "application/json" },
         body,
+        keepalive: body.length < 30000,
       });
       if (!response.ok) throw Error("Настройки не записаны");
     })
@@ -35,7 +36,7 @@ function persist() {
 export function writeWindowSetting(key, value) {
   if (!allowed(key)) throw Error("Неизвестная настройка");
   writeLocal(key, value);
-  persist();
+  persist({[key]:value});
 }
 export async function loadWindowSettings() {
   try {

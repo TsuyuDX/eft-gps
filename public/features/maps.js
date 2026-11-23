@@ -160,6 +160,9 @@ export async function renderMap(root, slug, {signal} = {}) {
     ["extracts", "transits", "hazards", "artillery"].forEach(group => active.add(group));
     disabledTypes.clear();
   }
+  const styleCatalog = await json("map-styles.json", "ru").catch(() => ({maps:{}}));
+  const overview = styleCatalog.maps?.[slug];
+  let mapStyle = "abstract";
   const details = await json("map-detail.json").catch(() => ({}));
   const questMetadata = await json(db.mode + "/quest-search.json").catch(
     () => ({}),
@@ -212,10 +215,18 @@ export async function renderMap(root, slug, {signal} = {}) {
   const viewport = root.querySelector("#map-viewport"),
     canvas = root.querySelector("#map-canvas"),
     image = root.querySelector("#map-image");
+  const styleSelect = document.createElement("select");styleSelect.id="map-style";styleSelect.setAttribute("aria-label","Вид карты");
+  styleSelect.innerHTML='<option value="abstract">Схема</option><option value="overhead">Обзор местности сверху</option>';
+  styleSelect.options[1].disabled=!overview;styleSelect.title=overview?"Игровой рендер местности; не спутниковая съёмка":"Проверенный обзор этой локации пока недоступен";root.querySelector("#floor").before(styleSelect);
+  try{const saved=JSON.parse(readWindowSetting(filtersKey));if(saved?.mapStyle==="overhead"&&overview)mapStyle="overhead"}catch{}
+  styleSelect.value=mapStyle;
   image.src =
     (m.svgPath && asset(m.svgPath) !== "/assets/fallback.svg"
       ? asset(m.svgPath)
       : m.renderedPath) || asset(m.image);
+  const abstractSource=image.src;
+  styleSelect.onchange=()=>{mapStyle=styleSelect.value;image.src=mapStyle==="overhead"?overview.path:abstractSource;syncFilters();draw()};
+  if(mapStyle==="overhead")image.src=overview.path;
   let baseWidth = 1,
     baseHeight = 1,
     markerLayoutSize = "";
@@ -335,6 +346,9 @@ export async function renderMap(root, slug, {signal} = {}) {
       h = viewport.clientHeight,
       cw = Math.min(w, h * ratio),
       ch = cw / ratio;
+    // Preserve the world point under the viewport centre across source/aspect
+    // changes and window resizes, instead of preserving only pixel offsets.
+    if(baseWidth>1 && baseHeight>1){tx*=cw/baseWidth;ty*=ch/baseHeight;}
     baseWidth = cw;
     baseHeight = ch;
     if (pendingFocus) {
@@ -418,7 +432,7 @@ export async function renderMap(root, slug, {signal} = {}) {
     const floorSource =
       floor?.renderedPath || (floor?.svgPath ? asset(floor.svgPath) : "");
     const highFloor = floorDetail.setSource(floor);
-    baseDetail.setSource(m);
+    baseDetail.setSource(mapStyle==="overhead" ? null : m);
     const showFloor =
       highFloor || (!!floorSource && floorSource !== "/assets/fallback.svg");
     canvas.classList.toggle("has-floor", showFloor);
@@ -581,6 +595,7 @@ export async function renderMap(root, slug, {signal} = {}) {
           active: [...active],
           disabled: [...disabledTypes],
           showHazardZones,
+          mapStyle,
         }),
       );
     } catch {}

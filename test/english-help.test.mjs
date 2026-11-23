@@ -37,6 +37,10 @@ function dom() {
     dialog.open = false;
     dialog.dispatchEvent(new Event("close"));
   };
+  document.body.insertAdjacentHTML("beforeend",'<nav id="navigation"></nav><main id="app"><div id="map-viewport"></div><select id="map-style"></select><div class="map-panel-toggles"></div><button id="gps-toggle"></button><div class="toolbar"></div><div id="graphics-sliders"></div></main><button id="settings-link"></button><button id="help-link"></button>');
+  Object.assign(globalThis,{location:{hash:"#/"},innerWidth:1280,innerHeight:720});
+  window.HTMLElement.prototype.getBoundingClientRect=()=>({left:20,top:20,right:400,bottom:80,width:380,height:60});
+  window.HTMLElement.prototype.scrollIntoView=function(){};
   return document;
 }
 const requests = [];
@@ -97,13 +101,13 @@ test("first-run tour completes all steps, persists dismissal and replays from He
   installLocalization();
   assert.equal(hasSeenTour(), false);
   openTour();
-  for (let step = 1; step <= 6; step++) {
+  for (let step = 1; step <= 9; step++) {
     assert.match(
-      document.querySelector(".tour-header").textContent,
-      new RegExp(step + " / 6"),
+      document.querySelector(".tour-coach > small").textContent,
+      new RegExp(step + " / 9"),
     );
-    assert.ok(document.querySelector("#modal").open);
-    document.querySelector("[data-tour-next]").onclick();
+    assert.ok(document.querySelector(".tour-spotlight"));
+    document.querySelector("[data-next]").onclick();
   }
   assert.equal(hasSeenTour(), true);
   assert.equal(
@@ -117,9 +121,10 @@ test("first-run tour completes all steps, persists dismissal and replays from He
   );
   openHelp();
   document.querySelector('[data-help-action="tour"]').onclick();
-  assert.equal(document.querySelector("#modal").open, true);
-  assert.match(document.querySelector("h2").textContent, /Welcome/);
-  document.querySelector("[data-tour-skip]").onclick();
+  assert.equal(document.querySelector("#modal").open, false);
+  assert.ok(document.querySelector(".interactive-tour"));
+  assert.match(document.querySelector("#tour-title").textContent, /All your tools/);
+  document.querySelector("[data-skip]").onclick();
   openHelp();
   assert.equal(
     document

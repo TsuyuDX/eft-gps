@@ -2,6 +2,8 @@ import { uiIcon } from "../core/icons.js";
 import { getPreferences, setPreference } from "../core/preferences.js";
 export function bindMapPanels(root) {
   const layout = root.querySelector(".map-layout");
+  const compact = window.matchMedia("(max-width: 1150px)");
+  let compactOpen = "";
   root.querySelectorAll("[data-toggle-panel]").forEach((button) => {
     const filters = button.dataset.togglePanel === "sidebar";
     button.innerHTML = button.closest(".map-panel-heading")
@@ -14,7 +16,7 @@ export function bindMapPanels(root) {
   function sync() {
     const prefs = getPreferences();
     for (const key of ["sidebar", "questBrowser"]) {
-      const visible = prefs[key];
+      const visible = compact.matches ? compactOpen === key : prefs[key];
       layout.classList.toggle(
         key === "sidebar" ? "filters-collapsed" : "quests-collapsed",
         !visible,
@@ -31,14 +33,16 @@ export function bindMapPanels(root) {
     (button) =>
       (button.onclick = () => {
         const key = button.dataset.togglePanel;
-        setPreference(key, !getPreferences()[key]);
+        if(compact.matches)compactOpen=compactOpen===key?"":key;
+        else setPreference(key, !getPreferences()[key]);
         sync();
       }),
   );
   window.addEventListener("preferences-changed", sync);
+  compact.addEventListener("change",sync);
   window.addEventListener(
     "view-changing",
-    () => window.removeEventListener("preferences-changed", sync),
+    () => {window.removeEventListener("preferences-changed", sync);compact.removeEventListener("change",sync);},
     { once: true },
   );
   sync();

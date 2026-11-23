@@ -25,8 +25,9 @@ export function parseScreenshot(filename) {
   const length = Math.hypot(qx, qy, qz, qw);
   if (length < 0.1 || length > 2) return null;
   const [a, b, c, d] = [qx, qy, qz, qw].map((v) => v / length);
+  // Unity forward (+Z) projected onto XZ: looking up/down must not turn the map pointer.
   const rotation =
-    ((Math.atan2(2 * (d * b + a * c), 1 - 2 * (b * b + c * c)) * 180) /
+    ((Math.atan2(2 * (d * b + a * c), 1 - 2 * (a * a + b * b)) * 180) /
       Math.PI +
       360) %
     360;
@@ -37,8 +38,10 @@ const names = {
   customs: "customs",
   woods: "woods",
   interchange: "interchange",
+  shopping_mall: "interchange",
   shoreline: "shoreline",
   rezervbase: "reserve",
+  rezerv_base: "reserve",
   reserve: "reserve",
   lighthouse: "lighthouse",
   tarkovstreets: "streets-of-tarkov",
@@ -49,13 +52,17 @@ const names = {
   factory_day_preset: "factory",
   factory_night_preset: "night-factory",
   factory_day: "factory",
+  factory_event: "factory",
   factory_night: "night-factory",
   laboratory: "the-lab",
   lab: "the-lab",
   laboratory_preset: "the-lab",
+  laboratory_event: "the-lab",
+  laboratory_dark: "the-lab",
   labyrinth: "the-labyrinth",
   labyrinth_preset: "the-labyrinth",
   sandbox: "ground-zero",
+  sandbox_start: "ground-zero",
   sandbox_high: "ground-zero-21",
   sandbox_preset: "ground-zero",
   sandbox_high_preset: "ground-zero-21",
@@ -75,8 +82,10 @@ export function parseLogLine(line) {
   const location =
     line.match(/Location:\s*([\w-]+)/i) ||
     line.match(/"location"\s*:\s*"([\w-]+)"/i);
-  const map = mapName(scene?.[1] || location?.[1]);
-  const mode = line.match(/Session mode:\s*(regular|pve)/i)?.[1]?.toLowerCase();
+  const rcid = line.match(/rcid:\s*([\w-]+)\.scenes?preset\.asset/i);
+  const map = mapName(scene?.[1]) || mapName(rcid?.[1]) || mapName(location?.[1]);
+  const rawMode = line.match(/Session mode:\s*(regular|pve|pvpseason|pvp)\b/i)?.[1]?.toLowerCase();
+  const mode = rawMode && (rawMode.startsWith("pvp") ? "regular" : rawMode);
   let raid = null;
   if (/application\|GameStarted\b/i.test(line)) raid = "active";
   else if (

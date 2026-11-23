@@ -4,7 +4,8 @@ export function deltaManifest(current,base) {
   const prior=new Map(base.files.map(f=>[f.path,f]));
   const files=current.files.filter(f=>{const old=prior.get(f.path);return !old||old.sha256!==f.sha256||old.size!==f.size;});
   const names=new Set(current.files.map(f=>f.path));
-  const removed=base.files.filter(f=>!names.has(f.path)).map(f=>f.path);
+  // Keep previously saved offline material when upgrading to hybrid storage.
+  const removed=base.files.filter(f=>!names.has(f.path)&&!(current.hybrid&&/^public\/(assets|data)\//.test(f.path))).map(f=>f.path);
   if(!files.some(f=>f.path==='package.json'))throw Error('A delta must include the new package version');
   return {format:2,app:'TarkovOffline',version:current.version,baseVersion:base.version,files,removed};
 }

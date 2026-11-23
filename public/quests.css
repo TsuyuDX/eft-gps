@@ -30,7 +30,7 @@
 }
 .quest-guide-reference > summary {
   cursor: pointer;
-  color: #c5baa2;
+  color: #a2c5b1;
   font-size: 12px;
 }
 .quest-card-header {
@@ -64,7 +64,7 @@
   padding: 14px 18px;
   background: #111;
   border: 1px solid #363636;
-  border-left: 3px solid #c3b18a;
+  border-left: 3px solid #8ac3a2;
   margin-bottom: 16px;
 }
 .quest-context .eyebrow {
@@ -108,7 +108,7 @@
 .quest-guide a:not(.button) {
   text-decoration: underline;
   text-underline-offset: 3px;
-  color: #d9cab0;
+  color: #b0d9c1;
 }
 .quest-hero-image {
   display: block;
@@ -252,7 +252,7 @@
   margin-bottom: 6px;
 }
 .quest-money {
-  color: #cfbe93;
+  color: #93cfac;
 }
 .quest-full-link {
   margin-top: 18px;
@@ -318,8 +318,8 @@
   min-width: 0;
 }
 .map-quest-row [aria-pressed="true"] {
-  border-color: #b7a47f;
-  background: #24211b;
+  border-color: #7fb796;
+  background: #1b241f;
 }
 .map-quest-row img {
   width: 27px;

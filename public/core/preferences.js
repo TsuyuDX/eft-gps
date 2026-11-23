@@ -1,3 +1,5 @@
+import {renderTraining} from "./interactive-tour.js";
+import {renderContentSettings} from "./content-client.js";
 import {renderDiagnosticsControl} from "./diagnostics-client.js";
 import {renderMapColourControls} from "./map-colour.js";
 import { renderOverlayControl } from "./overlay-client.js";
@@ -97,7 +99,7 @@ function storePreferences(value) {
 export function renderPreferences(root, selected = "Интерфейс") {
   if(selected === "Экспериментальное") selected = "Overlay";
   const prefs = getPreferences();
-  root.innerHTML = `<div class="preference-tabs" role="group" aria-label="Разделы настроек">${["Интерфейс", "Карта", "Overlay", "Оформление", "Диагностика"].map((title) => `<button type="button" data-preference-tab="${title}" aria-pressed="false">${title}</button>`).join("")}</div><p class="muted">Настройки сохраняются автоматически. Прогресс заданий и настройки GPS не меняются.</p>${preferenceGroups.map(([title, rows]) => `<section class="preference-group" data-preference-panel="${title}"><h3>${title}</h3>${rows.map(([key, label, description]) => `<label class="preference-row"><span><strong>${label}</strong><small class="muted">${description}</small></span><input type="checkbox" data-preference="${key}" ${prefs[key] ? "checked" : ""}></label>`).join("")}</section>`).join("")}<section class="preference-group" data-preference-panel="Оформление"><h3>Оформление</h3><div class="preference-row"><span><strong>Тема приложения</strong><small class="muted">Сейчас используется чёрная тема. Другие темы скоро будут доступны.</small></span><button type="button" class="theme-coming-soon" data-secret-theme aria-disabled="true" title="Новые темы скоро будут доступны">Выбор темы · скоро будет</button></div></section><button type="button" data-reset-preferences>Вернуть стандартный вид</button><p class="muted small">Слои и разновидности меток выбираются на самой карте и запоминаются отдельно для каждой локации и режима. Зоны опасностей включаются там же.</p>`;
+  root.innerHTML = `<div class="preference-tabs" role="group" aria-label="Разделы настроек">${["Интерфейс", "Карта", "Overlay", "Оформление", "Данные", "Обучение", "Диагностика"].map((title) => `<button type="button" data-preference-tab="${title}" aria-pressed="false">${title}</button>`).join("")}</div><p class="muted">Настройки сохраняются автоматически. Прогресс заданий и настройки GPS не меняются.</p>${preferenceGroups.map(([title, rows]) => `<section class="preference-group" data-preference-panel="${title}"><h3>${title}</h3>${rows.map(([key, label, description]) => `<label class="preference-row"><span><strong>${label}</strong><small class="muted">${description}</small></span><input type="checkbox" data-preference="${key}" ${prefs[key] ? "checked" : ""}></label>`).join("")}</section>`).join("")}<section class="preference-group" data-preference-panel="Оформление"><h3>Оформление</h3><div class="preference-row"><span><strong>Тема приложения</strong><small class="muted">Сейчас используется тёмная тема с зелёными акцентами. Другие темы скоро будут доступны.</small></span><button type="button" class="theme-coming-soon" data-secret-theme aria-disabled="true" title="Новые темы скоро будут доступны">Выбор темы · скоро будет</button></div></section><button type="button" data-reset-preferences>Вернуть стандартный вид</button><p class="muted small">Слои и разновидности меток выбираются на самой карте и запоминаются отдельно для каждой локации и режима. Зоны опасностей включаются там же.</p>`;
   const beta=document.createElement("section");beta.className="preference-group";beta.dataset.preferencePanel="Overlay";root.querySelector("[data-reset-preferences]").before(beta);renderOverlayControl(beta);
   const mapPanel = root.querySelector('[data-preference-panel="Карта"]');
   mapPanel?.insertAdjacentHTML(
@@ -112,6 +114,7 @@ export function renderPreferences(root, selected = "Интерфейс") {
       toast("Пасхалка открыта! Тема действует до перезапуска приложения.");
   };
   const diagnosticPanel=document.createElement("section");diagnosticPanel.className="preference-group";diagnosticPanel.dataset.preferencePanel="Диагностика";root.querySelector("[data-reset-preferences]").before(diagnosticPanel);void renderDiagnosticsControl(diagnosticPanel);
+  for(const [name,render] of [["Обучение",renderTraining],["Данные",renderContentSettings]]){const panel=document.createElement("section");panel.className="preference-group";panel.dataset.preferencePanel=name;root.querySelector("[data-reset-preferences]").before(panel);render(panel);}
   bindMarkerStyleControls(root);
   languageControl(root);
   const choose = (title) => {
@@ -134,7 +137,7 @@ export function renderPreferences(root, selected = "Интерфейс") {
       (button) => (button.onclick = () => choose(button.dataset.preferenceTab)),
     );
   choose(
-    ["Интерфейс", "Карта", "Оформление", "Overlay", "Диагностика"].includes(selected)
+    ["Интерфейс", "Карта", "Оформление", "Overlay", "Данные", "Обучение", "Диагностика"].includes(selected)
       ? selected
       : "Интерфейс",
   );

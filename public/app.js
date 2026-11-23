@@ -104,7 +104,7 @@ function nav() {
   navigation.innerHTML = sections
     .map(
       ([k, v]) =>
-        `<a href="#/${k}/${["map", "boss", "trader", "item", "quest", "hideout", "items-tracker"].includes(k) ? db.mode : ""}" data-section="${k}" class="${["promocodes","graphics"].includes(k)?"nav-has-new":""}"><span>${v}</span>${["promocodes","graphics"].includes(k)?`<span class="nav-new-badge" aria-hidden="true" data-no-translate>${textPair("НОВОЕ","NEW")}</span>`:""}</a>`,
+        `<a href="#/${k}/${["map", "boss", "trader", "item", "quest", "hideout", "items-tracker"].includes(k) ? db.mode : ""}" data-section="${k}" class="${["promocodes","graphics"].includes(k)?"nav-has-new":""}"><span class="nav-icon">${uiIcon(({map:"map",gps:"locate",quest:"list",item:"box","items-tracker":"check",hideout:"home",trader:"trade",boss:"target",event:"calendar",promocodes:"ticket",season:"season",news:"news",graphics:"sliders"})[k],17)}</span><span>${v}</span>${["promocodes","graphics"].includes(k)?`<span class="nav-new-badge" aria-hidden="true" data-no-translate>${textPair("НОВОЕ","NEW")}</span>`:""}</a>`,
     )
     .join("");
 }

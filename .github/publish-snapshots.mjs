@@ -76,12 +76,14 @@ for(const item of plan) {
     const componentModule=await import(pathToFileURL(path.join(source,'scripts/prepare-portable.mjs')).href+'?snapshot='+item.version);
     componentModule.assembleComponent(source,JSON.parse(await fs.readFile(path.join(source,'scripts/offline-components.json'),'utf8')));
     const inventoryFile=path.join(source,'distribution/package-files.json');const inventory=JSON.parse(await fs.readFile(inventoryFile,'utf8'));
-    const files=inventory.files.map(f=>({...f}));
+    let files=inventory.files.map(f=>({...f}));
+    let hybrid=false;
+    if(await fs.stat(path.join(source,"public/data/content-catalog.json")).catch(()=>null)){const {hybridFiles}=await import(pathToFileURL(path.join(source,"scripts/hybrid-package.mjs")).href);files=hybridFiles(files,JSON.parse(await fs.readFile(path.join(source,"public/data/content-catalog.json"),"utf8")));hybrid=true;}
     for(const relative of ['distribution/package-files.json','runtime/MicrosoftEdgeWebView2RuntimeInstallerX64.exe']){
       if(!files.some(f=>f.path===relative)){const file=path.join(source,relative);files.push({path:relative,size:(await fs.stat(file)).size,sha256:await hash(file)});}
     }
     for(const entry of files){if(entry.path.split('/').some(p=>!p||p==='..'||p==='.')||/^(userdata|work|\.git)\//.test(entry.path))throw Error('Unsafe source inventory');}
-    const releaseManifest={format:1,app:'TarkovOffline',version:item.version,builtAt:run('git',['show','-s','--format=%cI',item.commit]),files};
+    const releaseManifest={format:1,hybrid,app:'TarkovOffline',version:item.version,builtAt:run('git',['show','-s','--format=%cI',item.commit]),files};
     const manifestFile=path.join(out,'release-input.json');await fs.writeFile(manifestFile,JSON.stringify(releaseManifest));
     const native=path.join(home,'native');
     const nativeText=path.join(out,'NativeText.cs'),translations=path.join(out,'native.en.json'),russianTranslations=path.join(out,'native.ru.json'),maintenance=path.join(out,'Maintenance.cs');

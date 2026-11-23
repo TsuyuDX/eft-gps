@@ -63,6 +63,11 @@ export const locations = [
   "Маяк",
   "Резерв",
   "Эпицентр",
+  "Ночной Завод",
+  "Эпицентр 21+",
+  "Ледокол",
+  "Терминал",
+  "Лабиринт",
   "Другая локация",
 ];
 export function normalizeAdjustments(value = {}) {
@@ -103,6 +108,8 @@ export function normalizeGraphics(value) {
         values: normalizeAdjustments(preset.values),
       });
     }
+  if(locations.includes(value?.location))result.location=value.location;
+  if(value?.preset===""||[...builtinPresets,...result.presets].some(p=>p?.id===value?.preset))result.preset=value.preset;
   return result;
 }
 export function validGraphics(value) {
@@ -125,6 +132,8 @@ export function validGraphics(value) {
         v[k] <= max,
     );
   return (
+    (value.location===undefined||locations.includes(value.location)) &&
+    (value.preset===undefined||value.preset===""||[...builtinPresets,...value.presets].some(p=>p?.id===value.preset)) &&
     validValues(value.values) &&
     value.presets.every(
       (p) =>

@@ -1,3 +1,4 @@
+import {startInteractiveTour} from "../core/interactive-tour.js";
 import {textPair} from "../core/localization.js";
 import { supportUrl } from "../core/support-config.js";
 import { language } from "../core/localization.js";
@@ -16,80 +17,6 @@ import {
 } from "../core/brand.js";
 const L = textPair;
 const tourKey = "tarkov-onboarding-v1";
-const steps = [
-  {
-    symbol: "⌖",
-    title: ["Добро пожаловать в EFT GPS", "Welcome to EFT GPS"],
-    body: [
-      "Карты, задания, предметы и подготовка к рейду — в одном окне. Всё сохранённое доступно без интернета. Этот короткий обзор покажет, с чего начать.",
-      "Maps, quests, items and raid preparation in one window. Saved content works offline. This short tour shows you where to start.",
-    ],
-    tip: [
-      "Выбранный язык можно поменять в настройках.",
-      "You can change your language in Settings.",
-    ],
-  },
-  {
-    symbol: "◇",
-    title: ["Настройте карту под рейд", "Set up your raid map"],
-    body: [
-      "Откройте локацию, выберите этаж и оставьте только нужные метки. Разновидности контейнеров включаются отдельно. Приближайте колесом, перемещайте карту перетаскиванием.",
-      "Open a location, choose a floor and keep only the markers you need. Container types can be toggled individually. Use the wheel to zoom and drag to pan.",
-    ],
-    tip: [
-      "Фильтры и личные метки сохраняются для каждого режима и локации.",
-      "Filters and personal markers are saved per game mode and location.",
-    ],
-  },
-  {
-    symbol: "✓",
-    title: ["Открывайте задания прямо с карты", "Open quests from the map"],
-    body: [
-      "Нажмите на метку задания, чтобы увидеть цели, необходимые ключи и доступное прохождение. Поиск находит названия, предметы и текст инструкций.",
-      "Click a quest marker to view objectives, required keys and the available walkthrough. Search finds quest names, items and instructions.",
-    ],
-    tip: [
-      "Для заданий без подробного прохождения доступен краткий план по целям.",
-      "Quests without a detailed walkthrough have a quick objective-based plan.",
-    ],
-  },
-  {
-    symbol: "⌁",
-    title: ["Подключите GPS", "Connect GPS"],
-    body: [
-      "В разделе GPS проверьте папки скриншотов и логов. Автосъёмку включайте вручную перед рейдом. Она работает только при активном окне игры.",
-      "Check screenshot and log folders in GPS settings. Enable auto capture manually before a raid. It runs only while the game window is active.",
-    ],
-    tip: [
-      "Позиция определяется по новым скриншотам. Между снимками GPS не измеряет перемещение.",
-      "Position comes from new screenshots. GPS does not measure movement between captures.",
-    ],
-  },
-  {
-    symbol: "↗",
-    title: ["Сохраняйте свой прогресс", "Keep your progress"],
-    body: [
-      "Отмечайте выполненные задания, уровни убежища и собранные предметы. У PvP и PvE отдельный прогресс. В настройках можно сохранить резервную копию.",
-      "Track completed quests, built hideout levels and collected items. PvP and PvE progress is separate. Save a backup from Settings.",
-    ],
-    tip: [
-      "Очистка GPS удаляет только новые снимки сеанса автосъёмки. Старые скриншоты сохраняются.",
-      "GPS cleanup deletes only new screenshots from the auto-capture session. Older screenshots are kept.",
-    ],
-  },
-  {
-    symbol: "?",
-    title: ["Можно отправляться в рейд", "You are ready for your raid"],
-    body: [
-      "Ctrl+K открывает общий поиск, Esc закрывает карточку или сворачивает карту. Этот обзор, ответы на вопросы и список изменений доступны по кнопке «Помощь».",
-      "Ctrl+K opens global search. Esc closes a detail view or collapses the map. Find this tour, FAQs and release notes under Help.",
-    ],
-    tip: [
-      "В разделе поддержки можно узнать, как помочь развитию проекта. Общение, помощь и обсуждение обновлений доступны на нашем Discord-сервере.",
-      "Visit Support to learn how to help fund development. Join our Discord server for community chat, help and update discussions.",
-    ],
-  },
-];
 export function hasSeenTour() {
   try {
     return JSON.parse(readWindowSetting(tourKey))?.completed === true;
@@ -97,41 +24,7 @@ export function hasSeenTour() {
     return false;
   }
 }
-export function openTour() {
-  const dialog = document.querySelector("#modal");
-  let step = 0;
-  dialog.classList.add("tour-dialog");
-  function render() {
-    const item = steps[step];
-    modal(
-      `<div class="tour-header"><small>${esc(APP_TITLE)}</small><span>${step + 1} / ${steps.length}</span></div><div class="tour-art" aria-hidden="true"><span>${item.symbol}</span><i></i><i></i><i></i></div><h2>${esc(L(...item.title))}</h2><p class="tour-copy">${esc(L(...item.body))}</p><p class="tour-tip">${esc(L(...item.tip))}</p><div class="tour-dots" aria-label="${L("Этапы обзора", "Tour steps")}">${steps.map((_, i) => `<span class="${i === step ? "active" : ""}"></span>`).join("")}</div><div class="tour-actions"><button class="quiet" data-tour-skip>${L("Пропустить", "Skip")}</button><span></span><button data-tour-back ${step === 0 ? "disabled" : ""}>${L("Назад", "Back")}</button><button class="primary" data-tour-next>${step === steps.length - 1 ? L("Начать", "Let’s go") : L("Далее", "Next")}</button></div>`,
-    );
-    document.querySelector("[data-tour-skip]").onclick = () => dialog.close();
-    document.querySelector("[data-tour-back]").onclick = () => {
-      step = Math.max(0, step - 1);
-      render();
-    };
-    document.querySelector("[data-tour-next]").onclick = () => {
-      if (step === steps.length - 1) dialog.close();
-      else {
-        step++;
-        render();
-      }
-    };
-  }
-  dialog.addEventListener(
-    "close",
-    () => {
-      dialog.classList.remove("tour-dialog");
-      writeWindowSetting(
-        tourKey,
-        JSON.stringify({ completed: true, version: 1 }),
-      );
-    },
-    { once: true },
-  );
-  render();
-}
+export function openTour() { startInteractiveTour(); }
 export function maybeShowTour() {
   if (!hasSeenTour()) openTour();
 }

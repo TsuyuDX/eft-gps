@@ -33,25 +33,32 @@ test('live server blocks foreign origins, rebinding, static junction escapes and
  await fs.copyFile('server/profile-store.mjs',path.join(directory,'server/profile-store.mjs'));
  await fs.mkdir(path.join(directory,'public/core'),{recursive:true});
  await fs.copyFile('public/core/overlay-settings.js',path.join(directory,'public/core/overlay-settings.js'));
- for(const file of ['server.mjs','server/connectivity.mjs','server/app-update.mjs','server/overlay.mjs','server/event-content.mjs','server/startup.mjs','server/gps.mjs','server/screenshot-cleanup.mjs','server/window-settings.mjs','server/graphics-gallery.mjs','server/game-info.mjs','server/diagnostics.mjs','public/core/game-info-model.js','public/core/news-artwork.js','public/core/map-colour-model.js','public/data/game-info.json','public/core/graphics-model.js','public/core/gps-format.js','public/core/profile-schema.js']){
+ for(const file of ['server.mjs','server/content-cache.mjs','server/connectivity.mjs','server/app-update.mjs','server/overlay.mjs','server/event-content.mjs','server/startup.mjs','server/gps.mjs','server/screenshot-cleanup.mjs','server/window-settings.mjs','server/graphics-gallery.mjs','server/game-info.mjs','server/diagnostics.mjs','public/core/game-info-model.js','public/core/news-artwork.js','public/core/map-colour-model.js','public/data/game-info.json','public/core/graphics-model.js','public/core/gps-format.js','public/core/profile-schema.js']){
    await fs.mkdir(path.dirname(path.join(directory,file)),{recursive:true});await fs.copyFile(file,path.join(directory,file));
  }
+ await fs.mkdir(path.join(directory,'public/data'),{recursive:true});
+ await fs.writeFile(path.join(directory,'public/data/content-catalog.json'),JSON.stringify({format:1,revision:'0'.repeat(64),files:[],packs:[]}));
  await fs.writeFile(path.join(directory,'package.json'),JSON.stringify({type:'module',version:'1.8.1'}));
  await fs.writeFile(path.join(directory,'public/index.html'),'safe interface');
  const outside=path.join(directory,'private');await fs.mkdir(outside);await fs.writeFile(path.join(outside,'secret.txt'),'private test secret');
  await fs.symlink(outside,path.join(directory,'public/escape'),process.platform==='win32'?'junction':'dir');
  const listener=net.createServer();listener.listen(0,'127.0.0.1');await once(listener,'listening');const port=listener.address().port;await new Promise(resolve=>listener.close(resolve));
- child=spawn(process.execPath,[path.join(directory,'server.mjs')],{cwd:directory,env:{...process.env,PORT:String(port),EFTGPS_PREVIEW:"1",EFTGPS_NO_EVENT_NETWORK:"1"},stdio:['ignore','pipe','pipe'],windowsHide:true});
+ child=spawn(process.execPath,[path.join(directory,'server.mjs')],{cwd:directory,env:{...process.env,PORT:String(port),EFTGPS_PREVIEW:"1",EFTGPS_NO_EVENT_NETWORK:"1",EFTGPS_NO_CONTENT_NETWORK:"1"},stdio:['ignore','pipe','pipe'],windowsHide:true});
 
  let errors='';child.stderr.on('data',b=>errors+=b);const origin='http://127.0.0.1:'+port;
  let ready=false;for(let i=0;i<120;i++){try{const r=await fetch(origin+'/api/health');if(r.ok){ready=true;break;}}catch{}await new Promise(resolve=>setTimeout(resolve,50));}assert.equal(ready,true,errors);
  const r=await fetch(origin+'/');assert.match(r.headers.get('content-security-policy'),/frame-ancestors 'self'/);
  assert.equal((await fetch(origin+'/api/profile',{headers:{Origin:'https://evil.test'}})).status,403);
  assert.equal((await fetch(origin+'/api/gps/state',{headers:{'Sec-Fetch-Site':'cross-site'}})).status,403);
+ assert.equal((await fetch(origin+'/api/content/download',{method:'POST',headers:{Origin:'https://evil.test'}})).status,403);
+ assert.equal((await fetch(origin+'/api/content')).status,200);
  const badHost=await new Promise((resolve,reject)=>{const request=http.get(origin+'/api/health',{headers:{Host:'evil.test'}},response=>{response.resume();response.on('end',()=>resolve(response.statusCode));});request.on('error',reject);});assert.equal(badHost,403);
  assert.equal((await fetch(origin+'/escape/secret.txt')).status,404);
  assert.equal((await fetch(origin+'/%')).status,400);
  const headers={Origin:origin,'Content-Type':'application/json'};
+ assert.equal((await fetch(origin+'/api/window-settings',{method:'PUT',headers,body:JSON.stringify({version:1,values:{'tarkov-interface-v1':'{"clock":false}'}})})).status,204);
+ assert.equal((await fetch(origin+'/api/window-settings',{method:'PATCH',headers,body:JSON.stringify({version:1,values:{'tarkov-onboarding-v1':'{"completed":true}'}})})).status,204);
+ assert.equal((await fetch(origin+'/api/window-settings').then(r=>r.json())).values['tarkov-interface-v1'],'{"clock":false}');
  assert.equal((await fetch(origin+'/api/graphics-gallery',{method:'POST',headers:{Origin:'https://evil.test'},body:'not an image'})).status,403);
  assert.equal((await fetch(origin+'/api/graphics-gallery',{method:'POST',headers,body:'not an image'})).status,400);
  assert.deepEqual(await fetch(origin+'/api/graphics-gallery').then(r=>r.json()),[]);

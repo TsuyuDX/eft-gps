@@ -1,4 +1,5 @@
 import {Diagnostics,diagnosticPolicyVersion} from "./server/diagnostics.mjs";
+import {ContentCache} from "./server/content-cache.mjs";
 import { GameInfoService } from "./server/game-info.mjs";
 import { GraphicsGallery, graphicsGalleryRoute } from "./server/graphics-gallery.mjs";
 import { Connectivity } from "./server/connectivity.mjs";
@@ -51,6 +52,7 @@ const diagnostics=new Diagnostics(userRoot,appVersion);
 void diagnostics.ready.then(()=>diagnostics.record({category:"startup",code:"started"}));
 const gameInfoService = new GameInfoService(root);
 const graphicsGallery = new GraphicsGallery(userRoot);
+const contentCache = new ContentCache(root);
 const gps = new GpsService(root);
 const overlayManager=new OverlayManager(root,port);
 const connectivity = new Connectivity();
@@ -75,6 +77,9 @@ const server = http.createServer(async (req, res) => {
       return res.end("Invalid host");
     }
     res.setHeader("X-Content-Type-Options", "nosniff");
+    // Local UI activity keeps a preview alive even when background browser
+    // timers are throttled. Normal desktop shutdown still uses its handshake.
+    if(process.env.EFTGPS_PREVIEW === "1")lastPing=Date.now();
     res.setHeader("Referrer-Policy", "no-referrer");
     res.setHeader(
       "Content-Security-Policy",
@@ -327,7 +332,7 @@ const server = http.createServer(async (req, res) => {
       res.setHeader("Cache-Control", "no-store");
       if (req.method === "GET")
         return res.end(fs.existsSync(file) ? fs.readFileSync(file) : "null");
-      if (req.method !== "PUT") {
+      if (!["PUT","PATCH"].includes(req.method)) {
         res.writeHead(405);
         return res.end("{}");
       }
@@ -351,6 +356,11 @@ const server = http.createServer(async (req, res) => {
       if (!validWindowSettings(value)) {
         res.writeHead(400);
         return res.end("{}");
+      }
+      if(req.method==="PATCH"){
+        let previous;try{previous=JSON.parse(fs.readFileSync(file,"utf8"))}catch{}
+        if(validWindowSettings(previous))value.values={...previous.values,...value.values};
+        if(!validWindowSettings(value)){res.writeHead(400);return res.end("{}");}
       }
       fs.mkdirSync(userRoot, { recursive: true });
       fs.writeFileSync(file + ".tmp", JSON.stringify(value));
@@ -393,6 +403,16 @@ const server = http.createServer(async (req, res) => {
         return res.end();
       }
     }
+    if(url.pathname.startsWith('/api/content')){
+      if(url.pathname==='/api/content'&&req.method==='GET'){res.setHeader('Content-Type','application/json');return res.end(JSON.stringify(await contentCache.state()))}
+      if(req.method==='POST'){
+        if(url.pathname==='/api/content/check')void contentCache.check();
+        else if(url.pathname==='/api/content/download')contentCache.start();
+        else if(url.pathname==='/api/content/cancel')contentCache.cancel();
+        else{res.writeHead(404);return res.end()}
+        res.setHeader('Content-Type','application/json');return res.end('{}');
+      }
+    }
     if (!["GET", "HEAD"].includes(req.method)) {
       res.writeHead(405);
       return res.end();
@@ -401,11 +421,19 @@ const server = http.createServer(async (req, res) => {
       publicRoot,
       decodeURIComponent(url.pathname === "/" ? "/index.html" : url.pathname),
     );
+    let cached=false;
+    const contentPath=decodeURIComponent(url.pathname).slice(1);
+    if(req.method==='GET'||req.method==='HEAD'){
+      await contentCache.ready;
+      if(contentCache.index.has(contentPath)){
+        try{p=await contentCache.file(contentPath);if(contentCache.stalePaths.has(contentPath))res.setHeader("X-EFTGPS-Content-Stale","1");cached=!!p&&p.startsWith(contentCache.dir+path.sep)}catch(e){res.writeHead(503,{'Content-Type':'text/plain; charset=utf-8'});return res.end(e.message)}
+      }
+    }
     if (!p || !fs.existsSync(p) || !fs.statSync(p).isFile()) {
       res.writeHead(404);
       return res.end("Not found");
     }
-    const canonicalRoot = fs.realpathSync(publicRoot);
+    const canonicalRoot = fs.realpathSync(cached?contentCache.dir:publicRoot);
     p = fs.realpathSync(p);
     if (!p.startsWith(canonicalRoot + path.sep)) {
       res.writeHead(404);
@@ -413,7 +441,7 @@ const server = http.createServer(async (req, res) => {
     }
     res.setHeader(
       "Content-Type",
-      types[path.extname(p)] || "application/octet-stream",
+      types[path.extname(contentPath||p)] || "application/octet-stream",
     );
     res.setHeader("Cache-Control", "no-cache");
     res.setHeader("Content-Length", fs.statSync(p).size);
@@ -448,6 +476,7 @@ if (
     console.log(`Tarkov Offline: http://127.0.0.1:${port}`),
   );
   gps.start();
+  void contentCache.ready.then(()=>{if(process.env.EFTGPS_NO_CONTENT_NETWORK!=="1")return contentCache.check()}).catch(()=>{});
   if (process.env.EFTGPS_NO_EVENT_NETWORK !== "1")
     eventContent.start({ isActive: () => Date.now() - lastPing < 120000 });
   process.on("exit", () => {
@@ -469,8 +498,9 @@ if (
   });
   if (process.argv.includes("--desktop") || process.env.EFTGPS_PREVIEW === "1")
     setInterval(() => {
-      const downloading = ["checking", "downloading", "verifying"].includes(appUpdater.state.phase);
-      if (Date.now() - lastPing > 120000 && !downloading)
+      const downloading = ["checking", "downloading", "verifying"].includes(appUpdater.state.phase) || !!contentCache.downloading;
+      const idleLimit=process.env.EFTGPS_PREVIEW === "1"?900000:120000;
+      if (Date.now() - lastPing > idleLimit && !downloading)
         server.close(() => process.exit(0));
     }, 30000).unref();
 }

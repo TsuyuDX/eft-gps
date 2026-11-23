@@ -32,7 +32,7 @@ export async function json(url, locale = language()) {
       key,
       fetch("/data/" + requested)
         .then((r) => {
-          if (!r.ok) throw Error("Нет локального файла: " + url);
+          if (!r.ok) throw Error("Не удалось загрузить материал. Проверьте подключение или скачайте базу для офлайн-доступа: " + url);
           return r.json();
         })
         .then((value) =>

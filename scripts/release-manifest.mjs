@@ -1,12 +1,14 @@
+import {hybridFiles} from "./hybrid-package.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";
 import { createReadStream } from "node:fs";
 import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const files = [];
+let files = [];
 const top = ["public", "server", "scripts", "runtime", "test", "node_modules"];
 async function walk(relative) {
+
   const stat = await fs.lstat(path.join(root, relative));
   if (stat.isSymbolicLink())
     throw Error("Ссылка в составе выпуска: " + relative);
@@ -38,6 +40,7 @@ for (const name of [
   "distribution/checkout.json",
 ])
   await walk(name);
+files=hybridFiles(files,JSON.parse(await fs.readFile(path.join(root,"public/data/content-catalog.json"),"utf8")));
 let cursor = 0;
 await Promise.all(
   Array.from({ length: 8 }, async () => {
@@ -54,6 +57,7 @@ await Promise.all(
 files.sort((a, b) => a.path.localeCompare(b.path, "en"));
 const manifest = {
   format: 1,
+  hybrid: true,
   app: "TarkovOffline",
   version: JSON.parse(await fs.readFile(path.join(root, "package.json")))
     .version,

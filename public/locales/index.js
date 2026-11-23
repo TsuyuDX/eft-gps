@@ -1,3 +1,4 @@
+import {workspaceTexts} from "./workspace.js";
 import { diagnosticTexts } from "./diagnostics.js";
 import { customTexts } from "./custom.js";
 import { markup } from "./markup.js";
@@ -41,6 +42,7 @@ export const interfaceTexts = Object.assign(
   other_interface,
   markup,
   diagnosticTexts,
+  workspaceTexts,
   customTexts,
 );
 

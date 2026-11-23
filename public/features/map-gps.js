@@ -63,7 +63,8 @@ export function bindMapGps(root, map, { setFloor, center }) {
     const age = Math.max(0, Math.floor((Date.now() - fix.updatedAt) / 1000)),
       p = projectPoint(fix.position, map),
       stale = age > Math.max(5, s.config.interval * 3);
-    dot.hidden = p.x < 0 || p.x > 100 || p.y < 0 || p.y > 100;
+    dot.hidden = ![p.x,p.y].every(Number.isFinite) || p.x < 0 || p.x > 100 || p.y < 0 || p.y > 100;
+    if(dot.hidden){label.textContent=L("GPS: координаты вне границ карты. Проверьте выбранную локацию.","GPS: coordinates outside this map. Check the selected location.");return;}
     dot.style.left = p.x + "%";
     dot.style.top = p.y + "%";
     dot.classList.toggle("stale", stale);

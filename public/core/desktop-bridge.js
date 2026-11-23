@@ -1,11 +1,13 @@
+import {openPreferences} from "./preferences.js";
 import { confirmAction, toast } from "./ui.js";
 export function bindDesktopActions(root) {
   const bridge = window.chrome?.webview;
   root.querySelectorAll("[data-desktop-command]").forEach((button) => {
-    button.disabled = !bridge;
+    button.disabled = !bridge && button.dataset.desktopCommand!=="update-data";
     if (!bridge) button.title = "Доступно в отдельном окне EFT GPS";
     button.onclick = async () => {
       const command = button.dataset.desktopCommand;
+      if(command==="update-data"){openPreferences("Данные");return;}
       if (
         command === "update-data" &&
         !(await confirmAction(
