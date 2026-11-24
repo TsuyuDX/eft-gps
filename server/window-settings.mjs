@@ -15,7 +15,8 @@ export function validWindowSettings(value) {
     entries.length <= 40 &&
     entries.every(
       ([key, text]) =>
-        (key === "eftgps-map-colour-v1" ||
+        (key === "eftgps-appearance-v1" ||
+  key === "eftgps-map-colour-v1" ||
   key === "eftgps-graphics-v1" ||
           key === "tarkov-overlay-v1" ||
           key === "tarkov-map-markers-v1" ||
@@ -32,6 +33,7 @@ export function validWindowSettings(value) {
               data &&
               typeof data === "object" &&
               !Array.isArray(data) &&
+              (key !== "eftgps-appearance-v1" || ([90,100,110,125].includes(data.scale) && ["system","arial","tahoma"].includes(data.font) && typeof data.animations==="boolean")) &&
               (key !== "eftgps-map-colour-v1" || validMapColour(data)) &&
               (key !== "eftgps-graphics-v1" || validGraphics(data)) &&
               (key !== "tarkov-overlay-v1" ||

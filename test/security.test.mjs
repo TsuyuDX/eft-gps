@@ -33,7 +33,7 @@ test('live server blocks foreign origins, rebinding, static junction escapes and
  await fs.copyFile('server/profile-store.mjs',path.join(directory,'server/profile-store.mjs'));
  await fs.mkdir(path.join(directory,'public/core'),{recursive:true});
  await fs.copyFile('public/core/overlay-settings.js',path.join(directory,'public/core/overlay-settings.js'));
- for(const file of ['server.mjs','server/content-cache.mjs','server/connectivity.mjs','server/app-update.mjs','server/overlay.mjs','server/event-content.mjs','server/startup.mjs','server/gps.mjs','server/screenshot-cleanup.mjs','server/window-settings.mjs','server/graphics-gallery.mjs','server/game-info.mjs','server/diagnostics.mjs','public/core/game-info-model.js','public/core/news-artwork.js','public/core/map-colour-model.js','public/data/game-info.json','public/core/graphics-model.js','public/core/gps-format.js','public/core/profile-schema.js']){
+ for(const file of ['server.mjs','server/item-recognition.mjs','public/core/item-recognition-model.js','server/startup-setting.mjs','server/content-cache.mjs','server/connectivity.mjs','server/app-update.mjs','server/overlay.mjs','server/event-content.mjs','server/startup.mjs','server/gps.mjs','server/screenshot-cleanup.mjs','server/window-settings.mjs','server/graphics-gallery.mjs','server/game-info.mjs','server/diagnostics.mjs','public/core/game-info-model.js','public/core/news-artwork.js','public/core/map-colour-model.js','public/data/game-info.json','public/core/graphics-model.js','public/core/gps-format.js','public/core/profile-schema.js']){
    await fs.mkdir(path.dirname(path.join(directory,file)),{recursive:true});await fs.copyFile(file,path.join(directory,file));
  }
  await fs.mkdir(path.join(directory,'public/data'),{recursive:true});

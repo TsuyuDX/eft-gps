@@ -23,6 +23,7 @@ class DesktopHost : Form {
     bool maintenance;
     readonly System.Windows.Forms.Timer overlaySync=new System.Windows.Forms.Timer {Interval=1500};
     OverlayHost raidOverlay;
+    ItemNoticeForm itemNotice;
     bool syncingOverlay,desktopClosing;
     [DllImport("dwmapi.dll")] static extern int DwmSetWindowAttribute(IntPtr window, int attribute, ref int value, int size);
     [DllImport("user32.dll")] static extern bool SetForegroundWindow(IntPtr window);
@@ -136,6 +137,7 @@ class DesktopHost : Form {
                     try { command = e.TryGetWebMessageAsString(); } catch { return; }
                     if (command == "secret-brand-on") { SetSecretBrand(true); return; }
                     if (command == "secret-brand-off") { SetSecretBrand(false); return; }
+                    if(command.StartsWith("item-icon:",StringComparison.Ordinal)&&command.Length<90000){if(itemNotice!=null)itemNotice.SetIcon(command.Substring(10));return;}
                     if (command == "overlay-refresh") { SyncOverlaySoon(); return; }
                     if (command == "overlay-toggle") { ToggleOverlaySoon(); return; }
                     if (command == "open-folder") { Process.Start(new ProcessStartInfo("explorer.exe", "\"" + root + "\"") { UseShellExecute = false }); return; }
@@ -162,7 +164,7 @@ class DesktopHost : Form {
                 Close();
             }
         };
-        FormClosing += delegate { desktopClosing=true;overlaySync.Stop();if(raidOverlay!=null){raidOverlay.Close();raidOverlay.Dispose();raidOverlay=null;}if (!maintenance) {StopAutoCapture();StopLocalService();} };
+        FormClosing += delegate { if(itemNotice!=null){itemNotice.Dispose();itemNotice=null;}desktopClosing=true;overlaySync.Stop();if(raidOverlay!=null){raidOverlay.Close();raidOverlay.Dispose();raidOverlay=null;}if (!maintenance) {StopAutoCapture();StopLocalService();} };
         FormClosed+=delegate {overlaySync.Dispose();};
     }
     string InstanceKey(){using(var sha=System.Security.Cryptography.SHA256.Create())return BitConverter.ToString(sha.ComputeHash(Encoding.UTF8.GetBytes(Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar).ToLowerInvariant()))).Replace("-","").ToLowerInvariant();}
@@ -287,4 +289,31 @@ class DesktopHost : Form {
         maintenance = true;
         Close();
     }
+}
+
+// Native, click-through notification owned by the existing desktop process.
+// Only a foreground Tarkov window is inspected; no game memory or injection.
+sealed class ItemNoticeForm : Form {
+ [DllImport("user32.dll")]static extern IntPtr GetForegroundWindow();
+ [DllImport("user32.dll")]static extern uint GetWindowThreadProcessId(IntPtr hwnd,out uint pid);
+ readonly Label title=new Label(),body=new Label();readonly System.Windows.Forms.Timer expiry=new System.Windows.Forms.Timer();readonly PictureBox picture=new PictureBox {Dock=DockStyle.Left,Width=48,SizeMode=PictureBoxSizeMode.Zoom};
+ readonly Font titleFont=new Font("Segoe UI",11,FontStyle.Bold),bodyFont=new Font("Segoe UI",9);
+ protected override bool ShowWithoutActivation{get{return true;}}
+ protected override CreateParams CreateParams{get{var p=base.CreateParams;p.ExStyle|=0x08000000|0x00000080|0x00000020;return p;}}
+ public ItemNoticeForm(){FormBorderStyle=FormBorderStyle.None;ShowInTaskbar=false;TopMost=true;BackColor=Color.FromArgb(18,36,29);ForeColor=Color.FromArgb(228,239,231);Size=new Size(350,205);Padding=new Padding(16);title.Dock=DockStyle.Top;title.Height=30;title.Font=titleFont;title.AutoEllipsis=true;body.Dock=DockStyle.Fill;body.Font=bodyFont;Controls.Add(body);Controls.Add(picture);Controls.Add(title);expiry.Tick+=delegate{Hide();expiry.Stop();};}
+ static Dictionary<string,object> Obj(Dictionary<string,object> d,string k){object x;return d!=null&&d.TryGetValue(k,out x)?x as Dictionary<string,object>:null;}
+ static string Str(Dictionary<string,object>d,string k){object x;return d!=null&&d.TryGetValue(k,out x)&&x!=null?Convert.ToString(x):"";}
+ static string Money(Dictionary<string,object>d,string k){double n;return Double.TryParse(Str(d,k),out n)?n.ToString("N0")+" ₽":"—";}
+ public void SetIcon(string encoded){try{var bytes=Convert.FromBase64String(encoded);if(bytes.Length<24||bytes[0]!=137||bytes[1]!=80||bytes[2]!=78||bytes[3]!=71)return;int w=(bytes[16]<<24)|(bytes[17]<<16)|(bytes[18]<<8)|bytes[19],h=(bytes[20]<<24)|(bytes[21]<<16)|(bytes[22]<<8)|bytes[23];if(w<1||h<1||w>256||h>256)return;using(var stream=new MemoryStream(bytes))using(var image=Image.FromStream(stream)){var old=picture.Image;picture.Image=new Bitmap(image);if(old!=null)old.Dispose();}}catch{}}
+ public void UpdateState(Dictionary<string,object> state){
+  var config=Obj(state,"config");var r=Obj(state,"result");uint pid;var foreground=GetForegroundWindow();GetWindowThreadProcessId(foreground,out pid);bool game=false;try{game=String.Equals(Process.GetProcessById((int)pid).ProcessName,"EscapeFromTarkov",StringComparison.OrdinalIgnoreCase);}catch{}
+  double expires;double now=(DateTime.UtcNow-new DateTime(1970,1,1)).TotalMilliseconds;
+  if(!game||config==null||Str(config,"enabled")!="True"||r==null||!Double.TryParse(Str(r,"expiresAt"),out expires)||expires<now){Hide();return;}
+  bool en=NativeText.English;title.Text=Str(r,"name");var text=new StringBuilder();var price=Obj(r,"price");var quotes=Obj(price,"quotes");
+  if(price!=null){if(price.ContainsKey("error"))text.AppendLine(en?"Current price unavailable":"Актуальная цена недоступна");else{var best=Obj(quotes,"best");var vendor=Obj(best,"vendor");text.AppendLine((en?"Flea, before fees: ":"Барахолка, до комиссии: ")+Money(quotes,"flea"));text.AppendLine((en?"Trader: ":"Торговец: ")+Str(vendor,"name")+" · "+Money(best,"priceRUB"));text.AppendLine(en?"Verify fees and trader access":"Проверьте комиссию и доступ к торговцу");}}
+  object raw;if(r.TryGetValue("quests",out raw)&&raw is System.Collections.IEnumerable){foreach(object row in (System.Collections.IEnumerable)raw){var q=row as Dictionary<string,object>;if(q==null)continue;text.AppendLine(en?"Needed for a quest — do not sell":"Нужен для задания — не продавай");text.AppendLine(Str(q,"name")+" × "+Str(q,"count"));break;}}
+  body.Text=text.ToString();var area=Screen.FromHandle(foreground).WorkingArea;Location=new Point(area.Right-Width-20,area.Bottom-Height-24);expiry.Stop();expiry.Interval=Math.Max(1,Math.Min(30000,(int)(expires-now)));expiry.Start();if(!Visible)Show();
+ }
+ protected override void WndProc(ref Message m){if(m.Msg==0x0084){m.Result=new IntPtr(-1);return;}if(m.Msg==0x0021){m.Result=new IntPtr(3);return;}base.WndProc(ref m);}
+ protected override void Dispose(bool disposing){if(disposing){expiry.Dispose();if(picture.Image!=null){picture.Image.Dispose();picture.Image=null;}titleFont.Dispose();bodyFont.Dispose();}base.Dispose(disposing);}
 }

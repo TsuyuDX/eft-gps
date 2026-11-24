@@ -1,3 +1,4 @@
+import {uiIcon} from "./icons.js";
 import {textPair} from "./localization.js";
 import {gameInfo} from "./game-info-client.js";
 import { db, json } from "./data.js";
@@ -186,10 +187,11 @@ export function bindGlobalSearch(field, box, news = []) {
     textPair("Предметы, задания, карты и справочник","Search items, quests, maps and guides"),
   );
   field.oninput = async () => {
+    field.parentElement.classList.add("search-working");
     const own = ++generation,
       query = field.value;
     visibility(Boolean(query.trim()));
-    if (box.hidden) return;
+    if (box.hidden) {field.parentElement.classList.remove("search-working");return;}
     box.textContent = textPair("Поиск…","Searching…");
     try {
       const results = searchEntries(await globalIndex(news), query);
@@ -218,7 +220,7 @@ export function bindGlobalSearch(field, box, news = []) {
       if (own === generation)
         box.textContent =
           textPair("Поиск недоступен. Попробуйте ещё раз.","Search is unavailable. Try again.");
-    }
+    } finally {if(own===generation)field.parentElement.classList.remove("search-working");}
   };
   field.onkeydown = (e) => {
     if (e.key === "Escape") {
@@ -261,7 +263,7 @@ export function openGlobalSearch(news = []) {
   modal(
     "<h2>" +
       (textPair("Поиск по приложению","Search the application")) +
-      '</h2><input id="app-search-field" type="search" autocomplete="off" style="width:100%"><div class="global-results" id="app-search-results"></div>',
+      '</h2><div class="search-dialog-field">'+uiIcon('search',20)+'<input id="app-search-field" aria-label="'+textPair('Поиск','Search')+'" type="search" autocomplete="off"></div><div class="global-results" id="app-search-results"></div>',
   );
   const field = document.querySelector("#app-search-field");
   bindGlobalSearch(field, document.querySelector("#app-search-results"), news);

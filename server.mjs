@@ -1,3 +1,5 @@
+import {ItemRecognition} from "./server/item-recognition.mjs";
+import {startupSetting} from "./server/startup-setting.mjs";
 import {Diagnostics,diagnosticPolicyVersion} from "./server/diagnostics.mjs";
 import {ContentCache} from "./server/content-cache.mjs";
 import { GameInfoService } from "./server/game-info.mjs";
@@ -54,6 +56,8 @@ const gameInfoService = new GameInfoService(root);
 const graphicsGallery = new GraphicsGallery(userRoot);
 const contentCache = new ContentCache(root);
 const gps = new GpsService(root);
+const itemRecognition=new ItemRecognition(root,{content:contentCache,profile:profileStore});
+gps.onScreenshot=(file,mode)=>itemRecognition.enqueue(file,mode).catch(()=>{});
 const overlayManager=new OverlayManager(root,port);
 const connectivity = new Connectivity();
 const eventContent = new EventContentService(root);
@@ -222,6 +226,10 @@ const server = http.createServer(async (req, res) => {
       let body="";for await(const chunk of req){body+=chunk.toString();if(body.length>1024){res.writeHead(413);res.end();req.destroy();return;}}
       try {res.setHeader("Content-Type","application/json");return res.end(JSON.stringify(overlayManager.report(JSON.parse(body))));}
       catch {res.writeHead(400);return res.end();}
+    }
+    if(url.pathname==='/api/startup-setting' && ['GET','POST'].includes(req.method)){
+      try{let enabled;if(req.method==='POST'){let raw='';for await(const b of req){raw+=b;if(raw.length>1000)throw Error('Invalid request')}enabled=JSON.parse(raw).enabled;if(typeof enabled!=='boolean')throw Error('Invalid setting')}
+      const value=await startupSetting(root,enabled);res.setHeader('Content-Type','application/json');return res.end(JSON.stringify(value));}catch{res.writeHead(400);return res.end(JSON.stringify({error:'Не удалось изменить автозапуск'}))}
     }
     if (url.pathname === "/api/startup" && req.method === "GET") {
       res.setHeader("Content-Type", "application/json");
@@ -402,6 +410,10 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(204);
         return res.end();
       }
+    }
+    if(url.pathname==='/api/item-recognition'){
+      if(req.method==='GET'){await itemRecognition.ready;res.setHeader('Content-Type','application/json');return res.end(JSON.stringify(itemRecognition.snapshot()))}
+      if(req.method==='POST'){try{let body='';for await(const b of req){body+=b;if(body.length>8000)throw Error('Too large')}const x=JSON.parse(body);if(!x||typeof x.enabled!=='boolean')throw Error('Invalid settings');const value=await itemRecognition.settings(x);res.setHeader('Content-Type','application/json');return res.end(JSON.stringify(value));}catch{res.writeHead(400);return res.end('{}')}}
     }
     if(url.pathname.startsWith('/api/content')){
       if(url.pathname==='/api/content'&&req.method==='GET'){res.setHeader('Content-Type','application/json');return res.end(JSON.stringify(await contentCache.state()))}

@@ -1,3 +1,5 @@
+import {initializeItemRecognition} from "./core/item-recognition-client.js";
+import {renderRaidHome, installShell} from "./core/raid-shell.js";
 import {installDiagnostics} from "./core/diagnostics-client.js";
 import {textPair} from "./core/localization.js";
 import { initializeGameInfo, startGameInfo } from "./core/game-info-client.js";
@@ -62,6 +64,7 @@ if (communityLink && communityUrl) {
 }
 installAppNavigation();
 installDesktopUi();
+initializeItemRecognition();
 installBackNavigation();
 const modeSelect=document.querySelector("#mode"),modeEmblem=document.createElement("span");
 modeEmblem.className="mode-emblem";modeEmblem.setAttribute("aria-hidden","true");modeSelect.before(modeEmblem);
@@ -78,7 +81,7 @@ let routeController = null;
 const viewCache = new ViewCache();
 window.addEventListener("game-info-updated",()=>{
  refreshGameNews();
- const homeNews=app.querySelector(".home-news .news-grid");if(homeNews)homeNews.innerHTML=newsCards(newsEntries.slice(0,4));
+ const homeNews=app.querySelector(".home-news .news-grid");if(homeNews)homeNews.innerHTML=newsCards(newsEntries.slice(0,3));
  const list=app.querySelector("#news-list");if(list){const filter=app.querySelector("[data-news-filter].primary")?.dataset.newsFilter||"Все";list.innerHTML=newsCards(newsEntries.filter(x=>filter==="Все"||x.kind===filter));}
 });
 window.addEventListener("language-changed",refreshGameNews);
@@ -101,18 +104,12 @@ const sections = [
 ];
 
 function nav() {
-  navigation.innerHTML = sections
-    .map(
-      ([k, v]) =>
-        `<a href="#/${k}/${["map", "boss", "trader", "item", "quest", "hideout", "items-tracker"].includes(k) ? db.mode : ""}" data-section="${k}" class="${["promocodes","graphics"].includes(k)?"nav-has-new":""}"><span class="nav-icon">${uiIcon(({map:"map",gps:"locate",quest:"list",item:"box","items-tracker":"check",hideout:"home",trader:"trade",boss:"target",event:"calendar",promocodes:"ticket",season:"season",news:"news",graphics:"sliders"})[k],17)}</span><span>${v}</span>${["promocodes","graphics"].includes(k)?`<span class="nav-new-badge" aria-hidden="true" data-no-translate>${textPair("НОВОЕ","NEW")}</span>`:""}</a>`,
-    )
-    .join("");
+ const link=([k,v])=>'<a href="#/'+k+'/'+(["map","boss","trader","item","quest","hideout","items-tracker"].includes(k)?db.mode:"")+'" data-section="'+k+'">'+v+'</a>';
+ navigation.innerHTML='<a href="#/" data-section="">'+textPair("Главная","Home")+'</a>'+sections.slice(0,4).map(link).join("")+'<details class="more-navigation"><summary>'+textPair("Ещё","More")+'</summary><div class="more-panel">'+sections.slice(4).map(link).join("")+'<hr><button data-community="help">'+textPair("Помощь","Help")+'</button><a href="'+(communityUrl||'#/settings')+'" target="_blank" rel="noopener noreferrer">Discord ↗</a><button data-community="support">'+textPair("Поддержать проект","Support the project")+'</button></div></details>';
+ installShell(navigation,{help:openHelp,support:openSupport});
 }
 function home() {
-  const completed = Object.values(current().quests).filter(Boolean).length;
-  app.innerHTML = `<section class="home-hero"><div class="eyebrow">НАВИГАЦИЯ / ПОДГОТОВКА / РЕЙД</div><h1>EFT <span>GPS</span></h1><div class="badge home-version" data-no-translate>${textPair("Версия","Version")} ${APP_VERSION}</div><p>Всё для следующего рейда. Карты, GPS, задания и личный прогресс.</p><div class="row wrap home-actions"><a class="button primary" href="#/map/${db.mode}">Открыть карты ↗</a><a class="button" href="#/gps">Настроить GPS</a></div><div class="home-search"><span>⌕</span><input type="search" id="global-search" placeholder="Найти предметы, задания, модули убежища" autocomplete="off"><kbd>Ctrl K</kbd></div><div id="global-results" class="global-results" hidden></div></section><div class="dashboard-strip"><a href="#/map/${db.mode}"><b>${db.maps.length}</b> карт</a><a href="#/item/${db.mode}"><b>${db.items.length.toLocaleString(localeCode())}</b> предметов</a><a href="#/quest/${db.mode}"><b>${completed} / ${db.quests.length}</b> заданий</a><a href="#/items-tracker/${db.mode}"><b>Мой прогресс</b> →</a></div><div id="home-information"></div><section class="home-news"><h2 class="center">Новости приложения и игры</h2><div class="card-grid news-grid">${newsCards(newsEntries.slice(0, 4))}</div><p class="center" style="margin-top:24px"><a class="button" href="#/news">Все новости →</a></p></section>`;
-  renderHomeInformation(app.querySelector("#home-information"));
-  bindGlobalSearch(app.querySelector("#global-search"), app.querySelector("#global-results"), newsEntries);
+ renderRaidHome(app,{db,completed:Object.values(current().quests).filter(Boolean).length,news:newsCards(newsEntries.slice(0,3)),information:renderHomeInformation});
 }
 async function route() {
   routeController?.abort();
@@ -133,6 +130,7 @@ async function route() {
   const [section, modeOrSlug, slug] = path.split("/");
   document.querySelector("#modal").close();
   navigation.classList.remove("expanded");
+ navigation.querySelectorAll("details").forEach(e=>e.open=false);
   navigation
     .querySelectorAll("a")
     .forEach((e) =>

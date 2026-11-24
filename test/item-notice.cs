@@ -1,0 +1,4 @@
+using System;using System.Collections.Generic;using System.Reflection;using System.Windows.Forms;
+class ItemNoticeTest {
+ [STAThread]static int Main(){using(var form=new ItemNoticeForm()){if(form.ShowInTaskbar)throw new Exception("Taskbar entry");var p=(CreateParams)typeof(ItemNoticeForm).GetProperty("CreateParams",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(form,null);if((p.ExStyle&0x08000020)!=0x08000020)throw new Exception("Notice must not capture input");form.SetIcon("invalid");form.SetIcon(Convert.ToBase64String(new byte[24]));form.UpdateState(new Dictionary<string,object>());if(form.Visible)throw new Exception("Notice appeared with OCR disabled");}Console.WriteLine("Native item notice checks passed: same-process form, no taskbar entry, no focus capture, invalid icon rejection, disabled state stays hidden.");return 0;}
+}

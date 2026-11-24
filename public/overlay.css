@@ -11,3 +11,5 @@
 .raid-overlay dialog {display:none!important}
 .raid-overlay.overlay-hide-labels .map-destination-label{display:none!important}
 .raid-overlay .map-caption{display:none!important}
+
+.raid-overlay body{zoom:1!important;width:100vw!important;height:100dvh!important;--ui-scale:1}

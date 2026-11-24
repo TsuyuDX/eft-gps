@@ -171,6 +171,7 @@ export async function renderGraphics(root) {
       $("#graphics-empty").hidden = true;
       setZoom(1);
       $("#graphics-image-title").textContent = tr(item.location) + (item.readonly ? tr(" · игровой снимок", " · gameplay capture") : "");
+      let attribution=root.querySelector("#graphics-source");if(!attribution){attribution=document.createElement("p");attribution.id="graphics-source";attribution.className="small muted";$("#graphics-image-title").after(attribution)}attribution.replaceChildren();if(item.readonly&&item.sourceUrl?.startsWith("https://escapefromtarkov.fandom.com/wiki/")){const link=document.createElement("a");link.href=item.sourceUrl;link.target="_blank";link.rel="noopener noreferrer";link.textContent=tr("Источник игрового снимка · Wiki","Gameplay image source · Wiki");attribution.append(link)}
       status(
         tr(
           "Предпросмотр уменьшен до 1920 × 1080 для быстрой работы. Исходный файл сохранён без изменений.",

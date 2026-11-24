@@ -1,3 +1,4 @@
+import {locationPreview} from "../core/location-images.js";
 import {bindMapColour} from "../core/map-colour.js";
 import {canonicalQuestLayer} from "../core/map-data-quality.js";
 import { overlayMode } from "../core/overlay-mode.js";
@@ -47,7 +48,7 @@ export function renderMaps(root) {
       "Карты",
       "Выходы, спавны, ключи, лут и задания · доступно без интернета",
     ) +
-    `<div class="card-grid maps-grid">${db.maps.map((m) => `<a class="card map-card" href="#/map/${db.mode}/${m.routeSlug || m.normalizedName}">${img(m.preview || m.svgPath || m.imageThumb || m.image, m.name)}<div class="card-body"><h2>${esc(m.name)}</h2><p class="muted small">${esc(m.description || "")}</p><span class="badge">${esc(String(m.duration || "—").replace("min", "мин"))}</span> <span class="badge">${esc(m.players || "—")} игроков</span></div></a>`).join("")}</div>`;
+    `<div class="card-grid maps-grid">${db.maps.map((m) => `<a class="card map-card" href="#/map/${db.mode}/${m.routeSlug || m.normalizedName}">${img(locationPreview(m.routeSlug || m.normalizedName) || m.preview || m.svgPath || m.imageThumb || m.image, m.name)}<div class="card-body"><h2>${esc(m.name)}</h2><p class="muted small">${esc(m.description || "")}</p><span class="badge">${esc(String(m.duration || "—").replace("min", "мин"))}</span> <span class="badge">${esc(m.players || "—")} игроков</span></div></a>`).join("")}</div>`;
 }
 export function mapMarkers(m, {includeInvalid=false}={}) {
   const a = [];

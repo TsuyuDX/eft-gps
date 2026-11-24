@@ -1,3 +1,8 @@
+import {renderRecognitionSettings} from "./item-recognition-client.js";
+import {applyAppearance,renderAppearance} from "./appearance.js";
+import {renderGps} from "../features/gps.js";
+import {uiIcon} from "./icons.js";
+import {textPair as L} from "./localization.js";
 import {renderTraining} from "./interactive-tour.js";
 import {renderContentSettings} from "./content-client.js";
 import {renderDiagnosticsControl} from "./diagnostics-client.js";
@@ -25,7 +30,7 @@ export const preferenceGroups = [
         "Нижняя панель",
         "Сведения об игре и состояние соединения.",
       ],
-      ["news", "Новости на главной", "Карточки новостей под поиском."],
+      ["news", "Новости на главной", "Короткая лента новостей внизу главной страницы."],
     ],
   ],
   [
@@ -83,6 +88,7 @@ export function getPreferences() {
   }
 }
 export function applyPreferences() {
+  applyAppearance();
   for (const [key, visible] of Object.entries(getPreferences()))
     document.documentElement.classList.toggle("hide-" + key, !visible);
 }
@@ -100,7 +106,7 @@ export function renderPreferences(root, selected = "Интерфейс") {
   if(selected === "Экспериментальное") selected = "Overlay";
   const prefs = getPreferences();
   root.innerHTML = `<div class="preference-tabs" role="group" aria-label="Разделы настроек">${["Интерфейс", "Карта", "Overlay", "Оформление", "Данные", "Обучение", "Диагностика"].map((title) => `<button type="button" data-preference-tab="${title}" aria-pressed="false">${title}</button>`).join("")}</div><p class="muted">Настройки сохраняются автоматически. Прогресс заданий и настройки GPS не меняются.</p>${preferenceGroups.map(([title, rows]) => `<section class="preference-group" data-preference-panel="${title}"><h3>${title}</h3>${rows.map(([key, label, description]) => `<label class="preference-row"><span><strong>${label}</strong><small class="muted">${description}</small></span><input type="checkbox" data-preference="${key}" ${prefs[key] ? "checked" : ""}></label>`).join("")}</section>`).join("")}<section class="preference-group" data-preference-panel="Оформление"><h3>Оформление</h3><div class="preference-row"><span><strong>Тема приложения</strong><small class="muted">Сейчас используется тёмная тема с зелёными акцентами. Другие темы скоро будут доступны.</small></span><button type="button" class="theme-coming-soon" data-secret-theme aria-disabled="true" title="Новые темы скоро будут доступны">Выбор темы · скоро будет</button></div></section><button type="button" data-reset-preferences>Вернуть стандартный вид</button><p class="muted small">Слои и разновидности меток выбираются на самой карте и запоминаются отдельно для каждой локации и режима. Зоны опасностей включаются там же.</p>`;
-  const beta=document.createElement("section");beta.className="preference-group";beta.dataset.preferencePanel="Overlay";root.querySelector("[data-reset-preferences]").before(beta);renderOverlayControl(beta);
+  const beta=document.createElement("section");beta.className="preference-group";beta.dataset.preferencePanel="Overlay";root.querySelector("[data-reset-preferences]").before(beta);renderOverlayControl(beta);const recognitionPanel=document.createElement("section");beta.append(recognitionPanel);void renderRecognitionSettings(recognitionPanel);
   const mapPanel = root.querySelector('[data-preference-panel="Карта"]');
   mapPanel?.insertAdjacentHTML(
     "afterbegin",
@@ -117,7 +123,20 @@ export function renderPreferences(root, selected = "Интерфейс") {
   for(const [name,render] of [["Обучение",renderTraining],["Данные",renderContentSettings]]){const panel=document.createElement("section");panel.className="preference-group";panel.dataset.preferencePanel=name;root.querySelector("[data-reset-preferences]").before(panel);render(panel);}
   bindMarkerStyleControls(root);
   languageControl(root);
+  const gpsPanel=document.createElement('section');gpsPanel.className='preference-group';gpsPanel.dataset.preferencePanel='GPS';gpsPanel.innerHTML='<h3>GPS</h3>';root.querySelector('[data-reset-preferences]').before(gpsPanel);
+  const groups=[['Интерфейс','Общие','General','sliders'],['GPS','GPS и скриншоты','GPS and screenshots','locate'],['Карта','Карты и метки','Maps and markers','map'],['Overlay','Игровой оверлей','Game overlay','expand'],['Оформление','Внешний вид','Appearance','sun'],['Данные','Данные и обновления','Data and updates','box'],['Диагностика','Помощь и диагностика','Help and diagnostics','info']];
+  const tabs=root.querySelector('.preference-tabs');tabs.innerHTML=groups.map(([id,ru,en,icon])=>'<button type="button" data-preference-tab="'+id+'" aria-pressed="false">'+uiIcon(icon,18)+L(ru,en)+'</button>').join('');
+  const sidebar=document.createElement('aside');sidebar.className='preference-sidebar';sidebar.append(tabs);const content=document.createElement('div');content.className='preference-content';for(const child of [...root.children])if(child!==tabs)content.append(child);root.append(sidebar,content);
+  // Language belongs to General only, rather than being repeated above every category.
+  const languageRow=content.querySelector('label');if(languageRow)content.querySelector('[data-preference-panel="Интерфейс"]').prepend(languageRow);
+  const general=content.querySelector('[data-preference-panel="Интерфейс"]');const mode=document.createElement('label');mode.className='preference-row';mode.innerHTML='<span><strong>'+L('Режим игры','Game mode')+'</strong></span><select aria-label="'+L('Режим игры в настройках','Game mode in settings')+'"><option value="regular">PvP</option><option value="pve">PvE</option></select>';general.append(mode);const startup=document.createElement('label');startup.className='preference-row';startup.innerHTML='<span><strong>'+L('Запускать вместе с Windows','Start with Windows')+'</strong><small>'+L('Только для текущего пользователя.','For the current Windows user only.')+'</small></span><input type="checkbox" disabled>';general.append(startup);const startupCheck=startup.querySelector('input');fetch('/api/startup-setting').then(r=>{if(!r.ok)throw Error();return r.json()}).then(x=>{if(startupCheck.isConnected){startupCheck.checked=x.enabled;startupCheck.disabled=false}}).catch(()=>{startup.querySelector('small').textContent=L('Автозапуск недоступен в этом окружении.','Startup is unavailable in this environment.')});startupCheck.onchange=async()=>{startupCheck.disabled=true;try{const r=await fetch('/api/startup-setting',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({enabled:startupCheck.checked})});if(!r.ok)throw Error();}catch{startupCheck.checked=!startupCheck.checked;toast(L('Не удалось изменить автозапуск','Could not change startup setting'))}finally{startupCheck.disabled=false}};mode.querySelector('select').value=document.querySelector('#mode').value;mode.querySelector('select').onchange=e=>{const main=document.querySelector('#mode');main.value=e.target.value;main.dispatchEvent(new Event('change'))};
+  const data=content.querySelector('[data-preference-panel="Данные"]');data.insertAdjacentHTML('beforeend','<p><a class="button" href="#/settings">'+L('Резервные копии, импорт и экспорт','Backups, import and export')+' →</a></p>');
+  const appearance=content.querySelector('[data-preference-panel="Оформление"]');const appearanceControls=document.createElement('section');appearance.append(appearanceControls);renderAppearance(appearanceControls);appearance.insertAdjacentHTML('beforeend','<p><a class="button" href="#/graphics">'+L('Графика и цветокоррекция','Graphics and colour correction')+' →</a></p>');
+  let gpsLoaded=false;const gpsController=new AbortController();document.querySelector('#modal')?.addEventListener('close',()=>{gpsController.abort()},{once:true});
   const choose = (title) => {
+    if(title==='Обучение')title='Диагностика';
+    if(title==='GPS'&&!gpsLoaded){gpsLoaded=true;void renderGps(gpsPanel,{signal:gpsController.signal})}
+
     selected = title;
     root
       .querySelectorAll("[data-preference-tab]")
@@ -128,7 +147,7 @@ export function renderPreferences(root, selected = "Интерфейс") {
         ),
       );
     root.querySelectorAll("[data-preference-panel]").forEach((panel) => {
-      panel.hidden = panel.dataset.preferencePanel !== title;
+      panel.hidden = panel.dataset.preferencePanel !== title && !(title === "Диагностика" && panel.dataset.preferencePanel === "Обучение");
     });
   };
   root
@@ -137,7 +156,7 @@ export function renderPreferences(root, selected = "Интерфейс") {
       (button) => (button.onclick = () => choose(button.dataset.preferenceTab)),
     );
   choose(
-    ["Интерфейс", "Карта", "Оформление", "Overlay", "Данные", "Обучение", "Диагностика"].includes(selected)
+    ["Интерфейс", "GPS", "Карта", "Оформление", "Overlay", "Данные", "Обучение", "Диагностика"].includes(selected)
       ? selected
       : "Интерфейс",
   );
@@ -158,8 +177,10 @@ export function renderPreferences(root, selected = "Интерфейс") {
 }
 export function openPreferences(selected = "Интерфейс") {
   modal(
-    '<h2 id="preferences-title">Настройки интерфейса</h2><div id="preferences-controls"></div><p><a class="button" href="#/graphics">Графика и цветокоррекция →</a></p><p><a class="button" href="#/settings">Данные, резервные копии и заметки →</a></p>',
+    '<h2 id="preferences-title">Настройки</h2><div id="preferences-controls"></div>',
   );
+  document.querySelector("#modal").classList.add("preferences-window");
+  document.querySelector("#modal").addEventListener("close",()=>document.querySelector("#modal").classList.remove("preferences-window"),{once:true});
   renderPreferences(document.querySelector("#preferences-controls"), selected);
 }
 

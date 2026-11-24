@@ -281,6 +281,8 @@ export class GpsService {
       while(this.seen.size>4096)this.seen.delete(this.seen.keys().next().value);
       const latest = candidates.sort((a, b) => b.mtime - a.mtime)[0];
       if (latest && (!this.fix || latest.mtime > this.fix.updatedAt)) {
+        // Copy for optional OCR before the next cleanup tick; OCR itself never blocks GPS.
+        await this.onScreenshot?.(path.join(this.config.screenshotsPath,latest.name),this.detectedMode||"regular");
         this.fix = {
           ...latest.parsed,
           file: latest.name,

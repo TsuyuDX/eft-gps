@@ -27,6 +27,7 @@ export async function renderGps(root, {signal} = {}) {
   let lastState=initial;
   toggle.onclick=async()=>{toggle.disabled=true;try{update(await gpsRequest("settings",{enabled:!lastState.config.enabled}));}catch(e){toast(e.message);}finally{toggle.disabled=false;}};
   const controller = new AbortController();
+  signal?.addEventListener("abort",()=>controller.abort(),{once:true});
   function updatePointerSample() {
     root.querySelector("#gps-pointer-sample").innerHTML = gpsPointerSvg(
       getMarkerStyle(),

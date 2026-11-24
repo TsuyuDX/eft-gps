@@ -33,3 +33,9 @@ The dark green workspace adapts to small windows. Open **Settings → Training**
 Maps, markers, summary lists and screenshot GPS remain bundled. Detailed cards and additional images are downloaded on demand and cached with SHA-256 validation. Before going offline, open **Settings → Data → Download everything for offline use** and wait for completion. Existing cached files are reused and remain available after network failures.
 
 Interchange (`shopping_mall`), Reserve and event scene aliases have been fixed. Actual coordinate filenames and log associations were checked on six maps, not every in-raid position. The graphics preview includes gameplay captures from six locations; import your own PNG/JPEG for the others. Preview values are not NVIDIA/PostFX scales.
+
+## Navigation and item recognition Beta
+
+Primary navigation is Home, Maps, GPS, Quests, Items and More. Search is available from the header or Ctrl+K. Settings use seven vertical categories with persistent font, size and motion controls.
+
+Enable recognition in Settings → Game overlay. It uses new GPS screenshots and installed Windows Russian/English OCR, locally. It is disabled by default; images are never uploaded. Enable the integrated overlay for click-through notifications over the foreground game, even while the map is hidden. Item prices use Tarkov.dev IDs, separate PvP/PvE caches and a 15-minute lifetime. Offline quotes are marked stale. Choose unlocked traders; flea quotes exclude fees, so guaranteed flea net profit is not claimed. Quest warnings use known item requirements and completed quest progress. All 15 location variants include offline gameplay previews with Wiki source attribution.

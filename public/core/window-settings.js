@@ -1,5 +1,6 @@
 import { readLocal, writeLocal, localEntries } from "./storage.js";
 const allowed = (key) =>
+  key === "eftgps-appearance-v1" ||
   key === "eftgps-map-colour-v1" ||
   key === "eftgps-graphics-v1" ||
   key === "tarkov-overlay-v1" ||
