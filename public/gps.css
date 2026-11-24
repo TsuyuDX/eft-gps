@@ -1,3 +1,25 @@
+/* The GPS form also lives in Settings; generic dialog forms use a horizontal row. */
+#gps-form {
+  display: block;
+  min-width: 0;
+}
+.gps-layout > .panel {
+  min-width: 0;
+}
+.gps-field > .row {
+  min-width: 0;
+  flex-wrap: wrap;
+}
+.gps-field > .row > input {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+.gps-field > .row > button {
+  flex: 0 0 auto;
+}
+.gps-options > label {
+  min-width: 0;
+}
 .gps-layout {
   display: grid;
   grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr);
@@ -39,7 +61,7 @@
   align-items: start;
 }
 .gps-layout .check input {
-  flex-shrink: 0;
+  flex: 0 0 18px;
   margin-top: 4px;
 }
 .gps-layout button[type="submit"] {

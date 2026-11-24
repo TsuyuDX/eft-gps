@@ -1,5 +1,6 @@
 import { textPair as L } from "./localization.js";
 import { uiIcon } from "./icons.js";
+import { locationPreview } from "./location-images.js";
 import { gpsState, gpsRequest, pollGps } from "./gps-client.js";
 import { esc, modal, toast } from "./ui.js";
 let installed = false;
@@ -17,13 +18,30 @@ export function installShell(nav, actions) {
   // Keep existing handlers and IDs when moving controls.
   for (const id of ["app-search-open", "settings-link", "mode"]) {
     const e = document.getElementById(id);
-    if (e) tools.append(e);
+    if (e) {
+      tools.append(e);
+      if (id !== "mode") {
+        const label =
+          id === "settings-link"
+            ? L("Настройки", "Settings")
+            : L("Поиск", "Search");
+        e.setAttribute("aria-label", label);
+        e.title = label + (id === "app-search-open" ? " · Ctrl+K" : "");
+        e.innerHTML =
+          uiIcon(id === "settings-link" ? "settings" : "search", 18) +
+          (id === "app-search-open"
+            ? '<span class="shell-search-label">' +
+              label +
+              "</span><kbd>Ctrl K</kbd>"
+            : "");
+      }
+    }
   }
   const notifications = document.createElement("button");
   notifications.id = "notifications-open";
   notifications.title = L("Уведомления", "Notifications");
   notifications.setAttribute("aria-label", notifications.title);
-  notifications.innerHTML = uiIcon("news", 18);
+  notifications.innerHTML = uiIcon("bell", 18);
   tools.querySelector("#settings-link")?.before(notifications);
   notifications.onclick = async () => {
     modal(
@@ -33,13 +51,14 @@ export function installShell(nav, actions) {
         L("Проверяем состояние…", "Checking status…") +
         "</p>",
     );
-    const root = document.querySelector("#modal-content");
+    const status = document.querySelector("#modal-content [role=status]");
     try {
       const r = await fetch("/api/app-update/state");
       if (!r.ok) throw Error("HTTP " + r.status);
       const state = await r.json();
-      if (!root.isConnected || !root.querySelector("[role=status]")) return;
-      root.querySelector("[role=status]").textContent =
+      if (!status?.isConnected || !document.querySelector("#modal").open)
+        return;
+      status.textContent =
         state.phase === "available"
           ? L(
               "Доступно обновление. Подробности и установка — в панели обновления.",
@@ -47,9 +66,8 @@ export function installShell(nav, actions) {
             )
           : L("Новых уведомлений нет.", "No new notifications.");
     } catch {
-      root
-        .querySelector("[role=status]")
-        ?.replaceChildren(
+      if (status?.isConnected)
+        status.replaceChildren(
           document.createTextNode(
             L(
               "Не удалось проверить обновления. Текущая версия продолжает работать.",
@@ -74,12 +92,39 @@ export function renderRaidHome(root, { db, completed, news, information }) {
   const selected =
     db.maps.find((m) => (m.routeSlug || m.normalizedName) === slug) ||
     db.maps[0];
-  root.innerHTML = `<section class="raid-dashboard"><div class="raid-intro"><div><p class="eyebrow">EFT GPS · ${db.mode === "pve" ? "PvE" : "PvP"}</p><h1>${L("Готов к рейду?", "Ready for a raid?")}</h1><p class="muted" data-raid-readiness></p></div><label>${L("Локация", "Location")}<select id="home-location">${db.maps.map((m) => `<option value="${esc(m.routeSlug || m.normalizedName)}" ${m === selected ? "selected" : ""}>${esc(m.name)}</option>`).join("")}</select></label></div><div class="row wrap raid-actions"><a id="home-open-map" class="button primary">${uiIcon("map", 18)}${L("Открыть карту", "Open map")}</a><button id="home-gps">${L("Настроить GPS", "Configure GPS")}</button><span data-home-gps-status class="muted" role="status"></span></div></section><div class="dashboard-strip"><a href="#/map/${db.mode}"><b>${db.maps.length}</b> ${L("карт", "maps")}</a><a href="#/quest/${db.mode}"><b>${completed} / ${db.quests.length}</b> ${L("заданий", "quests")}</a><a href="#/item/${db.mode}"><b>${db.items.length.toLocaleString()}</b> ${L("предметов", "items")}</a><a href="#/items-tracker/${db.mode}">${L("Мой прогресс →", "My progress →")}</a></div><div id="home-information"></div><section class="home-news"><h2>${L("Новости приложения и игры", "Application and game news")}</h2><div class="card-grid news-grid">${news}</div><a class="button" href="#/news">${L("Все новости →", "All news →")}</a></section>`;
+  root.innerHTML = `<section class="raid-dashboard" aria-label="${L("Подготовка к рейду", "Raid preparation")}">
+    <div class="raid-primary">
+      <p class="eyebrow">${L("ПОДГОТОВКА К РЕЙДУ", "RAID PREPARATION")} <span class="raid-mode">${db.mode === "pve" ? "PvE" : "PvP"}</span></p>
+      <h1>${L("Готов к рейду?", "Ready for a raid?")}</h1>
+      <p class="muted" data-raid-readiness></p>
+      <div class="row wrap raid-actions"><a id="home-open-map" class="button primary">${uiIcon("map", 18)}${L("Открыть карту", "Open map")}${uiIcon("right", 16)}</a><button id="home-gps">${L("Настроить GPS", "Configure GPS")}</button></div>
+      <span data-home-gps-status class="raid-gps-state" role="status"></span>
+    </div>
+    <div class="raid-location">
+      <figure class="raid-location-image"><img data-home-location-image alt="" width="480" height="270"><figcaption>${L("Выбранная локация", "Selected location")}</figcaption></figure>
+      <label for="home-location">${uiIcon("locate", 16)}<span>${L("Локация", "Location")}</span></label>
+      <select id="home-location">${db.maps.map((m) => `<option value="${esc(m.routeSlug || m.normalizedName)}" ${m === selected ? "selected" : ""}>${esc(m.name)}</option>`).join("")}</select>
+    </div>
+  </section>
+  <div class="dashboard-strip">
+    <a href="#/map/${db.mode}"><span class="dashboard-icon">${uiIcon("map", 20)}</span><span><b>${db.maps.length}</b><small>${L("Доступных карт", "Available maps")}</small></span>${uiIcon("right", 16)}</a>
+    <a href="#/quest/${db.mode}"><span class="dashboard-icon">${uiIcon("check", 20)}</span><span><b>${completed} <em>/ ${db.quests.length}</em></b><small>${L("Заданий выполнено", "Quests completed")}</small></span>${uiIcon("right", 16)}</a>
+    <a href="#/item/${db.mode}"><span class="dashboard-icon">${uiIcon("box", 20)}</span><span><b>${db.items.length.toLocaleString()}</b><small>${L("Предметов в базе", "Items in database")}</small></span>${uiIcon("right", 16)}</a>
+    <a href="#/items-tracker/${db.mode}"><span class="dashboard-icon">${uiIcon("list", 20)}</span><span><b class="dashboard-label">${L("Мой прогресс", "My progress")}</b><small>${L("Предметы и задания", "Items and quests")}</small></span>${uiIcon("right", 16)}</a>
+  </div>
+  <div id="home-information"></div>
+  <section class="home-news"><div class="section-heading"><h2>${L("Новости приложения и игры", "Application and game news")}</h2><a href="#/news">${L("Все новости", "All news")} ${uiIcon("right", 16)}</a></div><div class="card-grid news-grid">${news}</div></section>`;
   const location = root.querySelector("#home-location"),
     button = root.querySelector("#home-gps");
-  const updateLink = () =>
-    (root.querySelector("#home-open-map").href =
-      `#/map/${db.mode}/${location.value}`);
+  const updateLink = () => {
+    root.querySelector("#home-open-map").href =
+      `#/map/${db.mode}/${location.value}`;
+    const image = root.querySelector("[data-home-location-image]");
+    const preview = locationPreview(location.value);
+    image.parentElement.hidden = !preview;
+    if (preview) image.src = preview;
+    image.alt = location.selectedOptions[0]?.textContent || "";
+  };
   updateLink();
   location.onchange = updateLink;
   const draw = (s) => {
@@ -93,10 +138,12 @@ export function renderRaidHome(root, { db, completed, news, information }) {
         );
     button.textContent = !ready
       ? L("Настроить GPS", "Configure GPS")
-      : s.config.enabled
+      : s?.config?.enabled
         ? L("Отключить GPS", "Disable GPS")
         : L("Включить GPS", "Enable GPS");
-    root.querySelector("[data-home-gps-status]").textContent = s?.config.enabled
+    const status = root.querySelector("[data-home-gps-status]");
+    status.dataset.enabled = String(!!s?.config?.enabled);
+    status.textContent = s?.config?.enabled
       ? L("GPS включён", "GPS enabled")
       : L("GPS выключен", "GPS disabled");
   };
